@@ -5,10 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class PollAnswer {
+public class Question {
     @Id
     private String id;
 
-//    private PollQuestion question;
 
 }
