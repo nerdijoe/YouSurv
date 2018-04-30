@@ -1,0 +1,1 @@
+# MyPoll - frontend
