@@ -8,10 +8,21 @@ import javax.persistence.Id;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String email;
+    private String password;
+    private String role;
+
+    public User(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public boolean auth(String email, String password){
+        return this.email.equals(email) && this.password.equals(password);
+    }
 
     public String getEmail() {
         return email;
@@ -29,19 +40,15 @@ public class User {
         this.password = password;
     }
 
-    private String password;
-
-    private String name;
-
-    public String getName() {
-        return name;
+    public String getRole() {
+        return role;
     }
 
-    public long getId() {
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Long getId() {
         return id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

@@ -9,9 +9,4 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(path="/poll")
 public class PollController {
-    @GetMapping(path="/test")
-    public @ResponseBody
-    String test() {
-        return "Hello, World";
-    }
 }
