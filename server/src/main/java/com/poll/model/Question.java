@@ -1,10 +1,7 @@
 package com.poll.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -15,8 +12,10 @@ public class Question extends AbstractTimestampEntity {
 
     private String image;
 
+    @OneToMany(targetEntity=QuestionOption.class)
     private List<QuestionOption> options;
 
+    @OneToOne
     private QuestionAnswer answer;
 
     private boolean isRequired;
