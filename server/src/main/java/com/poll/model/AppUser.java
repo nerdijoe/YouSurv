@@ -1,24 +1,25 @@
 package com.poll.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.poll.security.Role;
+import org.hibernate.validator.constraints.UniqueElements;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
-public class User {
+public class AppUser implements IEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String email;
-    private String password;
-    private String role;
 
-    public User(String email, String password, String role) {
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    @Column(unique = true)
+    private String email;
+
+    private String password;
+
+    private Role role;
+
+    public AppUser(){}
 
     public boolean auth(String email, String password){
         return this.email.equals(email) && this.password.equals(password);
@@ -40,11 +41,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
