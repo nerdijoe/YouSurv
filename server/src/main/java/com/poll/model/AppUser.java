@@ -1,10 +1,8 @@
 package com.poll.model;
 
 import com.poll.security.Role;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class AppUser implements IEntity{
@@ -12,14 +10,20 @@ public class AppUser implements IEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
+//    @Size(min = 8, message = "Minimum password length: 8 characters")
     private String password;
 
     private Role role;
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    List<Role> roles;
 
-    public AppUser(){}
+    public AppUser(){
+        role = Role.ANONYMOUS;
+    }
 
     public boolean auth(String email, String password){
         return this.email.equals(email) && this.password.equals(password);
