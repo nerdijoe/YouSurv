@@ -46,6 +46,11 @@ public class UserService {
         return userRepository.existsByEmail(appUser.getEmail());
     }
 
+    public boolean isUserExist(Long id) {
+        return userRepository.existsById(id);
+    }
+
+
     public AppUser findByEmail(String email){
         return userRepository.findByEmail(email);
     }
