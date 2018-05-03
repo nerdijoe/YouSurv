@@ -32,7 +32,7 @@ public abstract class AbstractTimestampEntity {
     @Column(name = "isDeleted", nullable = false)
     private boolean isDeleted;
 
-    
+
     public Long getId(){
         return id;
     }

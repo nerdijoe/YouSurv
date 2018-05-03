@@ -1,9 +1,6 @@
 package com.poll.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class QuestionOption extends AbstractTimestampEntity {
@@ -11,4 +8,7 @@ public class QuestionOption extends AbstractTimestampEntity {
 
     private String image;
 
+    @ManyToOne
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 }

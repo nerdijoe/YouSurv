@@ -11,11 +11,15 @@ public class Survey extends AbstractTimestampEntity {
     private AppUser surveyor;
 
     @ElementCollection(targetClass=String.class)
+//    @ElementCollection
     private List<String> invitedEmailList;
 
+    @Enumerated(EnumType.STRING)
     private SurveyType type;
 
-    @OneToMany(targetEntity=Question.class)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "survey")
     private List<Question> questions;
 
     private boolean isPublished;

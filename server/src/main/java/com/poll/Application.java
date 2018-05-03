@@ -48,11 +48,11 @@ public class Application {
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
 
-            AppUser registeredUser = new AppUser();
-            registeredUser.setEmail("frank.qjq@outlook.com");
-            registeredUser.setPassword("123");
-            registeredUser.setRole(Role.USER);
-            userService.signup(registeredUser);
+//            AppUser registeredUser = new AppUser();
+//            registeredUser.setEmail("frank.qjq@outlook.com");
+//            registeredUser.setPassword("123");
+//            registeredUser.setRole(Role.USER);
+//            userService.signup(registeredUser);
 
         };
     }

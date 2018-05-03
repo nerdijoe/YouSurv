@@ -12,11 +12,19 @@ public class Question extends AbstractTimestampEntity {
 
     private String image;
 
-    @OneToMany(targetEntity=QuestionOption.class)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "survey_id")
+    private Survey survey;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "question")
     private List<QuestionOption> options;
 
-    @OneToOne
-    private QuestionAnswer answer;
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "question")
+    private QuestionAnswer questionAnswer;
 
     private boolean isRequired;
 

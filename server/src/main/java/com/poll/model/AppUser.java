@@ -1,8 +1,11 @@
 package com.poll.model;
 
 import com.poll.security.Role;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class AppUser implements IEntity{
@@ -11,6 +14,7 @@ public class AppUser implements IEntity{
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @Email
     private String email;
 
     @Column(nullable = false)
