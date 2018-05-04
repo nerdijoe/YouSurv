@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 @RestController
 //@CrossOrigin(origins = "http://localhost:3000")
 public class RestUserController {
@@ -35,10 +34,12 @@ public class RestUserController {
         return userService.signin(username, password);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public String signup(
                         @RequestParam String username,
                         @RequestParam String password) {
+        System.out.println("RestUserController.signup");
         System.out.println("username=" + username + ", password=" + password);
         AppUser user = new AppUser();
         user.setEmail(username);
