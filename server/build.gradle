@@ -55,22 +55,13 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.20'
     apt "org.projectlombok:lombok:1.16.20"
 
+    compile 'org.mapstruct:mapstruct-jdk8:1.2.0.Final'
+    compile 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+    apt 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+
+
 
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile "org.mockito:mockito-core:2.+"
 }
-
-//configurations {
-////    apt
-//    provided
-//    compile.extendsFrom provided
-//}
-//compileJava {
-//    inputs.files configurations.apt
-//    outputs.dir 'gen/'
-//    options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ]
-//    doFirst {
-//        mkdir('gen/')
-//    }
-//}

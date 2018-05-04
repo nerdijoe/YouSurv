@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-@Getter(AccessLevel.PUBLIC)
+@Getter
 @NoArgsConstructor @AllArgsConstructor
 public class SurveyCreateDTO {
 

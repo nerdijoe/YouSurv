@@ -36,6 +36,8 @@ public class Application  extends SpringBootServletInitializer {
                 .setInitParameter("dispatchOptionsRequest", "true");
     }
 
+
+
 //    @Bean
 //    public AuthenticationManager authenticationManager(){
 //        return new AuthenticationManager() {

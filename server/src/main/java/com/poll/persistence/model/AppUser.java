@@ -1,11 +1,16 @@
 package com.poll.persistence.model;
 
 import com.poll.security.authentication.Role;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 
 @Entity
+@Getter
+@Setter
 public class AppUser implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,31 +36,31 @@ public class AppUser implements IEntity {
         return this.email.equals(email) && this.password.equals(password);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Long getId() {
-        return id;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
+//
+//    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
+//
+//    public Long getId() {
+//        return id;
+//    }
 }

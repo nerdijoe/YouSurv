@@ -1,11 +1,23 @@
 package com.poll.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Survey extends AbstractTimestampModel {
+
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     private AppUser surveyor;
