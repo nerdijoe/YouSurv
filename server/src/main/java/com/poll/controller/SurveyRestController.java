@@ -2,6 +2,7 @@ package com.poll.controller;
 
 
 import com.poll.persistence.dto.SurveyDTO;
+import com.poll.persistence.model.AppUser;
 import com.poll.persistence.model.Survey;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.service.SurveyService;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,7 +21,7 @@ import java.util.logging.Logger;
 
 
 @RestController
-@RequestMapping(path="/survey")
+@RequestMapping(path="")
 public class SurveyRestController {
 
     private Logger log = Logger.getLogger(this.getClass().getName());
@@ -31,7 +33,7 @@ public class SurveyRestController {
     UserService userService;
 
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<List<SurveyDTO>> findAllBySurveyorId(@PathVariable String id, UriComponentsBuilder ucBuilder) {
         if (id == null){
             System.out.println("surveyor id is not included in url");
@@ -60,7 +62,7 @@ public class SurveyRestController {
         return new ResponseEntity<>(surveys, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = "/survey/", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Void> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder) {
         System.out.println("Creating survey, surveyorId = " + surveyDTO.getSurveyorId());
 
@@ -89,6 +91,12 @@ public class SurveyRestController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SurveyDTO> getSurveyById(@PathVariable("id") long id) {
+        System.out.println("Fetching survey with id " + id);
 
+        SurveyDTO surveyDTO = surveyService.findById(id);
+        return new ResponseEntity<>(surveyDTO, HttpStatus.OK);
+    }
 
 }

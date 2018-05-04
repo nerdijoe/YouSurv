@@ -36,12 +36,8 @@ public class SurveyService {
     }
 
     public Survey createSurvey(SurveyCreateDTO surveyDTO) {
-        AppUser user = findById(Long.parseLong(surveyDTO.getSurveyorId()));
+        AppUser user = appUserRepository.findById(Long.parseLong(surveyDTO.getSurveyorId()));
         return createSurvey(user, SurveyType.getType(surveyDTO.getType()));
-    }
-
-    private AppUser findById(long id) {
-        return appUserRepository.findById(id);
     }
 
     public List<SurveyDTO> findAllBySurveyorId(Long id) {
@@ -51,5 +47,10 @@ public class SurveyService {
             dtoList.add(SurveyMapper.MAPPER.fromModel(survey));
         }
         return dtoList;
+    }
+
+    public SurveyDTO findById(long id) {
+        Survey survey = surveyRepository.findById(id);
+        return SurveyMapper.MAPPER.fromModel(survey);
     }
 }
