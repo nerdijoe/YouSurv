@@ -1,8 +1,8 @@
 package com.poll.service;
 
 import com.poll.exception.CustomException;
-import com.poll.model.domain.AppUser;
-import com.poll.repository.UserRepository;
+import com.poll.persistence.model.AppUser;
+import com.poll.persistence.repository.AppUserRepository;
 import com.poll.security.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -31,46 +31,46 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     public List<AppUser> findAllUsers() {
-        return userRepository.findAll();
+        return appUserRepository.findAll();
     }
 
     public AppUser findById(long id) {
-        return userRepository.findById(id);
+        return appUserRepository.findById(id);
     }
 
     public void saveUser(AppUser appUser) {
-        userRepository.save(appUser);
+        appUserRepository.save(appUser);
     }
 
     public boolean isUserExist(AppUser appUser) {
-        return userRepository.existsByEmail(appUser.getEmail());
+        return appUserRepository.existsByEmail(appUser.getEmail());
     }
 
     public boolean isUserExist(Long id) {
-        return userRepository.existsById(id);
+        return appUserRepository.existsById(id);
     }
 
 
     public AppUser findByEmail(String email){
-        return userRepository.findByEmail(email);
+        return appUserRepository.findByEmail(email);
     }
 
     public void updateUser(AppUser currentAppUser) {
-        userRepository.save(currentAppUser);
+        appUserRepository.save(currentAppUser);
     }
 
     public void deleteUserById(long id) {
-        userRepository.deleteById(id);
+        appUserRepository.deleteById(id);
     }
 
     public void deleteAllUsers() {
-        userRepository.deleteAll();
+        appUserRepository.deleteAll();
     }
 
     public String signup(AppUser user) {
-        if (!userRepository.existsByEmail(user.getEmail())) {
+        if (!appUserRepository.existsByEmail(user.getEmail())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
+            appUserRepository.save(user);
             return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);

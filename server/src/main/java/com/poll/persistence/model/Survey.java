@@ -1,13 +1,11 @@
-package com.poll.model.domain;
-
-import com.poll.model.AbstractTimestampEntity;
+package com.poll.persistence.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Survey extends AbstractTimestampEntity {
+public class Survey extends AbstractTimestampModel {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     private AppUser surveyor;

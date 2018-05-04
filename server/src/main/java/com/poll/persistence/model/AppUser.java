@@ -1,11 +1,9 @@
-package com.poll.model.domain;
+package com.poll.persistence.model;
 
-import com.poll.model.IEntity;
 import com.poll.security.authentication.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class AppUser implements IEntity {

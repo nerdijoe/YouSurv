@@ -1,12 +1,12 @@
-package com.poll.repository;
+package com.poll.persistence.repository;
 
-import com.poll.model.domain.AppUser;
+import com.poll.persistence.model.AppUser;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
 
-public interface UserRepository extends CrudRepository<AppUser, Long> {
+public interface AppUserRepository extends CrudRepository<AppUser, Long> {
     List<AppUser> findAll();
 
     AppUser findById(long id);

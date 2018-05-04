@@ -1,7 +1,7 @@
 package com.poll.security.authentication;
 
-import com.poll.model.domain.AppUser;
-import com.poll.repository.UserRepository;
+import com.poll.persistence.model.AppUser;
+import com.poll.persistence.repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,15 +13,15 @@ import java.util.Collections;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser appUser = userRepository.findByEmail(username);
+        AppUser appUser = appUserRepository.findByEmail(username);
         if (appUser == null) {
             throw new UsernameNotFoundException(username);
         }

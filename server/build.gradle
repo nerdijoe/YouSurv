@@ -4,9 +4,13 @@ version '0.1'
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE")
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.15"
     }
 }
 
@@ -14,6 +18,9 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'net.ltgt.apt'
+
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -44,6 +51,26 @@ dependencies {
 
 //    compile("org.springframework.boot:spring-boot-devtools")
 //    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.6'
+
+    compile 'org.projectlombok:lombok:1.16.20'
+    apt "org.projectlombok:lombok:1.16.20"
+
+
+
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile "org.mockito:mockito-core:2.+"
 }
+
+//configurations {
+////    apt
+//    provided
+//    compile.extendsFrom provided
+//}
+//compileJava {
+//    inputs.files configurations.apt
+//    outputs.dir 'gen/'
+//    options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ]
+//    doFirst {
+//        mkdir('gen/')
+//    }
+//}

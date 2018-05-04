@@ -1,4 +1,4 @@
-package com.poll.model;
+package com.poll.persistence.model;
 
 import java.io.Serializable;
 

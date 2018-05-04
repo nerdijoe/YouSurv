@@ -1,11 +1,9 @@
-package com.poll.model.domain;
-
-import com.poll.model.AbstractTimestampEntity;
+package com.poll.persistence.model;
 
 import javax.persistence.*;
 
 @Entity
-public class QuestionAnswer extends AbstractTimestampEntity {
+public class QuestionAnswer extends AbstractTimestampModel {
     private String text;
 
     @OneToOne(fetch = FetchType.LAZY)

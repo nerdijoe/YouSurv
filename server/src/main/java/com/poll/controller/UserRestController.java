@@ -1,8 +1,8 @@
 package com.poll.controller;
 
 
-import com.poll.model.domain.AppUser;
-import com.poll.model.dto.AppUserDTO;
+import com.poll.persistence.model.AppUser;
+import com.poll.persistence.dto.AppUserDTO;
 import com.poll.security.authentication.Role;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,6 @@ public class UserRestController {
         return userService.signin(username, password);
     }
 
-//    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public String signup(
             @RequestBody AppUserDTO body) {

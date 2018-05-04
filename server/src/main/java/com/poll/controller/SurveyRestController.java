@@ -1,9 +1,10 @@
 package com.poll.controller;
 
 
-import com.poll.model.domain.AppUser;
-import com.poll.model.domain.Survey;
-import com.poll.model.domain.SurveyType;
+import com.poll.persistence.model.AppUser;
+import com.poll.persistence.model.Survey;
+import com.poll.persistence.model.SurveyType;
+import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.service.SurveyService;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +28,21 @@ public class SurveyRestController {
     //-------------------Create Survey--------------------------------------------------------
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Void> createSurvey(@RequestBody String surveyorId, String type, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating survey, surveyorId = " + surveyorId);
+    public @ResponseBody ResponseEntity<Void> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder) {
+        System.out.println("Creating survey, surveyorId = " + surveyDTO.getSurveyorId());
 
-        if (surveyorId == null){
+
+        if (surveyDTO.getSurveyorId() == null){
             System.out.println("surveyorId is not included in POST body");
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
 
-        if (!userService.isUserExist(Long.parseLong(surveyorId))){
-            System.out.println("surveyor with id: " + surveyorId + "does not exists");
+        if (!userService.isUserExist(Long.parseLong(surveyDTO.getSurveyorId()))){
+            System.out.println("surveyor with id: " + surveyDTO.getSurveyorId() + "does not exists");
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
 
-        AppUser user = userService.findById(Long.parseLong(surveyorId));
-        Survey survey = surveyService.createSurvey(user, SurveyType.getType(type));
+        Survey survey = surveyService.createSurvey(surveyDTO);
 
         if (survey == null){
             System.out.println("fail to create survey");

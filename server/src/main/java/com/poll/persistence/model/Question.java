@@ -1,13 +1,11 @@
-package com.poll.model.domain;
+package com.poll.persistence.model;
 
-
-import com.poll.model.AbstractTimestampEntity;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Question extends AbstractTimestampEntity {
+public class Question extends AbstractTimestampModel {
     private QuestionType type;
 
     private String text;

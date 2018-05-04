@@ -1,7 +1,7 @@
-package com.poll.repository;
+package com.poll.persistence.repository;
 
 
-import com.poll.model.domain.Survey;
+import com.poll.persistence.model.Survey;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

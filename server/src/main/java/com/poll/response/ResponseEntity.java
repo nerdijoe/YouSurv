@@ -1,4 +1,4 @@
-package com.poll.model.response;
+package com.poll.response;
 
 public class ResponseEntity {
     private String code;

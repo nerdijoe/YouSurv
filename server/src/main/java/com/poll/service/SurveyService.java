@@ -1,18 +1,19 @@
 package com.poll.service;
 
-import com.poll.model.domain.AppUser;
-import com.poll.model.domain.Survey;
-import com.poll.model.domain.SurveyType;
-import com.poll.repository.SurveyRepository;
+import com.poll.persistence.dto.SurveyCreateDTO;
+import com.poll.persistence.model.AppUser;
+import com.poll.persistence.model.Survey;
+import com.poll.persistence.model.SurveyType;
+import com.poll.persistence.repository.AppUserRepository;
+import com.poll.persistence.repository.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class SurveyService {
 
+    @Autowired
+    private AppUserRepository appUserRepository;
     @Autowired
     private SurveyRepository surveyRepository;
 
@@ -27,5 +28,14 @@ public class SurveyService {
 
     public void saveSurvey(Survey survey) {
         surveyRepository.save(survey);
+    }
+
+    public Survey createSurvey(SurveyCreateDTO surveyDTO) {
+        AppUser user = findById(Long.parseLong(surveyDTO.getSurveyorId()));
+        return createSurvey(user, SurveyType.getType(surveyDTO.getType()));
+    }
+
+    private AppUser findById(long id) {
+        return appUserRepository.findById(id);
     }
 }

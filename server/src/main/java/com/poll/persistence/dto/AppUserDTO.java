@@ -1,4 +1,4 @@
-package com.poll.model.dto;
+package com.poll.persistence.dto;
 
 public class AppUserDTO {
     private String username;

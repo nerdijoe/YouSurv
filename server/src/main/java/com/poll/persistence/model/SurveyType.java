@@ -1,4 +1,4 @@
-package com.poll.model.domain;
+package com.poll.persistence.model;
 
 public enum SurveyType {
     GENERAL, CLOSE, OPEN;

@@ -1,10 +1,10 @@
-package com.poll.model;
+package com.poll.persistence.model;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
-public abstract class AbstractTimestampEntity {
+public abstract class AbstractTimestampModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
