@@ -1,6 +1,6 @@
 package com.poll.repository;
 
-import com.poll.model.AppUser;
+import com.poll.model.domain.AppUser;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

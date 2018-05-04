@@ -1,11 +1,12 @@
-package com.poll.model;
+package com.poll.model.domain;
 
-import com.poll.security.Role;
+import com.poll.model.IEntity;
+import com.poll.security.authentication.Role;
 
 import javax.persistence.*;
 
 @Entity
-public class AppUser implements IEntity{
+public class AppUser implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
