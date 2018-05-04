@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 @RestController
+//@CrossOrigin(origins = "http://localhost:3000")
 public class RestUserController {
 
     @Autowired
@@ -37,6 +39,7 @@ public class RestUserController {
     public String signup(
                         @RequestParam String username,
                         @RequestParam String password) {
+        System.out.println("username=" + username + ", password=" + password);
         AppUser user = new AppUser();
         user.setEmail(username);
         user.setPassword(bCryptPasswordEncoder.encode(password));
