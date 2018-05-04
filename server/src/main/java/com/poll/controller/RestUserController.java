@@ -37,8 +37,10 @@ public class RestUserController {
 
     @PostMapping("/signup")
     public String signup(
-                        @RequestParam String username,
-                        @RequestParam String password) {
+                        @RequestBody String body) {
+        System.out.println("body=" + body);
+        String username = "test";
+        String password = "password";
         System.out.println("username=" + username + ", password=" + password);
         AppUser user = new AppUser();
         user.setEmail(username);
