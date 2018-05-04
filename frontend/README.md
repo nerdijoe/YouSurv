@@ -1,3 +1,17 @@
+# Survey Front End
+
+## How to run
+
+```
+// install all dependencies
+$ yarn install
+
+// run the server (localhost:3000)
+$ yarn start
+
+
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

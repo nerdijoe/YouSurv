@@ -1,5 +1,7 @@
-package com.poll.model;
+package com.poll.model.domain;
 
+
+import com.poll.model.AbstractTimestampEntity;
 
 import javax.persistence.*;
 import java.util.List;

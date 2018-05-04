@@ -1,11 +1,10 @@
 package com.poll.repository;
 
-import com.poll.model.AppUser;
-import com.poll.model.Survey;
+
+import com.poll.model.domain.Survey;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-
 
 public interface SurveyRepository extends CrudRepository<Survey, Long> {
     List<Survey> findAll();

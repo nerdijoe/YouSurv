@@ -1,4 +1,4 @@
-package com.poll.security;
+package com.poll.security.authentication;
 
 import java.io.IOException;
 

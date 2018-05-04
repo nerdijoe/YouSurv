@@ -1,22 +1,18 @@
 package com.poll.controller;
 
 
-import com.poll.model.AppUser;
-import com.poll.model.Survey;
-import com.poll.model.SurveyType;
-import com.poll.security.Role;
+import com.poll.model.domain.AppUser;
+import com.poll.model.domain.Survey;
+import com.poll.model.domain.SurveyType;
 import com.poll.service.SurveyService;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(path="/survey")

@@ -1,6 +1,6 @@
-package com.poll.security;
+package com.poll.security.authentication;
 
-import com.poll.model.AppUser;
+import com.poll.model.domain.AppUser;
 import com.poll.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;

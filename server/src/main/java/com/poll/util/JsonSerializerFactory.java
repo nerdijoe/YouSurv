@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 
 
 /**
- * This factory class generates json serializer for each model entity.
+ * This factory class generates json serializer for each model response.
  */
 public class JsonSerializerFactory {
     private static JsonSerializer jsonSerializer;

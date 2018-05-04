@@ -1,8 +1,7 @@
-package com.poll.security;
+package com.poll.security.authentication;
 
 
 import com.poll.exception.CustomException;
-import com.poll.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

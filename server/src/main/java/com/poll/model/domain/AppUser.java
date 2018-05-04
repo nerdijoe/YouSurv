@@ -1,14 +1,14 @@
-package com.poll.model;
+package com.poll.model.domain;
 
-import com.poll.security.Role;
-import org.hibernate.validator.constraints.UniqueElements;
+import com.poll.model.IEntity;
+import com.poll.security.authentication.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class AppUser implements IEntity{
+public class AppUser implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -1,27 +1,22 @@
 package com.poll;
 
-import com.poll.model.AppUser;
-import com.poll.security.Role;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 @SpringBootApplication
 //@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
-public class Application {
+public class Application  extends SpringBootServletInitializer {
 
 //    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
@@ -29,6 +24,17 @@ public class Application {
     UserService userService;
 
 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+        servletContext.getServletRegistration(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
+                .setInitParameter("dispatchOptionsRequest", "true");
+    }
 
 //    @Bean
 //    public AuthenticationManager authenticationManager(){

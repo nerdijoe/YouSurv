@@ -1,4 +1,4 @@
-package com.poll.security;
+package com.poll.security.authentication;
 
 public class SecurityConstants {
     public static final String SECRET = "SecretKeyToGenJWTs";
