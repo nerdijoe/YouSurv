@@ -1,8 +1,9 @@
 package com.poll.controller;
 
 
-import com.poll.model.AppUser;
-import com.poll.security.Role;
+import com.poll.model.domain.AppUser;
+import com.poll.model.dto.AppUserDTO;
+import com.poll.security.authentication.Role;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,13 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
 public class RestUserController {
 
     @Autowired
@@ -35,16 +32,17 @@ public class RestUserController {
         return userService.signin(username, password);
     }
 
+//    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
-    public String signup(
-                        @RequestBody String body) {
-        System.out.println("body=" + body);
-        String username = "test";
-        String password = "password";
-        System.out.println("username=" + username + ", password=" + password);
+    public String signup(@RequestBody AppUserDTO body) {
+        System.out.println("RestUserController.signup");
+        System.out.println("body = " + body);
+
+        System.out.println("body.getUsername() = " + body.getUsername());
+        System.out.println("body.getPassword() = " + body.getPassword());
         AppUser user = new AppUser();
-        user.setEmail(username);
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setEmail(body.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(body.getPassword()));
         user.setRole(Role.USER);
         return userService.signup(user);
     }
