@@ -2,6 +2,7 @@ package com.poll.controller;
 
 
 import com.poll.model.AppUser;
+import com.poll.model.AppUserDTO;
 import com.poll.security.Role;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
 public class RestUserController {
 
     @Autowired
@@ -37,13 +37,15 @@ public class RestUserController {
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public String signup(
-                        @RequestParam String username,
-                        @RequestParam String password) {
+            @RequestBody AppUserDTO body) {
         System.out.println("RestUserController.signup");
-        System.out.println("username=" + username + ", password=" + password);
+        System.out.println("body = " + body);
+
+        System.out.println("body.getUsername() = " + body.getUsername());
+        System.out.println("body.getPassword() = " + body.getPassword());
         AppUser user = new AppUser();
-        user.setEmail(username);
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setEmail(body.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(body.getPassword()));
         user.setRole(Role.USER);
         return userService.signup(user);
     }

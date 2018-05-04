@@ -29,19 +29,10 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   console.log(" before axiosSignUp", data);
   
     axios.post('http://localhost:8080/signup', {
-            // method: 'GET',
-            // mode: 'no-cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json',
-            }
+            username: data.email,
+            password: data.password,
         },
-        {
-    username: data.email,
-    password: data.password,
-    // firstname: data.firstname,
-    // lastname: data.lastname,
-  })
+    )
   .then(res => {
     console.log('** afteraxiosSignup res.data', res.data);
     dispatch(userSignUp(data));
