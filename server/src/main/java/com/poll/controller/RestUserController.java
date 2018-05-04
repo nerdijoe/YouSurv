@@ -3,7 +3,7 @@ package com.poll.controller;
 
 import com.poll.model.AppUser;
 import com.poll.model.AppUserDTO;
-import com.poll.security.Role;
+import com.poll.security.authentication.Role;
 import com.poll.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,8 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -34,7 +32,7 @@ public class RestUserController {
         return userService.signin(username, password);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+//    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public String signup(
             @RequestBody AppUserDTO body) {

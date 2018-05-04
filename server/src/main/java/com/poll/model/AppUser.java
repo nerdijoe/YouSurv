@@ -1,10 +1,8 @@
 package com.poll.model;
 
-import com.poll.security.Role;
-import org.hibernate.validator.constraints.UniqueElements;
+import com.poll.security.authentication.Role;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class AppUser implements IEntity{

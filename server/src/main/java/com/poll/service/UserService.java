@@ -3,7 +3,7 @@ package com.poll.service;
 import com.poll.exception.CustomException;
 import com.poll.model.AppUser;
 import com.poll.repository.UserRepository;
-import com.poll.security.JwtTokenProvider;
+import com.poll.security.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;

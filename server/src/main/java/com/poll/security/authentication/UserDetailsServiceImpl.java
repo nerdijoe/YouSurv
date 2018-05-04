@@ -1,4 +1,4 @@
-package com.poll.security;
+package com.poll.security.authentication;
 
 import com.poll.model.AppUser;
 import com.poll.repository.UserRepository;
