@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as actionType from './constants';
 
 // axios.defaults.crossDomain = true;
+const token = 'Bearer ' + localStorage.getItem('token');
 
 export const axiosSignUp = (data, router) => (dispatch) => {
 
@@ -135,3 +136,51 @@ export const userSignOut = () => {
     type: actionType.USER_SIGN_OUT,
   };
 };
+
+export const axiosCreateSurvey = data => dispatch => {
+  console.log('< Before axiosCreateSurvey');
+  // axios.post('http://localhost:8080/surveys', {
+  //   type: data.type,
+  // }, {
+  //   headers: {
+  //     token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosCreateSurvey res.data', res.data);
+  //   dispatch(createSurvey(data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***error axiosCreateSurvey");
+  //   console.log(err);
+  // })
+
+  const res = {
+    data: {
+      id: '',
+      author: {
+        email: localStorage.getItem('user_email')
+      },
+      invitedEmailList: [],
+      type: data.type,
+      questions: [],
+      isPublished: false,
+      isDeleted: false,
+      created: '2018-05-05 03:14:00',
+      updated: '2018-05-05 03:14:00',
+    }
+  }
+  
+  dispatch(createSurvey(res.data));
+
+}
+
+export const createSurvey = (data) => {
+  return {
+    type: actionType.CREATE_SURVEY,
+    data,
+  }
+}
+
+
