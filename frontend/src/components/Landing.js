@@ -4,7 +4,8 @@ import {
   Link,
 } from 'react-router-dom';
 
-
+import Navbar from './Navbar';
+import '../style/youtube.css';
 
 const MyContainer = styled.div`
   width: 100%;
@@ -12,17 +13,37 @@ const MyContainer = styled.div`
   margin: 0px;
   padding: 0px;
   ${'' /* background: #0099FF; */}
+  ${'' /* font-family: 'Roboto'; */}
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
+  ${'' /* background: #0099FF; */}
+  ${'' /* padding: 10px; */}
+  margin-top: 10px;
+  margin-left: 35px;
 
 `;
 
 class Landing extends Component {
-
+  componentDidMount() {
+    if(localStorage.getItem('token') != null) {
+      this.props.history.push('/home');
+    }
+  }
+  
   render() {
     return (
       <MyContainer>
-        <h1>This is landing!</h1>
+        <Navbar />
 
-        <Link to='/signup'>Sign up</Link>
+        <Wrapper>
+          <h1>This is landing page!</h1>
+        </Wrapper>
+        
+
+        {/* <Link to='/signup'>Sign up</Link>
+        <Link to='/signin'>Sign in</Link> */}
       </MyContainer>
     );
   }

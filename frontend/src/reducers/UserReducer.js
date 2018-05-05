@@ -10,9 +10,25 @@ const UserReducer = (state = initialState, action) => {
     case actionType.USER_SIGN_UP: {
       return {
         ...state,
+      };
+    }
+    case actionType.USER_SIGN_IN: {
+      return {
+        ...state,
+        user: {
+          email: action.data.email,
+        },
         is_authenticated: true,
       };
     }
+    case actionType.USER_SIGN_OUT: {
+      return {
+        ...state,
+        user: {},
+        is_authenticated: false,
+      };
+    }
+
     default:
       return state;
   }

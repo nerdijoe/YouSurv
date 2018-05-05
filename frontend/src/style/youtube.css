@@ -1,0 +1,10 @@
+@font-face  {
+  font-family: 'Roboto';
+  src:url('/src/style/fonts/Roboto-Regular.ttf'); 
+  /* src:url('themes/basic/assets/fonts/fontname.eot?#') format('eot'),    
+      url('themes/basic/assets/fonts/fontname.woff') format('woff'); */
+}
+
+.Youtube {
+  font-family: 'Roboto', sans-serif;
+}
