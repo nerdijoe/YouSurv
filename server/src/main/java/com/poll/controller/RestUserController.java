@@ -26,13 +26,27 @@ public class RestUserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/login")
-    public String login(
-                        @RequestParam String username,
-                        @RequestParam String password) {
+    public String login(@RequestBody AppUserDTO body) {
+        System.out.println("RestUserController.login");
+        System.out.println("body = " + body);
+        String username = body.getUsername();
+        String password = body.getPassword();
+
         return userService.signin(username, password);
     }
 
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/signin")
+    public String signin(@RequestBody AppUserDTO body) {
+        System.out.println("RestUserController.login");
+        System.out.println("body = " + body);
+        String username = body.getUsername();
+        String password = body.getPassword();
+
+        return userService.signinV2(username, password);
+    }
+
+
+    //    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public String signup(@RequestBody AppUserDTO body) {
         System.out.println("RestUserController.signup");
@@ -42,7 +56,8 @@ public class RestUserController {
         System.out.println("body.getPassword() = " + body.getPassword());
         AppUser user = new AppUser();
         user.setEmail(body.getUsername());
-        user.setPassword(bCryptPasswordEncoder.encode(body.getPassword()));
+//        user.setPassword(bCryptPasswordEncoder.encode(body.getPassword()));
+        user.setPassword(body.getPassword());
         user.setRole(Role.USER);
         return userService.signup(user);
     }

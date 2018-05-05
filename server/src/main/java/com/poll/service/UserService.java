@@ -64,6 +64,7 @@ public class UserService {
 
     public String signup(AppUser user) {
         if (!userRepository.existsByEmail(user.getEmail())) {
+            System.out.println("UserService.signup user.password=" + user.getPassword());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
@@ -74,9 +75,44 @@ public class UserService {
 
     public String signin(String username, String password) {
         try {
+            System.out.println("UserService.signin=" + username +", " + password);
+            System.out.println("   password encoded" + passwordEncoder.encode(password));
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            System.out.println("    after authenticate");
+
             return jwtTokenProvider.createToken(username, Arrays.asList(findByEmail(username).getRole()));
         } catch (AuthenticationException e) {
+            System.out.println(e);
+            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    public String signinV2(String username, String password) {
+        try {
+            System.out.println("UserService.signinV2=" + username +", " + password);
+            System.out.println("   password encoded" + passwordEncoder.encode(password));
+            if (userRepository.existsByEmail(username)) {
+                AppUser user = userRepository.findByEmail(username);
+                System.out.println("user.password =" + user.getPassword());
+                if(passwordEncoder.matches(password, user.getPassword())) {
+
+                    return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
+                }
+                else {
+                    throw new CustomException("Password is incorrect", HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+            } else {
+                throw new CustomException("Email is incorrect ", HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+
+
+
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+//            return jwtTokenProvider.createToken(username, Arrays.asList(findByEmail(username).getRole()));
+        } catch (AuthenticationException e) {
+            System.out.println(e);
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }

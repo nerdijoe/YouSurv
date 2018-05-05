@@ -17,9 +17,12 @@ import styled from 'styled-components';
 
 // import logo from './logo.svg';
 // import './App.css';
+import './style/youtube.css';
 
 import Landing from './components/Landing';
 import SignUp from './components/SignUp';
+import SignIn from './components/SignIn';
+import Home from './components/Home';
 
 import store from './store/manageStore'
 
@@ -50,10 +53,13 @@ class App extends Component {
 
       <Provider store={store}>
         <Router>
+          
           <MyContainer>
+          
             <Route exact path='/' component={Landing} />
             <Route path='/signup' component={SignUp} />
-
+            <Route path='/signin' component={SignIn} />
+            <Route path='/home' component={Home} />
           </MyContainer>
 
         </Router>

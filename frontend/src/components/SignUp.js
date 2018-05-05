@@ -18,6 +18,8 @@ import {
 } from 'semantic-ui-react';
 import styled from 'styled-components';
 
+import Navbar from './Navbar';
+
 
 const MyContainer = styled.div`
 width: 100%;
@@ -57,8 +59,8 @@ class SignUp extends Component {
       formErrors: { firstname: '', lastname: '', email: '', password: '' },
       emailValid: false,
       passwordValid: false,
-      firstnameValid: false,
-      lastnameValid: false,
+      firstnameValid: true,
+      lastnameValid: true,
       formValid: false,
     }
   }
@@ -130,7 +132,7 @@ class SignUp extends Component {
   render() {
     return (
       <MyContainer>
-        <Link to='/'>Home</Link>
+        <Navbar />
         <Container>
           <Grid>
             <Grid.Row>
@@ -149,21 +151,21 @@ class SignUp extends Component {
               <Grid.Column width={8}>
               
                 <Form onSubmit={ (e) => { this.handleSignUp(e) }} >
-                  <Form.Field>
+                  {/* <Form.Field>
                     <label>First Name</label>
                     <input placeholder='John' name='firstname' value={this.state.firstname} onChange={ (e) => { this.handleChange(e); }} />
                   </Form.Field>
                   <Form.Field>
                     <label>Last Name</label>
                     <input placeholder='Snow' name='lastname' value={this.state.lastname} onChange={ (e) => { this.handleChange(e); }} />
-                  </Form.Field>
+                  </Form.Field> */}
                   <Form.Field>
                     <label>Email</label>
                     <input placeholder='john.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
                   </Form.Field>
                   <Form.Field>
                     <label>Password</label>
-                    <input type='password' placeholder='Password' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e); }}/>
+                    <input type='password' placeholder='WinterIsComing123' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
                   <Button color='green' type='submit' disabled={!this.state.formValid}>Sign up</Button>

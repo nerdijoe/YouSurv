@@ -1,0 +1,205 @@
+import React, { Component } from 'react';
+import {
+  Link,
+} from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import {
+  axiosSignIn,
+} from '../actions';
+
+import {
+  Container,
+  Form,
+  Button,
+  Grid,
+  Message,
+  Header,
+} from 'semantic-ui-react';
+import styled from 'styled-components';
+
+import Navbar from './Navbar';
+
+
+const MyContainer = styled.div`
+width: 100%;
+height: 100%;
+margin-left: 0px;
+padding: 0px;
+${'' /* background: #0099FF; */}
+
+`;
+
+
+const ErrorMessage = ({formErrors}) => (
+  <Container>
+    <div></div>
+    {Object.keys(formErrors).map((fieldName, i) => {
+      if (formErrors[fieldName].length > 0) {
+        return (
+         
+          <Message negative>
+            <p key={i}>{fieldName} {formErrors[fieldName]}</p>
+          </Message>
+
+        );
+      }
+    })}
+  </Container>
+);
+
+class SignIn extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+      formErrors: { firstname: '', lastname: '', email: '', password: '' },
+      emailValid: false,
+      passwordValid: false,
+      firstnameValid: true,
+      lastnameValid: true,
+      formValid: false,
+    }
+  }
+  
+  validateField(fieldName, value) {
+    const formErrorsValidation = this.state.formErrors;
+    let firstnameValid = this.state.firstnameValid;
+    let lastnameValid = this.state.lastnameValid;
+    
+    let emailValid = this.state.emailValid;
+    let passwordValid = this.state.passwordValid;
+    
+    switch (fieldName) {
+      case 'firstname':
+        firstnameValid = value.length > 0;
+        formErrorsValidation.firstname = firstnameValid ? '' : ' is blank. Please enter your first name.';
+        break;
+      case 'lastname':
+        lastnameValid = value.length > 0;
+        formErrorsValidation.lastname = lastnameValid ? '' : ' is blank. Please enter your last name.';
+        break;
+      case 'email':
+        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        formErrorsValidation.email = emailValid ? '' : ' is invalid.';
+        break;
+      case 'password':
+        passwordValid = value.length >= 4;
+        formErrorsValidation.password = passwordValid ? '' : ' is too short. Minimum password length is 4 characters.';
+        break;
+      default:
+        break;
+    }
+    // update the error message
+    this.setState({
+      formErrors: formErrorsValidation,
+      firstnameValid,
+      lastnameValid,
+      emailValid,
+      passwordValid,
+    }, this.validateForm);
+  }
+
+  validateForm() {
+    this.setState({ formValid: this.state.emailValid && this.state.passwordValid && this.state.firstnameValid && this.state.lastnameValid });
+  }
+
+  handleSignIn(e) {
+    e.preventDefault();
+    console.log('handleSignIn', this.state);
+    this.props.axiosSignIn(this.state, this.props.history);
+
+    // // this.props.history.push('/signin');
+  }
+
+  handleChange(e) {
+    const target = e.target;
+
+    console.log(`handleChange ${target.name}=[${target.value}]`);
+
+    // validate field everytime user enters something.
+    this.setState({
+      [target.name]: target.value,
+    }, () => {
+      this.validateField(target.name, target.value);
+    });
+  }
+
+
+  render() {
+    return (
+      <MyContainer>
+        <Navbar />
+
+        <Container>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={4} />
+              <Grid.Column width={8}>
+                <Header size='huge'>Sign In</Header>
+              </Grid.Column>
+              <Grid.Column width={4} />
+            </Grid.Row>
+          </Grid>
+
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={4}>
+              </Grid.Column>
+              <Grid.Column width={8}>
+              
+                <Form onSubmit={ (e) => { this.handleSignIn(e) }} >
+                  {/* <Form.Field>
+                    <label>First Name</label>
+                    <input placeholder='John' name='firstname' value={this.state.firstname} onChange={ (e) => { this.handleChange(e); }} />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Last Name</label>
+                    <input placeholder='Snow' name='lastname' value={this.state.lastname} onChange={ (e) => { this.handleChange(e); }} />
+                  </Form.Field> */}
+                  <Form.Field>
+                    <label>Email</label>
+                    <input placeholder='john.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Password</label>
+                    <input type='password' placeholder='iKnowNothing!' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e); }}/>
+                  </Form.Field>
+      
+                  <Button color='green' type='submit' disabled={!this.state.formValid}>Sign In</Button>
+                </Form>
+
+                <ErrorMessage formErrors={this.state.formErrors} />
+              </Grid.Column>
+              <Grid.Column width={4}>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+
+
+
+
+
+        </Container>
+      </MyContainer>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    axiosSignIn: (data, router) => { dispatch(axiosSignIn(data, router)); },
+  };
+};
+
+const connectedSignIn = connect(mapStateToProps,mapDispatchToProps)(SignIn);
+export default connectedSignIn;
