@@ -5,6 +5,19 @@ import { connect } from 'react-redux';
 import { userSignOutRequest } from '../actions';
 
 class NavbarMenu extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      is_token_exist: false,
+    }
+  }
+  componentDidMount() {
+    if(localStorage.getItem('token') != null) {
+      console.log('NavbarMenu componentDidMount');
+      this.setState({is_token_exist: true});
+    }
+  }
+
   state = { activeItem: '' }
 
   handleItemClick = (e, { name }) => {
@@ -14,14 +27,14 @@ class NavbarMenu extends Component {
 
   handleSignOut = () => this.props.userSignOutRequest();
 
-  render() {
-    const { activeItem } = this.state
 
+  render() {
+    const { activeItem } = this.state;
     return (
       <Container>
         <Menu secondary>
 
-          { this.props.is_authenticated ? (
+          { this.props.is_authenticated || this.state.is_token_exist? (
             <Menu.Menu position='right'>
             <Link to='/'>
                 <Menu.Item name='signOut' onClick={this.handleSignOut} />
