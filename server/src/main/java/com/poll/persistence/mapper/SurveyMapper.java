@@ -13,9 +13,9 @@ public interface SurveyMapper {
     SurveyMapper MAPPER = Mappers.getMapper( SurveyMapper.class );
 
     @Mappings({
-            @Mapping(source = "surveyorId", target = "surveyor.id"),
+            @Mapping(source = "authorEmail", target = "surveyor.email"),
             @Mapping(source = "created", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "created"),
-            @Mapping(source = "updated", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "updated")
+            @Mapping(source = "updated", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "updated"),
     })
     Survey toModel(SurveyDTO dto );
 

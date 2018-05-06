@@ -17,16 +17,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SurveyDTO {
-    private String surveyorId;
+    private String authorEmail;
 
     private List<String> invitedEmailList;
 
     private String type;
 
-//    private List<QuestionDTO> questions;
+    private List<QuestionDTO> questions;
 
-    private boolean isPublished;
-    private boolean isDeleted;
+    private boolean published;
+    private boolean deleted;
 
     private String created;
     private String updated;

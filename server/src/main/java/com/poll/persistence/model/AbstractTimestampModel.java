@@ -26,7 +26,7 @@ public abstract class AbstractTimestampModel {
     @PrePersist
     protected void onCreate() {
         updated = created = new Date();
-        isDeleted = false;
+        deleted = false;
     }
 
     @PreUpdate
@@ -34,8 +34,8 @@ public abstract class AbstractTimestampModel {
         updated = new Date();
     }
 
-    @Column(name = "isDeleted", nullable = false)
-    private boolean isDeleted;
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 
 
 }
