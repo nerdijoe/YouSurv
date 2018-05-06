@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class QuestionAnswer extends AbstractTimestampModel {
     private String text;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "question_id")
     private Question question;
 }

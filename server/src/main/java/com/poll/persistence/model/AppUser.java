@@ -21,7 +21,6 @@ public class AppUser implements IEntity {
     private String email;
 
     @Column(nullable = false)
-//    @Size(min = 8, message = "Minimum password length: 8 characters")
     private String password;
 
     private Role role;
@@ -36,31 +35,4 @@ public class AppUser implements IEntity {
         return this.email.equals(email) && this.password.equals(password);
     }
 
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-//
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-//
-//    public Role getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(Role role) {
-//        this.role = role;
-//    }
-//
-//    public Long getId() {
-//        return id;
-//    }
 }

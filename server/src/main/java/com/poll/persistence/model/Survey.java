@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,11 +20,12 @@ import java.util.List;
 public class Survey extends AbstractTimestampModel {
 
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     private AppUser surveyor;
 
     @ElementCollection(targetClass=String.class)
-//    @ElementCollection
     private List<String> invitedEmailList;
 
     @Enumerated(EnumType.STRING)
@@ -31,7 +33,10 @@ public class Survey extends AbstractTimestampModel {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            mappedBy = "survey")
+            mappedBy = "survey",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Question> questions;
 
     private boolean isPublished;
