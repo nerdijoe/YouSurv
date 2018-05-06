@@ -1,7 +1,8 @@
 import * as actionType from '../actions/constants';
 
 const initialState = {
-  surveys: [],  
+  surveys: [],
+  surveyCurrent: {},
 }
 
 const SurveyReducer = (state = initialState, action) => {
@@ -36,6 +37,16 @@ const SurveyReducer = (state = initialState, action) => {
         ...state,
       }
     }
+    case actionType.SURVEY_GET_ONE: {
+      console.log('SurveyReducer SURVEY_GET_ONE');
+      console.log('action = ', action);
+      // const surveyDetail = state.surveys.filter(s => s.id === action.id )
+      return {
+        ...state,
+        surveyCurrent: action.data,
+      }
+    }
+
     default: 
       return state;
   }

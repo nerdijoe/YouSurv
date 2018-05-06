@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { 
+  Link,
+  withRouter,
+  BrowserRouter as Router,
+  Route,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { userSignOutRequest } from '../actions';
@@ -14,6 +19,8 @@ import styled from 'styled-components';
 import Navbar from './Navbar';
 import SurveyForm from './surveys/SurveyForm';
 import SurveyList from './surveys/SurveyList';
+import SurveyDetail from './surveys/SurveyDetail';
+
 
 const MyContainer = styled.div`
   width: 100%;
@@ -50,7 +57,6 @@ class Home extends Component {
           <Divider />
           <SurveyList />
         </Container>
-
 
       </MyContainer>
     );

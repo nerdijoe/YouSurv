@@ -204,15 +204,27 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
 
 }
 
-const surveyGetAll = (data) => {
+export const surveyGetAll = (data) => {
   return {
     type: actionType.SURVEY_GET_ALL,
     data,
   }
 }
 
-const surveyGetAllDummy = () => {
+export const surveyGetAllDummy = () => {
   return {
     type: actionType.SURVEY_GET_ALL_DUMMY
+  }
+}
+
+export const surveyShowDetail = (data, router) => (dispatch) => {
+  router.push('/surveydetail');
+  dispatch(surveyShowDetailReduce(data));
+}
+
+export const surveyShowDetailReduce = (data) => {
+  return {
+    type: actionType.SURVEY_GET_ONE,
+    data,
   }
 }

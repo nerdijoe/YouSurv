@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import { 
+  Link,
+  withRouter,
+  BrowserRouter as Router,
+  Route,
+} from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
 import {
   axiosSurveyGetAll,
+  surveyShowDetail,
 } from '../../actions';
 
 import {
@@ -26,6 +33,11 @@ import cardHeader02 from '../../assets/images/card/card_header_02.png'
 
 
 class SurveyList extends Component {
+
+  handleShowDetail(survey) {
+    this.props.surveyShowDetail(survey, this.props.history);
+  }
+
   render() {
     return (
       <Container>
@@ -34,7 +46,10 @@ class SurveyList extends Component {
 
           return (
             <Card key={survey.id}>
-              <Image src={cardHeader02} />
+              <a onClick={() => {this.handleShowDetail(survey)}}>
+                <Image src={cardHeader02} />
+              </a>
+              
               <Card.Content>
                 <Card.Header>{survey.id}</Card.Header>
                 <Card.Meta>{Moment(survey.created).format('L LT')}</Card.Meta>
@@ -68,8 +83,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     axiosSurveyGetAll: (data) => { dispatch(axiosSurveyGetAll(data));},
+    surveyShowDetail: (data, router) => { dispatch(surveyShowDetail(data, router)); },
   }
 }
 
-const connectedSurveyList = connect(mapStateToProps, mapDispatchToProps)(SurveyList);
+const connectedSurveyList = withRouter(connect(mapStateToProps, mapDispatchToProps)(SurveyList));
 export default connectedSurveyList;
