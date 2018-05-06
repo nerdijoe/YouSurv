@@ -4,10 +4,16 @@ import { connect } from 'react-redux';
 
 import { userSignOutRequest } from '../actions';
 
-import { Button } from 'semantic-ui-react';
+import {
+  Container, 
+  Button,
+  Divider,
+} from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import Navbar from './Navbar';
+import SurveyForm from './surveys/SurveyForm';
+import SurveyList from './surveys/SurveyList';
 
 const MyContainer = styled.div`
   width: 100%;
@@ -35,10 +41,15 @@ class Home extends Component {
     return (
       <MyContainer>
         <Navbar />
-        <h2>Home</h2>
+        <Container>
+          <h2>Home</h2>
+          {/* <Button onClick={this.handleSignOut}>Sign out</Button> */}
 
-        <Button onClick={this.handleSignOut}>Sign out</Button>
+          <SurveyForm />
 
+          <Divider />
+          <SurveyList />
+        </Container>
 
 
       </MyContainer>

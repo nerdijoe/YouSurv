@@ -137,8 +137,8 @@ export const userSignOut = () => {
   };
 };
 
-export const axiosCreateSurvey = data => dispatch => {
-  console.log('< Before axiosCreateSurvey');
+export const axiosSurveyCreate = data => dispatch => {
+  console.log('<  before axiosSurveyCreate data=', data);
   // axios.post('http://localhost:8080/surveys', {
   //   type: data.type,
   // }, {
@@ -147,40 +147,72 @@ export const axiosCreateSurvey = data => dispatch => {
   //   }
   // })
   // .then(res => {
-  //   console.log('> after axiosCreateSurvey res.data', res.data);
+  //   console.log('>  after axiosCreateSurvey res.data', res.data);
   //   dispatch(createSurvey(data));
   //   // router.push('/signin');
   // })
   // .catch(err => {
-  //   console.log("***error axiosCreateSurvey");
+  //   console.log("***  error axiosCreateSurvey");
   //   console.log(err);
   // })
 
+  
   const res = {
     data: {
-      id: '',
-      author: {
-        email: localStorage.getItem('user_email')
-      },
+      id: '1',
+      authorEmail: localStorage.getItem('user_email'),
       invitedEmailList: [],
       type: data.type,
       questions: [],
       isPublished: false,
       isDeleted: false,
-      created: '2018-05-05 03:14:00',
-      updated: '2018-05-05 03:14:00',
+      created: '2018-05-05 15:14:00',
+      updated: '2018-05-05 15:14:00',
     }
   }
   
-  dispatch(createSurvey(res.data));
+  dispatch(surveyCreate(res.data));
 
 }
 
-export const createSurvey = (data) => {
+export const surveyCreate = (data) => {
   return {
-    type: actionType.CREATE_SURVEY,
+    type: actionType.SURVEY_CREATE,
     data,
   }
 }
 
+export const axiosSurveyGetAll = (data) => (dispatch) => {
+  console.log('<  before axiosSurveyGetAll data=', data);
 
+  // axios.get('http://localhost:8080/surveys', {
+  //   headers: {
+  //     token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosSurveyGetAll res.data', res.data);
+  //     dispatch(surveyGetAll(res.data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***  error axiosSurveyGetAll");
+  //   console.log(err);
+  // })
+
+  dispatch(surveyGetAllDummy());
+
+}
+
+const surveyGetAll = (data) => {
+  return {
+    type: actionType.SURVEY_GET_ALL,
+    data,
+  }
+}
+
+const surveyGetAllDummy = () => {
+  return {
+    type: actionType.SURVEY_GET_ALL_DUMMY
+  }
+}

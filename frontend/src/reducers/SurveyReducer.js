@@ -6,20 +6,34 @@ const initialState = {
 
 const SurveyReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionType.CREATE_SURVEY: {
-      console.log('SurveyReducer CREATE_SURVEY');
+    case actionType.SURVEY_CREATE: {
+      console.log('SurveyReducer SURVEY_CREATE');
       console.log('action=', action);
       
       const newSurvey = { 
         ...action.data,
-        authorId: localStorage.getItem('user_email'),
-        questions: [],
-        isPublished: false,
-        isDeleted: false,
       }
       return {
         ...state,
         surveys: [...state.surveys, newSurvey],
+      }
+    }
+    case actionType.SURVEY_GET_ALL: {
+      console.log('SurveyReducer SURVEY_GET_ALL');
+      console.log('action = ', action);
+
+      return {
+        ...state,
+        surveys: [...action.data],
+      }
+    }
+
+    case actionType.SURVEY_GET_ALL_DUMMY: {
+      console.log('SurveyReducer SURVEY_GET_ALL_DUMMY');
+      console.log('action = ', action);
+
+      return {
+        ...state,
       }
     }
     default: 
