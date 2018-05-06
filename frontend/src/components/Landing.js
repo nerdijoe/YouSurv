@@ -35,7 +35,7 @@ class Landing extends Component {
   render() {
     return (
       <MyContainer>
-        <Navbar />
+        {/* <Navbar /> */}
 
         <Wrapper>
           <h1>This is landing page!</h1>

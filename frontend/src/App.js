@@ -19,6 +19,7 @@ import styled from 'styled-components';
 // import './App.css';
 import './style/youtube.css';
 
+import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
@@ -31,7 +32,7 @@ const MyContainer = styled.div`
   height: 100%;
   margin: 0px;
   padding: 0px;
-  ${'' /* background: #0099FF; */}
+  background: #FAFAFA;
   
 `;
 
@@ -53,15 +54,17 @@ class App extends Component {
 
       <Provider store={store}>
         <Router>
-          
+          <div>
+          <Navbar />
+         
           <MyContainer>
-          
+            
             <Route exact path='/' component={Landing} />
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
             <Route path='/home' component={Home} />
           </MyContainer>
-
+          </div>
         </Router>
       </Provider>
 

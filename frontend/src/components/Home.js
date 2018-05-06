@@ -40,7 +40,7 @@ class Home extends Component {
   render() {
     return (
       <MyContainer>
-        <Navbar />
+        {/* <Navbar /> */}
         <Container>
           <h2>Home</h2>
           {/* <Button onClick={this.handleSignOut}>Sign out</Button> */}
