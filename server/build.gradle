@@ -43,6 +43,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    compile group:'org.springframework.boot', name:'spring-boot-devtools'
     compile 'mysql:mysql-connector-java'
     compile("com.h2database:h2")
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.0'
@@ -51,7 +53,9 @@ dependencies {
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.11'
     compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.2.11'
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.11'
-    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', optional: 'true'
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '3.1.1.RELEASE'
+    compile group: 'javax.mail', name: 'mail', version: '1.4'
 
 //    compile("org.springframework.boot:spring-boot-devtools")
 //    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.6'

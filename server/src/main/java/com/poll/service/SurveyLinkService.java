@@ -22,4 +22,10 @@ public class SurveyLinkService {
         return "";
     }
 
+    public String createClosedSurvey(SurveyLinks surveyLinks) {
+        System.out.println("Published");
+        surveyLinkRepository.save(surveyLinks);
+        return "";
+    }
+
 }
