@@ -5,13 +5,18 @@ import com.poll.persistence.model.Survey;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface SurveyMapper {
     SurveyMapper MAPPER = Mappers.getMapper( SurveyMapper.class );
 
-    @Mapping( source = "surveyorId", target = "surveyor.id" )
+    @Mappings({
+            @Mapping(source = "surveyorId", target = "surveyor.id"),
+            @Mapping(source = "created", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "created"),
+            @Mapping(source = "updated", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "updated")
+    })
     Survey toModel(SurveyDTO dto );
 
 

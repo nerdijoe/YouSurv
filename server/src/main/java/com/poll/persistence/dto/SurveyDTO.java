@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -25,4 +26,10 @@ public class SurveyDTO {
 //    private List<QuestionDTO> questions;
 
     private boolean isPublished;
+    private boolean isDeleted;
+
+    private String created;
+    private String updated;
+
+
 }

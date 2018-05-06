@@ -1,22 +1,27 @@
 package com.poll.persistence.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class AbstractTimestampModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created", nullable = false)
-    private Date created;
+    protected Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated", nullable = false)
-    private Date updated;
+    protected Date updated;
 
     @PrePersist
     protected void onCreate() {
@@ -33,7 +38,4 @@ public abstract class AbstractTimestampModel {
     private boolean isDeleted;
 
 
-    public Long getId(){
-        return id;
-    }
 }
