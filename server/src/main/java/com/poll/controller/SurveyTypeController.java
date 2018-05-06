@@ -23,17 +23,14 @@ public class SurveyTypeController {
 
     @PostMapping("/publish")
     public String publishSurvey(@RequestBody SurveyLinkDTO body) {
-        System.out.println("Inside publish Survey");
-        //System.out.println("body = " + body);
         String type = body.getType();
         String link="";
         String url="";
         String domain="localhost:";
         String port="3000/";
-        String route="takeSurvey/?token=";
+        String route="takeSurvey?token=";
         SurveyLinks surveyLinks=new SurveyLinks();
         if(type.equals("general")){
-            System.out.println("Inside general");
             Date startDate =new Date();
             Date endDate=new Date();
             try {
@@ -45,8 +42,6 @@ public class SurveyTypeController {
                 System.out.println(e);
 
             }
-
-
             url=domain+port+route;
             link=url+UUID.randomUUID().toString();
             surveyLinks.setSurveyId(body.getSurveyorId());
@@ -59,6 +54,6 @@ public class SurveyTypeController {
 
         return link;
     }
-    
+
 
 }
