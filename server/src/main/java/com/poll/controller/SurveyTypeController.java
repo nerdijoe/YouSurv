@@ -4,12 +4,11 @@ import com.poll.persistence.dto.SurveyLinkDTO;
 import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.SurveyLinks;
 import com.poll.service.SurveyLinkService;
+import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,5 +81,14 @@ public class SurveyTypeController {
         return link;
     }
 
-
+    @GetMapping(value="/takeSurvey",produces = "application/json")
+    public org.springframework.http.ResponseEntity<?> validateLink(@RequestParam String token){
+        boolean isValid=true;
+        isValid=surveyLinkService.validate(token);
+        if(isValid) {
+            return new org.springframework.http.ResponseEntity<Authenticator.Success>(HttpStatus.OK);
+        }else{
+            return new org.springframework.http.ResponseEntity<Authenticator.Failure>(HttpStatus.IM_USED);
+        }
+    }
 }

@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyPoll.iml" filepath="$PROJECT_DIR$/MyPoll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyPoll_main.iml" filepath="$PROJECT_DIR$/.idea/modules/MyPoll_main.iml" group="MyPoll" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyPoll_test.iml" filepath="$PROJECT_DIR$/.idea/modules/MyPoll_test.iml" group="MyPoll" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyPoll~1.iml" filepath="$PROJECT_DIR$/.idea/modules/MyPoll~1.iml" />
     </modules>
   </component>
 </project>
