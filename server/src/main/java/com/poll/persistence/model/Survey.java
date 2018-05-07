@@ -47,13 +47,14 @@ public class Survey extends AbstractTimestampModel {
     private Date expire;
 
     public Survey(){
+        super();
         this.invitedEmailList = new ArrayList<>();
         this.questions = new ArrayList<>();
         this.published = false;
     }
 
     public Survey(AppUser surveyor, SurveyType type) {
-        super();
+        this();
         this.surveyor = surveyor;
         this.type = type;
     }

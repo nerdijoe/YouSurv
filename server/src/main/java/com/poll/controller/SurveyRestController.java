@@ -64,9 +64,9 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<SurveyDTO> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder, Authentication auth) {
+    public @ResponseBody ResponseEntity<SurveyDTO> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
         String surveyorEmail = auth.getName();
-        System.out.println("surveyor Email = " + surveyorEmail);
+        System.out.println("==> POST /survey/, surveyor Email = " + surveyorEmail);
 
         if (!userService.existsByEmail(surveyorEmail)){
             System.out.println("surveyor with email: " + surveyorEmail + "does not exists");
@@ -82,9 +82,27 @@ public class SurveyRestController {
 
         return new ResponseEntity<>(survey, HttpStatus.CREATED);
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(ucBuilder.path("/survey/{id}").buildAndExpand(survey.getId()).toUri());
-//        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<SurveyDTO> saveSurvey(@PathVariable("id") long id, Authentication auth) {
+        System.out.println("Fetching survey with id " + id);
+        String surveyorEmail = auth.getName();
+
+        if (!surveyService.authorized(surveyorEmail, id)) {
+            System.out.println("User with email: " + surveyorEmail + "does not have access to the survey with id: " + id);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        SurveyDTO surveyDTO = surveyService.findById(id);
+
+        if (surveyDTO == null){
+            System.out.println("Survey with id: " + id + " does not exist");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(surveyDTO, HttpStatus.OK);
+
     }
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})

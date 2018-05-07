@@ -25,16 +25,17 @@ public class SurveyService {
     private SurveyRepository surveyRepository;
 
 
+    private void saveSurvey(Survey survey) {
+        surveyRepository.save(survey);
+    }
+
     public Survey createSurvey(AppUser surveyor, SurveyType type) {
         if (surveyor == null || type == null){
             return null;
         }
         Survey survey = new Survey(surveyor, type);
+        saveSurvey(survey);
         return survey;
-    }
-
-    private void saveSurvey(Survey survey) {
-        surveyRepository.save(survey);
     }
 
     public SurveyDTO createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
@@ -56,5 +57,10 @@ public class SurveyService {
     public SurveyDTO findById(long id) {
         Survey survey = surveyRepository.findById(id);
         return SurveyMapper.MAPPER.toSurveyDTO(survey);
+    }
+
+    public boolean authorized(String surveyorEmail, long id) {
+        Survey survey = surveyRepository.findById(id);
+        return survey.getSurveyor().getEmail().equals(surveyorEmail);
     }
 }

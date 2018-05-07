@@ -6,8 +6,7 @@ import com.poll.persistence.model.Survey;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-//@Mapper
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper
 public interface SurveyMapper {
     SurveyMapper MAPPER = Mappers.getMapper( SurveyMapper.class );
 
