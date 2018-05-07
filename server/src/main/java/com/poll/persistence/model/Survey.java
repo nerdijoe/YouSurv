@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Survey extends AbstractTimestampModel {
@@ -47,12 +46,15 @@ public class Survey extends AbstractTimestampModel {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expire;
 
+    public Survey(){
+        this.invitedEmailList = new ArrayList<>();
+        this.questions = new ArrayList<>();
+        this.published = false;
+    }
+
     public Survey(AppUser surveyor, SurveyType type) {
         super();
         this.surveyor = surveyor;
-        this.invitedEmailList = new ArrayList<>();
         this.type = type;
-        this.questions = new ArrayList<>();
-        this.published = false;
     }
 }

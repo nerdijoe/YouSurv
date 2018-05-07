@@ -15,11 +15,8 @@ public interface AnswerMapper {
     AnswerMapper MAPPER = Mappers.getMapper( AnswerMapper.class );
 
     QuestionAnswer toModel(QuestionAnswerDTO dto);
-//    QuestionOption toModel(QuestionOptionDTO dto, @Context List<QuestionOption> dtos);
-
 
     @InheritInverseConfiguration
     QuestionAnswerDTO fromModel(QuestionAnswer model);
-//    QuestionOptionDTO fromModel(QuestionOption model, @Context List<QuestionOption> models);
 
 }

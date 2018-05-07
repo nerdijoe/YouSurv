@@ -1,5 +1,6 @@
 package com.poll.persistence.mapper;
 
+import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
 import com.poll.persistence.model.Survey;
 import org.mapstruct.*;
@@ -16,10 +17,9 @@ public interface SurveyMapper {
             @Mapping(source = "updated", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "updated"),
             @Mapping(source = "expire", dateFormat = "yyyy.MM.dd HH:mm:ss", target = "expire"),
     })
-    Survey toModel(SurveyDTO dto );
-
+    Survey toSurvey(SurveyDTO dto );
 
     @InheritInverseConfiguration
-    SurveyDTO fromModel(Survey model );
+    SurveyDTO toSurveyDTO(Survey model );
 
 }

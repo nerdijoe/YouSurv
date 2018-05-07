@@ -64,27 +64,27 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Void> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder, Authentication auth) {
+    public @ResponseBody ResponseEntity<SurveyDTO> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder, Authentication auth) {
         String surveyorEmail = auth.getName();
         System.out.println("surveyor Email = " + surveyorEmail);
 
         if (!userService.existsByEmail(surveyorEmail)){
             System.out.println("surveyor with email: " + surveyorEmail + "does not exists");
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Survey survey = surveyService.createSurvey(surveyorEmail, surveyDTO);
+        SurveyDTO survey = surveyService.createSurvey(surveyorEmail, surveyDTO);
 
         if (survey == null){
             System.out.println("fail to create survey");
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        surveyService.saveSurvey(survey);
+        return new ResponseEntity<>(survey, HttpStatus.CREATED);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/survey/{id}").buildAndExpand(survey.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(ucBuilder.path("/survey/{id}").buildAndExpand(survey.getId()).toUri());
+//        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
