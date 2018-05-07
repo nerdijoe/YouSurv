@@ -23,6 +23,7 @@ import Landing from './components/Landing';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import Home from './components/Home';
+import SurveyType from './components/SurveyType';
 
 import store from './store/manageStore'
 
@@ -59,6 +60,7 @@ class App extends Component {
             <Route exact path='/' component={Landing} />
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
+            <Route path='/surveyType' component={SurveyType} />
             <Route path='/home' component={Home} />
           </MyContainer>
 

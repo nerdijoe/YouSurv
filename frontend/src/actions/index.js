@@ -29,7 +29,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
 
   console.log(" before axiosSignUp", data);
   
-  axios.post('http://localhost:8080/signup', {
+  axios.post('http://localhost:8300/signup', {
     username: data.email,
     password: data.password,
     // firstname: data.firstname,
@@ -92,7 +92,7 @@ export const userSignUp = (data) => {
 export const axiosSignIn = (data, router) => (dispatch) => {
   console.log('axiosSignIn');
 
-  axios.post('http://localhost:8080/login', {
+  axios.post('http://localhost:8300/login', {
     username: data.email,
     password: data.password,
   }).then( res => {
