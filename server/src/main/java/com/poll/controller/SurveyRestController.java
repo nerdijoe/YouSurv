@@ -2,6 +2,7 @@ package com.poll.controller;
 
 
 import com.poll.persistence.dto.SurveyDTO;
+import com.poll.persistence.dto.SurveySaveDTO;
 import com.poll.persistence.model.AppUser;
 import com.poll.persistence.model.Survey;
 import com.poll.persistence.dto.SurveyCreateDTO;
@@ -85,23 +86,17 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<SurveyDTO> saveSurvey(@PathVariable("id") long id, Authentication auth) {
-        System.out.println("Fetching survey with id " + id);
-        String surveyorEmail = auth.getName();
+    public ResponseEntity<Survey> saveSurvey(@PathVariable("id") long id, @RequestBody SurveySaveDTO surveyDTO) {
+        System.out.println("Saving survey with id " + id);
 
-        if (!surveyService.authorized(surveyorEmail, id)) {
-            System.out.println("User with email: " + surveyorEmail + "does not have access to the survey with id: " + id);
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Survey survey = surveyService.save(id, surveyDTO);
+
+        if (survey == null){
+            System.out.println("Survey with id: " + id + " can't be saved");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        SurveyDTO surveyDTO = surveyService.findById(id);
-
-        if (surveyDTO == null){
-            System.out.println("Survey with id: " + id + " does not exist");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(surveyDTO, HttpStatus.OK);
+        return new ResponseEntity<>(survey, HttpStatus.OK);
 
     }
 

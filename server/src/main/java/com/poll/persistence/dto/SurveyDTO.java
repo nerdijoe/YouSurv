@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SurveyDTO {
+    private String id;
     private String authorEmail;
 
     private List<String> invitedEmailList;
@@ -31,6 +32,4 @@ public class SurveyDTO {
     private boolean deleted;
     private String created;
     private String updated;
-
-
 }

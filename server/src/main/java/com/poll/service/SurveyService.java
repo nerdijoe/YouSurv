@@ -1,5 +1,8 @@
 package com.poll.service;
 
+import com.poll.persistence.dto.QuestionDTO;
+import com.poll.persistence.dto.SurveySaveDTO;
+import com.poll.persistence.mapper.QuestionMapper;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
@@ -62,5 +65,16 @@ public class SurveyService {
     public boolean authorized(String surveyorEmail, long id) {
         Survey survey = surveyRepository.findById(id);
         return survey.getSurveyor().getEmail().equals(surveyorEmail);
+    }
+
+    public Survey save(long surveyId, SurveySaveDTO surveyDTO) {
+
+        Survey survey = surveyRepository.findById(surveyId);
+        survey.setTitle(surveyDTO.getTitle());
+        survey.setInvitedEmailList(surveyDTO.getInvitedEmailList());
+        survey.setQuestions(QuestionMapper.MAPPER.toQuestionList(surveyDTO.getQuestions()));
+        survey.setExpire(TimeUtil.getDateFromString(surveyDTO.getExpire(), "yyyy.MM.dd HH:mm:ss"));
+        surveyRepository.save(survey);
+        return survey;
     }
 }

@@ -33,6 +33,7 @@ public class Survey extends AbstractTimestampModel {
 
     private String title;
 
+
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "survey",
@@ -57,5 +58,12 @@ public class Survey extends AbstractTimestampModel {
         this();
         this.surveyor = surveyor;
         this.type = type;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions.clear();
+        if (questions != null){
+            this.questions.addAll(questions);
+        }
     }
 }

@@ -16,9 +16,12 @@ import java.util.List;
 public interface QuestionMapper {
     QuestionMapper MAPPER = Mappers.getMapper( QuestionMapper.class );
 
+    @Named("toModel")
     Question toModel(QuestionDTO dto);
 
     @InheritInverseConfiguration
     QuestionDTO fromModel(Question model);
 
+    @IterableMapping(qualifiedByName = "toModel")
+    List<Question> toQuestionList(List<QuestionDTO> questions);
 }
