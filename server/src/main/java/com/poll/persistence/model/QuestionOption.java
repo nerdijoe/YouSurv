@@ -1,5 +1,6 @@
 package com.poll.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ public class QuestionOption extends AbstractTimestampModel {
 
     private String image;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;

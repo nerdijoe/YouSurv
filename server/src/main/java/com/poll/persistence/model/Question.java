@@ -38,7 +38,7 @@ public class Question extends AbstractTimestampModel {
             orphanRemoval = true,
             mappedBy = "question"
     )
-    private QuestionAnswer questionAnswer;
+    private QuestionAnswer answer;
 
     private boolean isRequired;
 

@@ -1,13 +1,12 @@
 package com.poll.persistence.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Getter
-@NoArgsConstructor @AllArgsConstructor
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SurveyCreateDTO {
 
     private String surveyorId;

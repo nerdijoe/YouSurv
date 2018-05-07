@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,8 @@ public class Survey extends AbstractTimestampModel {
     @Enumerated(EnumType.STRING)
     private SurveyType type;
 
+    private String title;
+
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "survey",
@@ -39,7 +42,10 @@ public class Survey extends AbstractTimestampModel {
     )
     private List<Question> questions;
 
-    private boolean isPublished;
+    private boolean published;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expire;
 
     public Survey(AppUser surveyor, SurveyType type) {
         super();
@@ -47,6 +53,6 @@ public class Survey extends AbstractTimestampModel {
         this.invitedEmailList = new ArrayList<>();
         this.type = type;
         this.questions = new ArrayList<>();
-        this.isPublished = false;
+        this.published = false;
     }
 }

@@ -7,17 +7,11 @@ import lombok.Setter;
 
 import java.util.List;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionDTO {
-
-    private String type;
-    private String text;
-    private String image;
-    private List<QuestionOptionDTO> options;
-    private QuestionAnswerDTO answer;
-    private boolean required;
+public class QuestionAnswerDTO {
+    private List<String> text;
 }
+
