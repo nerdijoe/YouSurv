@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -63,21 +64,16 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Void> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder) {
-        System.out.println("Creating survey, surveyorId = " + surveyDTO.getSurveyorId());
+    public @ResponseBody ResponseEntity<Void> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, UriComponentsBuilder ucBuilder, Authentication auth) {
+        String surveyorEmail = auth.getName();
+        System.out.println("surveyor Email = " + surveyorEmail);
 
-
-        if (surveyDTO.getSurveyorId() == null){
-            System.out.println("surveyorId is not included in POST body");
+        if (!userService.existsByEmail(surveyorEmail)){
+            System.out.println("surveyor with email: " + surveyorEmail + "does not exists");
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
 
-        if (!userService.isUserExist(Long.parseLong(surveyDTO.getSurveyorId()))){
-            System.out.println("surveyor with id: " + surveyDTO.getSurveyorId() + "does not exists");
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
-
-        Survey survey = surveyService.createSurvey(surveyDTO);
+        Survey survey = surveyService.createSurvey(surveyorEmail, surveyDTO);
 
         if (survey == null){
             System.out.println("fail to create survey");

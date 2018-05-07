@@ -123,4 +123,7 @@ public class UserService {
         }
     }
 
+    public boolean existsByEmail(String surveyorEmail) {
+        return appUserRepository.existsByEmail(surveyorEmail);
+    }
 }

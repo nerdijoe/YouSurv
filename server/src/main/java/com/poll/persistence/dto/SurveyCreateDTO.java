@@ -8,8 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SurveyCreateDTO {
-
-    private String surveyorId;
     private String type;
-
 }

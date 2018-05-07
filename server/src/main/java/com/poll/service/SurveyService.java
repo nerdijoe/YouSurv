@@ -35,8 +35,9 @@ public class SurveyService {
         surveyRepository.save(survey);
     }
 
-    public Survey createSurvey(SurveyCreateDTO surveyDTO) {
-        AppUser user = appUserRepository.findById(Long.parseLong(surveyDTO.getSurveyorId()));
+    public Survey createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
+//        AppUser user = appUserRepository.findById(Long.parseLong(surveyDTO.getSurveyorId()));
+        AppUser user = appUserRepository.findByEmail(surveyorEmail);
         return createSurvey(user, SurveyType.getType(surveyDTO.getType()));
     }
 
