@@ -56,7 +56,9 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
     compile group: 'org.springframework', name: 'spring-context-support', version: '3.1.1.RELEASE'
     compile group: 'javax.mail', name: 'mail', version: '1.4'
-
+    compile group: 'com.google.zxing' ,name: 'core',version:'3.2.1'
+    compile group: 'com.google.zxing', name:'javase', version:'2.0'
+    compile group: 'commons-io', name:'commons-io', version:'2.5'
 //    compile("org.springframework.boot:spring-boot-devtools")
 //    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.6'
 
