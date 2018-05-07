@@ -156,16 +156,49 @@ export const axiosSurveyCreate = data => dispatch => {
   //   console.log(err);
   // })
 
+/*
+question object
+{
+			"id": "",
+			"type": "",
+			"text": "",
+			"image": "",
+			"options": [
+				{
+					"id":"",
+					"text":"",
+					"image":"",
+					"created": "2018-05-02 15:00:59",
+					"updated": "2018-05-02 15:00:59",
+					"isDeleted": false
+				}
+			]
+			"answer":{
+				"id":"",
+				"text":"",
+				"created": "2018-05-02 15:00:59",
+				"updated": "2018-05-02 15:00:59",
+				"isDeleted": false
+			}
+			"isRequired": true
+			"created": "2018-05-02 15:00:59",
+			"updated": "2018-05-02 15:00:59",
+			"isDeleted": false
+		}
+*/
+
+
   
   const res = {
     data: {
       id: '1',
       authorEmail: localStorage.getItem('user_email'),
       invitedEmailList: [],
+      title: data.title,
       type: data.type,
       questions: [],
-      isPublished: false,
-      isDeleted: false,
+      published: false,
+      deleted: false,
       created: '2018-05-05 15:14:00',
       updated: '2018-05-05 15:14:00',
     }
@@ -226,5 +259,44 @@ export const surveyShowDetailReduce = (data) => {
   return {
     type: actionType.SURVEY_GET_ONE,
     data,
+  }
+}
+
+export const questionAdd = data => dispatch => {
+  console.log('questionAdd data=', data);
+  dispatch(questionAddReduce(data))
+}
+
+export const questionAddReduce = (data) => {
+  return {
+    type: actionType.QUESTION_ADD,
+    data,
+  }
+}
+
+export const questionUpdateText = (data) => dispatch => {
+  console.log('questionUpdateText data=', data);
+
+  dispatch(questionUpdateTextReduce(data));
+  
+}
+
+export const questionUpdateTextReduce = (data) => {
+  return {
+    type: actionType.QUESTION_UPDATE_TEXT,
+    data,
+  }
+}
+
+export const surveySave = () => dispatch => {
+  console.log('surveySave' );
+  
+  dispatch(surveySaveReduce());
+}
+
+export const surveySaveReduce = () => {
+  return {
+    type: actionType.SURVEY_SAVE,
+
   }
 }

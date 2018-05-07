@@ -31,7 +31,8 @@ class SurveyForm extends Component {
     super(props);
     this.state = {
       type: 'general',
-      email: '',
+      title: '',
+      expire: '',
     }
   }
   
@@ -67,12 +68,18 @@ class SurveyForm extends Component {
 
         <Form onSubmit={ (e) => { this.handleSubmit(e) }} >
           <Form.Field>
-            <Dropdown placeholder='Select Survey Type' name='type' value={this.state.type} fluid search selection options={surveyTypes} onChange={ this.handleChangeDropdown} />
+            <label>Title</label>
+            <input placeholder='Name' name='title' value={this.state.title} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           {/* <Form.Field>
-            <label>Email</label>
-            <input placeholder='john.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
+            <label>Expire</label>
+            <input placeholder='Name' name='title' value={this.state.title} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field> */}
+
+          <Form.Field>
+            <Dropdown placeholder='Select Survey Type' name='type' value={this.state.type} fluid search selection options={surveyTypes} onChange={ this.handleChangeDropdown} />
+          </Form.Field>
+
 
           <Button color='youtube' type='submit'>Create</Button>
         </Form>

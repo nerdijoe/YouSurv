@@ -51,7 +51,7 @@ class SurveyList extends Component {
               </a>
               
               <Card.Content>
-                <Card.Header>{survey.id}</Card.Header>
+                <Card.Header>{survey.id} {survey.title}</Card.Header>
                 <Card.Meta>{Moment(survey.created).format('L LT')}</Card.Meta>
                 <Card.Description>{survey.type}</Card.Description>
               </Card.Content>
