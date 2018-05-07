@@ -23,7 +23,7 @@ import {
   Card,
   Image,
   Icon,
-
+  List,
 } from 'semantic-ui-react';
 
 import Moment from 'moment';
@@ -53,7 +53,25 @@ class SurveyList extends Component {
               <Card.Content>
                 <Card.Header>{survey.id} {survey.title}</Card.Header>
                 <Card.Meta>{Moment(survey.created).format('L LT')}</Card.Meta>
-                <Card.Description>{survey.type}</Card.Description>
+                <Card.Description>
+                  <List>
+                    <List.Item>
+                      <List.Icon name='users' />
+                      <List.Content>{survey.type}</List.Content>
+                    </List.Item>
+                    <List.Item>
+                      <List.Icon name='marker' />
+                      <List.Content>{survey.questions.length} questions</List.Content>
+                    </List.Item>
+                    <List.Item>
+                      <List.Icon name='mail' />
+                      <List.Content>
+                        {survey.authorEmail}
+                      </List.Content>
+                    </List.Item>
+
+                  </List>
+                </Card.Description>
               </Card.Content>
               <Card.Content extra>
                 <a>

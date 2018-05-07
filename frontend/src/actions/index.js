@@ -288,15 +288,15 @@ export const questionUpdateTextReduce = (data) => {
   }
 }
 
-export const surveySave = () => dispatch => {
+export const surveySaveQuestion = () => dispatch => {
   console.log('surveySave' );
   
-  dispatch(surveySaveReduce());
+  dispatch(surveySaveQuestionReduce());
 }
 
-export const surveySaveReduce = () => {
+export const surveySaveQuestionReduce = () => {
   return {
-    type: actionType.SURVEY_SAVE,
+    type: actionType.SURVEY_SAVE_QUESTION,
 
   }
 }

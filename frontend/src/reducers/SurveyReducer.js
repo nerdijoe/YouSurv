@@ -82,7 +82,7 @@ const SurveyReducer = (state = initialState, action) => {
       }
       
     }
-    case actionType.SURVEY_SAVE: {
+    case actionType.SURVEY_SAVE_QUESTION: {
       console.log('SurveyReducer SURVEY_SAVE');
       // save current survey to survey arrays
       const updatedSurveys = [...state.surveys];

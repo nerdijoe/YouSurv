@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import {
   questionAdd,
   questionUpdateText,
-  surveySave,
+  surveySaveQuestion,
 } from '../../actions';
 
 import {
@@ -189,7 +189,7 @@ class SurveyDetail extends Component {
 
     this.props.questionUpdateText(this.state.text);
     //save current survey
-    this.props.surveySave();
+    this.props.surveySaveQuestion();
   }
 
   addQuestion(type) {
@@ -222,10 +222,11 @@ class SurveyDetail extends Component {
   handleAddShortAnswer() {
     console.log("handleAddShortAnswer");
     console.log('this=', this)
+    var id = uuid();
     var newQuestion = {
-      "id": uuid(),
+      "id": id,
       "type": 'string',
-      "name": uuid(),
+      "name": id,
       "text": "",
       "image": "",
       "options": [
@@ -247,10 +248,10 @@ class SurveyDetail extends Component {
   }
 
 
-  updateState(e, question) {
+  updateState(e) {
     var target = e.target
     console.log(`id=[${target.id}] value=[${target.value}] `)
-    console.log('question=', question);
+    // console.log('question=', question);
     // this.setState({
     // // questions: [..._this.state.questions, target.value]
     //   [target.id]: [target.value]
@@ -286,6 +287,7 @@ class SurveyDetail extends Component {
     return (
       <Container>
         <h2>Detail</h2>
+        
         
         
         <Divider />
@@ -324,7 +326,7 @@ class SurveyDetail extends Component {
               return ( 
                 <Form.Field key={question.id} >
                   <label>Enter your question</label>
-                  <input id={question.id} name={question.name} value={this.state.text[question.id]} onChange={e => this.updateState(e, question)} /> 
+                  <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} /> 
                 </Form.Field>
                 )
             } else 
@@ -362,7 +364,7 @@ const mapDispatchToProps = dispatch => {
   return {
     questionAdd: (data) => { dispatch(questionAdd(data)); },
     questionUpdateText: (data) => { dispatch(questionUpdateText(data)); },
-    surveySave: () => { dispatch(surveySave()); },
+    surveySaveQuestion: () => { dispatch(surveySaveQuestion()); },
   }
 }
 
