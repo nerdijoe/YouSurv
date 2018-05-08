@@ -40,7 +40,8 @@ import {
 import FormJson from "react-jsonschema-form";
 // import FormJson from "react-jsonschema-form-semanticui";
 // import FormJson from "react-jsonschema-form-semanticui";
-import Moment from 'moment';
+import moment from 'moment';
+import DatePicker from 'react-datepicker';
 
 import uuid from 'uuid';
 import cuid from 'cuid';
@@ -55,37 +56,6 @@ const mcqOptions = [
   { key: questionType.MCQ_IMAGE_RADIO, value: questionType.MCQ_IMAGE_RADIO, text: 'Image Radio', flag: 'so'  },
   { key: questionType.MCQ_IMAGE_CHECKBOX, value: questionType.MCQ_IMAGE_CHECKBOX, text: 'Image Checkbox', flag: 'so'  },
 ];
-
-
-const schema = {
-  title: "Survey",
-  type: "object",
-  // required: ["title"],
-  properties: {
-    title: {type: "string", title: "Title", default: "A new task"},
-    done: {type: "boolean", title: "Done?", default: false},
-    "multipleChoicesList": {
-      "type": "array",
-      "title": "this is a question sentence?",
-      "items": {
-        "type": "string",
-        "enum": [
-          "foo",
-          "bar",
-          "fuzz",
-          "qux"
-        ]
-      },
-      "uniqueItems": true
-    }
-  }
-};
-
-const uiSchema = {
-  "multipleChoicesList": {
-    "ui:widget": "checkboxes"
-  },
-}
 
 const questions = [{
 			"id": "123",
@@ -194,6 +164,8 @@ class SurveyDetail extends Component {
       rating: '',
       title: this.props.survey.title,
       invitedEmailList: '',
+      startDate: this.props.survey.startDate,
+      endDate: this.props.survey.endDate,
     }
 
     
@@ -468,6 +440,9 @@ class SurveyDetail extends Component {
     var currentSurvey = this.props.survey;
     currentSurvey.title = this.state.title;
     currentSurvey.invitedEmailList = invitedEmailList;
+    currentSurvey.startDate = this.state.startDate;
+    currentSurvey.endDate = this.state.endDate;
+
     this.props.axiosSurveyUpdate(currentSurvey);
     
   }
@@ -486,6 +461,21 @@ class SurveyDetail extends Component {
     this.setState({
       text: text,
       invitedEmailList: invitedEmailList,
+    })
+  }
+
+  handleChangeStartDate(date) {
+    console.log('handleChangeStartDate date=', date);
+    this.setState({
+      startDate: date,
+    })
+
+  }
+
+  handleChangeEndDate(date) {
+    console.log('handleChangeEndDate date=', date);
+    this.setState({
+      endDate: date,
     })
   }
 
@@ -600,6 +590,46 @@ class SurveyDetail extends Component {
             <label>Invite emails (separate emails by comma)</label>
             <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
           </Form.Field>
+
+          <Form.Group>
+            <Form.Field>
+              <label>Start Date</label>
+              <DatePicker
+                selected={this.state.startDate}
+                onChange={date => this.handleChangeStartDate(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="LLL"
+                timeCaption="time"
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>End Date</label>
+              <DatePicker
+                selected={this.state.endDate}
+                onChange={date => this.handleChangeEndDate(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="LLL"
+                timeCaption="time"
+              />
+            </Form.Field>
+          </Form.Group> 
+          {/* <Form.Field><label>End Date</label></Form.Field>
+          <Form.Field>
+            <DatePicker
+              selected={this.state.endDate}
+              onChange={this.handleChangeEndDate}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="LLL"
+              timeCaption="time"
+            />
+          </Form.Field> */}
+
 
           <Button color="youtube" type="submit">Update Survey</Button>
         </Form>
