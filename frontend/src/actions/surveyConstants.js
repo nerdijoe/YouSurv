@@ -18,6 +18,10 @@
 // export const MCQ_IMG_CHECKBOX_SINGLE = 'MCQ_IMG_CHECKBOX_SINGLE';
 // export const MCQ_IMG_CHECKBOX_MULTIPLE = 'MCQ_IMG_CHECKBOX_MULTIPLE';
 
+export const SV_GENERAL = 'SV_GENERAL';
+export const SV_CLOSE = 'SV_CLOSE';
+export const SV_OPEN = 'SV_OPEN';
+
 export const Q_STRING = 'Q_STRING'
 export const MCQ_TEXT_RADIO = 'MCQ_TEXT_RADIO';
 export const MCQ_TEXT_CHECKBOX = 'MCQ_TEXT_CHECKBOX';

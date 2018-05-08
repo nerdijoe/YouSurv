@@ -20,17 +20,19 @@ import {
 } from 'semantic-ui-react';
 import styled from 'styled-components';
 
+import * as surveyType from '../../actions/surveyConstants';
+
 const surveyTypes = [
-  { key: 'gs', value: 'general', text: 'General' },
-  { key: 'cs', value: 'close', text: 'Close' },
-  { key: 'os', value: 'open', text: 'Open' },
+  { key: surveyType.SV_GENERAL, value: surveyType.SV_GENERAL , text: 'General' },
+  { key: surveyType.SV_CLOSE, value: surveyType.SV_CLOSE, text: 'Close' },
+  { key: surveyType.SV_OPEN, value: surveyType.SV_OPEN, text: 'Open' },
 ];
 
 class SurveyForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: 'general',
+      type: surveyType.SV_GENERAL,
       title: '',
       expire: '',
     }
@@ -69,7 +71,7 @@ class SurveyForm extends Component {
         <Form onSubmit={ (e) => { this.handleSubmit(e) }} >
           <Form.Field>
             <label>Title</label>
-            <input placeholder='Name' name='title' value={this.state.title} onChange={ (e) => { this.handleChange(e); }} />
+            <input placeholder='Survey Title' name='title' value={this.state.title} onChange={ (e) => { this.handleChange(e); }} />
           </Form.Field>
           {/* <Form.Field>
             <label>Expire</label>
@@ -77,7 +79,8 @@ class SurveyForm extends Component {
           </Form.Field> */}
 
           <Form.Field>
-            <Dropdown placeholder='Select Survey Type' name='type' value={this.state.type} fluid search selection options={surveyTypes} onChange={ this.handleChangeDropdown} />
+            <label>Type</label>
+            <Dropdown placeholder="Select Survey Type" name='type' value={this.state.type} fluid search selection options={surveyTypes} onChange={ this.handleChangeDropdown} />
           </Form.Field>
 
 
