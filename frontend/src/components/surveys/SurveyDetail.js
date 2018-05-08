@@ -26,7 +26,10 @@ import {
   Input,
   Menu,
   Segment,
-  Divider
+  Divider,
+  Checkbox,
+  Radio,
+  Dropdown,
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -35,6 +38,20 @@ import FormJson from "react-jsonschema-form";
 import Moment from 'moment';
 
 import uuid from 'uuid';
+import cuid from 'cuid';
+import { CLIENT_RENEG_LIMIT } from 'tls';
+
+import * as mcqType from '../../actions/surveyConstants';
+
+const mcqOptions = [
+  { key: mcqType.MCQ_TEXT_RADIO, value: mcqType.MCQ_TEXT_RADIO, text: 'Text Radio' },
+  { key: mcqType.MCQ_TEXT_CHECKBOX, value:mcqType.MCQ_TEXT_CHECKBOX , text: 'Text Checkbox' },
+  { key: mcqType.MCQ_TEXT_DROPDOWN, value: mcqType.MCQ_TEXT_DROPDOWN, text: 'Text Dropdown' },
+
+  { key: mcqType.MCQ_IMAGE_CHECKBOX, value: mcqType.MCQ_IMAGE_CHECKBOX, text: 'Image Checkbox' },
+  { key: mcqType.MCQ_IMAGE_RADIO, value: mcqType.MCQ_IMAGE_RADIO, text: 'Image Radio' },
+];
+
 
 const schema = {
   title: "Survey",
@@ -153,6 +170,7 @@ const addQuestion = (type) => {
   }
 }
 
+// ----------------------------------------------------------------------------
 
 class SurveyDetail extends Component {
   constructor(props) {
@@ -161,6 +179,14 @@ class SurveyDetail extends Component {
       activeItem: 'Short Answer',
       questions: [],
       text: {},
+      questionText: '',
+      options: {
+        option_0: '',
+        option_1: '',
+        option_2: '',
+      },
+      mcqType: mcqType.MCQ_TEXT_RADIO,
+      dropdownOptions: '',
     }
 
     
@@ -222,12 +248,12 @@ class SurveyDetail extends Component {
   handleAddShortAnswer() {
     console.log("handleAddShortAnswer");
     console.log('this=', this)
-    var id = uuid();
+    var id = cuid();
     var newQuestion = {
       "id": id,
       "type": 'string',
       "name": id,
-      "text": "",
+      "text": this.state.questionText,
       "image": "",
       "options": [
         {
@@ -247,6 +273,97 @@ class SurveyDetail extends Component {
 
   }
 
+  handleAddMCQ(type) {
+    console.log('handleAddMCQ type=', type);
+    console.log('this.state.shortAnswer=', this.state.shortAnswer);
+
+
+    var id = cuid();
+    var newQuestion = {
+      "id": id,
+      "type": this.state.mcqType,
+      "name": id,
+      "text": this.state.questionText,
+      "image": "",
+      "options": [
+        {
+          "id":"",
+          "text":"",
+          "image":"",
+        }
+      ],
+      "answer":{
+        "id":"",
+        "text":"",
+      },
+      "required": false,
+    }
+
+    var options = [];
+    Object.keys(this.state.options).map(key => {
+      var o = {
+        id: key,
+        text: this.state.options[key],
+        image: '',
+      }
+
+      options.push(o);
+    })
+    newQuestion['options'] = options;
+
+    console.log('  newQuestion=', newQuestion);
+    this.props.questionAdd(newQuestion);
+
+  }
+
+  handleChangeMcqType(e, data) {
+    var target = e.target;
+    console.log(`handleChangeMcqType data=`, data);
+    // console.log('e = ', e);
+    
+    this.setState({
+      [data.name]: data.value
+    });
+  }
+
+  addOption() {
+    console.log('addOption');
+    var newOption = `option_${Object.keys(this.state.options).length}`
+    console.log(' newOption=', newOption);
+
+    var options = {...this.state.options};
+    options[newOption] = '';
+    console.log('options=', options);
+    this.setState({options});
+  }
+
+  removeOption() {
+    console.log('removeOption');
+    var index = Object.keys(this.state.options).length - 1;
+    var exclude = `option_${index}`;
+    // var options = Object.keys(this.state.options).filter( key =>{return (key !== exclude) });
+
+    var options = {}
+    Object.keys(this.state.options).map( key => {
+      if(key !== exclude)
+        options[key] = this.state.options[key];
+    })
+
+    console.log(`index=${index}, exclude=${exclude}`);
+    console.log('options=', options);
+
+    this.setState({options});
+  }
+
+  updateOptionText(e) {
+    var target = e.target
+    console.log(`id=[${target.name}] value=[${target.value}] `)
+    
+    var options = {...this.state.options};
+    options[target.name] = target.value;
+    console.log('options=', options);
+    this.setState({options});
+  }
 
   updateState(e) {
     var target = e.target
@@ -271,6 +388,16 @@ class SurveyDetail extends Component {
     this.setState({text});
   }
 
+  handleChangeShortAnswer(e) {
+    var target = e.target;
+    console.log(`handleChangeShortAnswer target.name=${target.name}, value=${target.value}`);
+
+    this.setState({
+      [target.name]: target.value,
+    })
+
+  }
+
   
   componentWillMount() {
     var text = {}
@@ -283,6 +410,71 @@ class SurveyDetail extends Component {
 
   render() {
     const { activeItem } = this.state;
+    const options = this.state.options;
+    const _this = this;
+    const segmentContent = activeItem => {
+      if(activeItem === 'Short Answer') {
+        return (
+          <div>
+            <h3>Short Answer</h3>
+            <Form onSubmit={e => this.handleAddShortAnswer()} >
+              <Form.Field>
+                <label>Enter your text</label>
+                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
+              </Form.Field>
+              <Button basic color="green" type="submit">Add</Button>
+            </Form>
+            {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button> */}
+          </div>
+        )
+      } else if ( activeItem === 'MCQ') {
+        return (
+          
+            <div>
+              <h3>Multiple Choice Question</h3>
+              <Form onSubmit={e => this.handleAddMCQ()} >
+              <Form.Field>
+              <Dropdown name='mcqType' placeholder='Select Type' fluid search selection options={mcqOptions} value={this.state.mcqType} onChange={(e, data) => this.handleChangeMcqType(e, data)}/>
+              </Form.Field>
+              <Form.Field>
+                <label>Enter your text</label>
+                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
+              </Form.Field>
+
+              <label>Options</label>
+              <div id="dynamicInput">
+                  {
+                    Object.keys(this.state.options).map( function(key, index){
+                      {/* console.log(`options rendering index=${index} key=${key}`); */}
+                      return (
+                        <Form.Field key={index}>
+                          {index} <input name={key} value={options[key]} onChange={e => _this.updateOptionText(e)} />
+                        </Form.Field>
+                      )
+                    })                  
+                  }
+                  <Button basic color="green" onClick={e => this.addOption()}>+</Button>
+                  <Button basic color="red" onClick={e => this.removeOption()}>+</Button>
+
+              </div>
+
+              <Button basic color="green" type="submit">Add MCQ</Button>
+            </Form>
+
+              {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add MCQ</Button> */}
+            </div>
+          
+        ) 
+      } else if ( activeItem === 'Edit' ) {
+        return (
+          <div>
+            <h3>Edit</h3>
+            <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Edit</Button>
+          </div>
+        ) 
+      }
+
+    }
 
     return (
       <Container>
@@ -295,6 +487,8 @@ class SurveyDetail extends Component {
         <Menu attached='top' tabular>
           <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
           <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
+          <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} />
+
           <Menu.Menu position='right'>
             <Menu.Item>
               <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' />
@@ -306,7 +500,7 @@ class SurveyDetail extends Component {
           {this.props.survey.id}
           {this.props.survey.authorEmail}
           {this.props.survey.type}
-          { (activeItem === 'Short Answer') ? (
+          {/* { (activeItem === 'Short Answer') ? (
             <div>
               <h3>Short Answer</h3>
               <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button>
@@ -314,8 +508,12 @@ class SurveyDetail extends Component {
             
           ): ('')}
           { (activeItem === 'MCQ') ? (
-            <h3>Multiple Choice Question</h3>   
-          ): ('')}
+            <div>
+              <h3>Multiple Choice Question</h3>
+              <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add MCQ</Button>
+            </div>
+          ): ('')} */}
+          {segmentContent(activeItem)}
         </Segment>
 
         <h3>Preview</h3>
@@ -325,11 +523,68 @@ class SurveyDetail extends Component {
             if(question.type === 'string') {
               return ( 
                 <Form.Field key={question.id} >
-                  <label>Enter your question</label>
-                  <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} /> 
+                  {/* <label>Enter your question</label>
+                  <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
+                  <label>{question.text}</label>
+                  <input id={question.id} name={question.id} /> 
                 </Form.Field>
-                )
-            } else 
+              )
+            } else if(question.type === mcqType.MCQ_TEXT_RADIO) {
+              return (
+                <Form.Field key={question.id}>
+                  <label>{question.text}</label>
+                  {question.options.map(option => {
+                    return (
+                      <Radio key={option.id}
+                        label={option.text}
+                        name={question.id}
+                        value={option.text}
+                        // checked={this.state.value === 'this'}
+                        // onChange={this.handleChange}
+                      />
+                    )
+                  })}
+                </Form.Field>
+              )
+            } 
+            else if(question.type === mcqType.MCQ_TEXT_CHECKBOX) {
+              return (
+                <Form.Field key={question.id}>
+                  <label>{question.text}</label>
+                  {question.options.map(option => {
+                    return (
+                      <Checkbox
+                        key={option.id}
+                        label={option.text}
+                        name={question.id}
+                        value={option.text}
+                        // checked={this.state.value === 'this'}
+                        // onChange={this.handleChange}
+                      />
+                    )
+                  })}
+                </Form.Field>
+              )
+            }
+            else if(question.type === mcqType.MCQ_TEXT_DROPDOWN) {
+              // create the dropdown options array
+              var dropdownOptions = [];
+              question.options.map(option => {
+                var newOption = {
+                  key: option.value,
+                  value: option.value,
+                  text: option.text,
+                }
+                dropdownOptions.push(newOption);
+              })
+              return (
+                <Form.Field key={question.id}>
+                  <label>{question.text}</label>
+                  <Dropdown key={question.id} name={question.id} placeholder='Please choose' fluid search selection options={dropdownOptions} value={this.state.dropdownOptions} />
+                </Form.Field>
+              )
+            }
+            else 
               return 'help'
 
           })
@@ -337,6 +592,25 @@ class SurveyDetail extends Component {
         
 
           }
+
+                {/* <Form.Field>
+                  <Checkbox
+                    
+                    label='Choose this'
+                    name='checkboxRadioGroup'
+                    value='this'
+                    // checked={this.state.value === 'this'}
+                    
+                  />
+                  <Checkbox
+                    
+                    label='Choose thats'
+                    name='checkboxRadioGroup'
+                    value='this'
+                    // checked={this.state.value === 'this'}
+                    
+                  />
+                </Form.Field> */}
           <Button color='youtube' type='submit' >Save</Button>
           </Form>
 
