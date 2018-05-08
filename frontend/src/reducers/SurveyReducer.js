@@ -82,6 +82,33 @@ const SurveyReducer = (state = initialState, action) => {
       }
       
     }
+    case actionType.QUESTION_REMOVE: {
+      console.log('SurveyReducer QUESTION_REMOVE action.data=', action.data);
+      const UpdatedSurveyCurrent = {...state.surveyCurrent};
+
+      UpdatedSurveyCurrent.questions = [
+        ...UpdatedSurveyCurrent.questions.filter(q => q.id !== action.data.id)
+      ];
+
+      return {
+        ...state,
+        surveyCurrent: UpdatedSurveyCurrent,
+      }
+    }
+    case actionType.SURVEY_UPDATE: {
+      console.log('SurveyReducer SURVEY_UPDATE action.data=', action.data);
+
+      const updatedSurveys = [...state.surveys];
+      const pos = updatedSurveys.findIndex(i => i.id === state.surveyCurrent.id)
+
+      // replace the whole survey with the updated survey
+      updatedSurveys[pos] = action.data;
+  
+      return {
+        ...state,
+        surveys: updatedSurveys,
+      }
+    }
     case actionType.SURVEY_SAVE_QUESTION: {
       console.log('SurveyReducer SURVEY_SAVE');
       // save current survey to survey arrays
@@ -94,7 +121,6 @@ const SurveyReducer = (state = initialState, action) => {
         ...state,
         surveys: updatedSurveys,
       }
-
     }
     default: 
       return state;

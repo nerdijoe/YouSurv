@@ -64,9 +64,9 @@ class SurveyList extends Component {
                       <List.Content>{survey.questions.length} questions</List.Content>
                     </List.Item>
                     <List.Item>
-                      <List.Icon name='mail' />
+                      <List.Icon name='user' />
                       <List.Content>
-                        {survey.authorEmail}
+                        {survey.surveyorEmail}
                       </List.Content>
                     </List.Item>
 
@@ -75,8 +75,8 @@ class SurveyList extends Component {
               </Card.Content>
               <Card.Content extra>
                 <a>
-                  <Icon name='user' />
-                  10 Friends
+                  <Icon name='mail' />
+                  {survey.invitedEmailList.length} Invites sent
                 </a>
               </Card.Content>
             </Card>

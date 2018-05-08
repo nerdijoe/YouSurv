@@ -141,6 +141,7 @@ export const axiosSurveyCreate = data => dispatch => {
   console.log('<  before axiosSurveyCreate data=', data);
   // axios.post('http://localhost:8080/surveys', {
   //   type: data.type,
+  //   title: data.title,
   // }, {
   //   headers: {
   //     token,
@@ -192,16 +193,18 @@ question object
   const res = {
     data: {
       id: '1',
-      authorEmail: localStorage.getItem('user_email'),
+      surveyorEmail: localStorage.getItem('user_email'),
       invitedEmailList: [],
       title: data.title,
       type: data.type,
       questions: [],
       answers: [],
-      published: '2018-05-05 15:14:00',
+      publish: null,
       deleted: false,
       created: '2018-05-05 15:14:00',
       updated: '2018-05-05 15:14:00',
+      start: null,
+      end: null,
     }
   }
   
@@ -237,6 +240,39 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
   dispatch(surveyGetAllDummy());
 
 }
+
+
+export const axiosSurveyUpdate = (data) => dispatch => {
+  console.log('<  before axiosSurveyUpdate data=', data);
+
+  // axios.put('http://localhost:8080/surveys', {
+  //   survey: data
+  // },{
+  //   headers: {
+  //     token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosSurveyUpdate res.data', res.data);
+  //     dispatch(surveyGetAll(res.data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***  error axiosSurveyUpdate");
+  //   console.log(err);
+  // })
+
+  dispatch(surveyUpdate(data));
+
+}
+
+export const surveyUpdate = (data) => {
+  return {
+    type: actionType.SURVEY_UPDATE,
+    data,
+  }
+}
+
 
 export const surveyGetAll = (data) => {
   return {
@@ -301,3 +337,18 @@ export const surveySaveQuestionReduce = () => {
 
   }
 }
+
+export const questionRemove = (data) => dispatch => {
+  console.log('questionRemove');
+
+  dispatch(questionRemoveReduce(data));
+}
+
+export const questionRemoveReduce = (data) => {
+  return {
+    type: actionType.QUESTION_REMOVE,
+    data,
+  }
+}
+
+

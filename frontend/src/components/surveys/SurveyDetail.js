@@ -10,7 +10,10 @@ import { connect } from 'react-redux';
 import {
   questionAdd,
   questionUpdateText,
+  questionRemove,
   surveySaveQuestion,
+  axiosSurveyUpdate,
+
 } from '../../actions';
 
 import {
@@ -188,6 +191,9 @@ class SurveyDetail extends Component {
       },
       questionType: questionType.MCQ_TEXT_RADIO,
       dropdownOptions: '',
+      rating: '',
+      title: this.props.survey.title,
+      invitedEmailList: '',
     }
 
     
@@ -433,12 +439,50 @@ class SurveyDetail extends Component {
     console.log('handleRating e=', e);
   }
   
+  handleRemoveQuestion(question) {
+    console.log('handleRemoveQuestion question=', question);
+
+    this.props.questionRemove(question);
+  }
+
+  handleChangeSurveyDetail(e) {
+    var target = e.target;
+    console.log(`handleChangeSurveyDetail target.name=${target.name}, value=${target.value}`);
+
+    this.setState({
+      [target.name]: target.value,
+    })
+
+  }
+
+  handleSubmitUpdateSurvey(e) {
+    e.preventDefault();
+    console.log('handleSubmitUpdateSurvey state=', this.state);
+
+    var invitedEmailList = this.state.invitedEmailList.split(/[ ,]+/)
+    console.log('invitedEmailList=', invitedEmailList);
+
+    var currentSurvey = this.props.survey;
+    currentSurvey.title = this.state.title;
+    currentSurvey.invitedEmailList = invitedEmailList;
+    this.props.axiosSurveyUpdate(currentSurvey);
+    
+  }
+
   componentWillMount() {
     var text = {}
     this.props.survey.questions.map(q => text[q.id] = q.text)
     console.log('componentWillMount text=', text);
+
+    // var invitedEmailList = ''.concat.apply(',', this.props.survey.invitedEmailList);
+    var invitedEmailList = '';
+    if(this.props.survey.invitedEmailList != undefined)
+      invitedEmailList = this.props.survey.invitedEmailList.join(", ");
+    console.log('invitedEmailList=', invitedEmailList);
+
     this.setState({
-      text: text
+      text: text,
+      invitedEmailList: invitedEmailList,
     })
   }
 
@@ -523,10 +567,29 @@ class SurveyDetail extends Component {
 
     }
 
+    const removeQuestionIcon = (question) => (
+      <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='red' size="big" name='remove'/></a>
+    )
+
+    
+
     return (
       <Container>
         <h2>Detail</h2>
         
+        <Form onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
+          <Form.Field>
+            <label>Title</label>
+            <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+          </Form.Field>
+
+          <Form.Field>
+            <label>Invite emails (separate emails by comma)</label>
+            <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+          </Form.Field>
+
+          <Button color="youtube" type="submit">Update Survey</Button>
+        </Form>
         
         
         <Divider />
@@ -568,21 +631,26 @@ class SurveyDetail extends Component {
           <Form onSubmit={e => this.handleSubmit(e)}>
           { this.props.survey.questions.map(question => {
             {/* console.log(question) */}
-            if(question.type === 'string') {
-              return ( 
-                <Form.Field key={question.id} >
+            if(question.type === questionType.Q_STRING) {
+              return (
+                <div key={question.id}>
+                <Form.Field>
                   {/* <label>Enter your question</label>
                   <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
-                  <label>{question.text}</label>
-                  <input id={question.id} name={question.id} /> 
-                </Form.Field>
+                  <label>{question.text}</label>{removeQuestionIcon(question)}
+                  </Form.Field>
+                  <Form.Field>
+                  <input id={question.id} name={question.id} />
+                  </Form.Field>
+                </div>
               )
             } else if(question.type === questionType.MCQ_TEXT_RADIO) {
               return (
-                <Form.Field key={question.id}>
-                  <label>{question.text}</label>
+                <div key={question.id}>
+                  <label>{question.text}</label>{removeQuestionIcon(question)}
                   {question.options.map(option => {
                     return (
+                      <Form.Field key={option.id}>
                       <Radio key={option.id}
                         label={option.text}
                         name={question.id}
@@ -590,17 +658,22 @@ class SurveyDetail extends Component {
                         // checked={this.state.value === 'this'}
                         // onChange={this.handleChange}
                       />
+                      </Form.Field>
                     )
                   })}
-                </Form.Field>
+                  
+                </div>
               )
             } 
             else if(question.type === questionType.MCQ_TEXT_CHECKBOX) {
               return (
+                <div key={question.id}>
                 <Form.Field key={question.id}>
-                  <label>{question.text}</label>
+                  <label>{question.text}</label>{removeQuestionIcon(question)}
+                </Form.Field>
                   {question.options.map(option => {
                     return (
+                      <Form.Field key={option.id}>
                       <Checkbox
                         key={option.id}
                         label={option.text}
@@ -609,9 +682,10 @@ class SurveyDetail extends Component {
                         // checked={this.state.value === 'this'}
                         // onChange={this.handleChange}
                       />
+                      </Form.Field>
                     )
                   })}
-                </Form.Field>
+                </div>
               )
             }
             else if(question.type === questionType.MCQ_TEXT_DROPDOWN) {
@@ -627,16 +701,32 @@ class SurveyDetail extends Component {
               })
               return (
                 <Form.Field key={question.id}>
-                  <label>{question.text}</label>
+                  <label>{question.text}</label>{removeQuestionIcon(question)}
                   <Dropdown key={question.id} name={question.id} placeholder='Please choose' fluid search selection options={dropdownOptions} value={this.state.dropdownOptions} />
                 </Form.Field>
               )
             } else if(question.type === questionType.STAR_RATING) {
+              var ratingOptions = [ 1, 2, 3, 4, 5];
               return (
+                <div>
                 <Form.Field key={question.id}>
-                  <label>{question.text}</label>
-                  <Rating icon='star' size="huge" defaultRating={0} maxRating={5} onChange={e => this.handleRating(e)} />
+                  <label>{question.text}</label>{removeQuestionIcon(question)}
                 </Form.Field>
+                <Form.Group>
+                {ratingOptions.map( (option, index) => {
+                  return (
+                    <Form.Field key={index}>
+                      <Radio key={index}
+                        label={option}
+                        name='rating'
+                        value={option}
+                      />
+                    </Form.Field>
+                  )
+                })}
+                </Form.Group>
+
+                </div>
               )
             }
             else 
@@ -666,6 +756,7 @@ class SurveyDetail extends Component {
                     
                   />
                 </Form.Field> */}
+          <Divider />
           <Button color='youtube' type='submit' >Save</Button>
           </Form>
 
@@ -693,6 +784,8 @@ const mapDispatchToProps = dispatch => {
   return {
     questionAdd: (data) => { dispatch(questionAdd(data)); },
     questionUpdateText: (data) => { dispatch(questionUpdateText(data)); },
+    questionRemove: (data) => { dispatch(questionRemove(data)); },
+    axiosSurveyUpdate: (data) => { dispatch(axiosSurveyUpdate(data)); },
     surveySaveQuestion: () => { dispatch(surveySaveQuestion()); },
   }
 }
