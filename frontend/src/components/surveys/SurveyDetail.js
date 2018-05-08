@@ -333,8 +333,9 @@ class SurveyDetail extends Component {
     });
   }
 
-  addOption() {
+  addOption(e) {
     console.log('addOption');
+    e.preventDefault();
     var newOption = `option_${Object.keys(this.state.options).length}`
     console.log(' newOption=', newOption);
 
@@ -344,8 +345,10 @@ class SurveyDetail extends Component {
     this.setState({options});
   }
 
-  removeOption() {
+  removeOption(e) {
     console.log('removeOption');
+    e.preventDefault();
+
     var index = Object.keys(this.state.options).length - 1;
     var exclude = `option_${index}`;
     // var options = Object.keys(this.state.options).filter( key =>{return (key !== exclude) });
@@ -511,6 +514,7 @@ class SurveyDetail extends Component {
             <div>
               <h3>Multiple Choice Question</h3>
               <Form onSubmit={e => this.handleAddMCQ()} >
+              <Form.Field><label>Select Type</label></Form.Field>
               <Form.Field>
               <Dropdown name='questionType' placeholder='Select Type' fluid search selection options={mcqOptions} value={this.state.questionType} onChange={(e, data) => this.handleChangeQuestionType(e, data)}/>
               </Form.Field>
@@ -518,25 +522,31 @@ class SurveyDetail extends Component {
                 <label>Enter your text</label>
                 <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
               </Form.Field>
-
-              <label>Options</label>
+              <Form.Field><label>Options</label>
+                <Button basic color="green" onClick={e => this.addOption(e)} icon='plus' />
+                <Button basic color="red" onClick={e => this.removeOption(e)} icon='minus'/>
+              </Form.Field>
               <div id="dynamicInput">
                   {
                     Object.keys(this.state.options).map( function(key, index){
                       {/* console.log(`options rendering index=${index} key=${key}`); */}
+                      var order = index + 1;
                       return (
-                        <Form.Field key={index}>
-                          {index} <input name={key} value={options[key]} onChange={e => _this.updateOptionText(e)} />
-                        </Form.Field>
+                        <Form.Group key={index}>
+                          <Form.Field>{order}</Form.Field>
+                          <Form.Field width={12}>
+                             <input name={key} value={options[key]} onChange={e => _this.updateOptionText(e)} />
+                          </Form.Field>
+                        </Form.Group>
+
                       )
                     })                  
                   }
-                  <Button basic color="green" onClick={e => this.addOption()}>+</Button>
-                  <Button basic color="red" onClick={e => this.removeOption()}>+</Button>
 
               </div>
-
-              <Button basic color="green" type="submit">Add MCQ</Button>
+              <Form.Field>
+                <Button basic color="green" type="submit">Add MCQ</Button>
+              </Form.Field>
             </Form>
 
               {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add MCQ</Button> */}
@@ -568,7 +578,7 @@ class SurveyDetail extends Component {
     }
 
     const removeQuestionIcon = (question) => (
-      <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='red' size="big" name='remove'/></a>
+      <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='red' size="large" name='remove'/></a>
     )
 
     
@@ -598,11 +608,11 @@ class SurveyDetail extends Component {
           <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
           <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
           <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
-          <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} />
+          {/* <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} /> */}
 
           <Menu.Menu position='right'>
             <Menu.Item>
-              <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' />
+              {/* <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' /> */}
             </Menu.Item>
           </Menu.Menu>
         </Menu>
@@ -629,25 +639,37 @@ class SurveyDetail extends Component {
 
         <h3>Preview</h3>
           <Form onSubmit={e => this.handleSubmit(e)}>
-          { this.props.survey.questions.map(question => {
-            {/* console.log(question) */}
+          { this.props.survey.questions.map((question, index) => {
+            var order = index + 1;
+            // left column width
+            const lcWidth = 1;
             if(question.type === questionType.Q_STRING) {
               return (
-                <div key={question.id}>
-                <Form.Field>
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+
+                  <Grid.Column>
+                    
+                  
+                  <Form.Field>
                   {/* <label>Enter your question</label>
                   <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
-                  <label>{question.text}</label>{removeQuestionIcon(question)}
+                  <label>{order}. {question.text}</label>
                   </Form.Field>
                   <Form.Field>
-                  <input id={question.id} name={question.id} />
+                  <input id={question.id} name={question.id} placeholder="Enter your answer here" />
                   </Form.Field>
-                </div>
+                  </Grid.Column>
+                </Grid>
               )
             } else if(question.type === questionType.MCQ_TEXT_RADIO) {
               return (
-                <div key={question.id}>
-                  <label>{question.text}</label>{removeQuestionIcon(question)}
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  <Grid.Column>
+                  <Form.Field>
+                    <label>{order}. {question.text}</label>
+                  </Form.Field>
                   {question.options.map(option => {
                     return (
                       <Form.Field key={option.id}>
@@ -661,15 +683,18 @@ class SurveyDetail extends Component {
                       </Form.Field>
                     )
                   })}
+                  </Grid.Column>
                   
-                </div>
+                </Grid>
               )
             } 
             else if(question.type === questionType.MCQ_TEXT_CHECKBOX) {
               return (
-                <div key={question.id}>
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                <Grid.Column>
                 <Form.Field key={question.id}>
-                  <label>{question.text}</label>{removeQuestionIcon(question)}
+                  <label>{order}. {question.text}</label>
                 </Form.Field>
                   {question.options.map(option => {
                     return (
@@ -685,7 +710,8 @@ class SurveyDetail extends Component {
                       </Form.Field>
                     )
                   })}
-                </div>
+                  </Grid.Column>
+                </Grid>
               )
             }
             else if(question.type === questionType.MCQ_TEXT_DROPDOWN) {
@@ -700,38 +726,44 @@ class SurveyDetail extends Component {
                 dropdownOptions.push(newOption);
               })
               return (
-                <Form.Field key={question.id}>
-                  <label>{question.text}</label>{removeQuestionIcon(question)}
-                  <Dropdown key={question.id} name={question.id} placeholder='Please choose' fluid search selection options={dropdownOptions} value={this.state.dropdownOptions} />
-                </Form.Field>
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  <Grid.Column>
+                    <Form.Field key={question.id}>
+                      <label>{order}. {question.text}</label>
+                      <Dropdown key={question.id} name={question.id} placeholder='Please choose' fluid search selection options={dropdownOptions} value={this.state.dropdownOptions} />
+                    </Form.Field>
+                  </Grid.Column>
+                </Grid>
               )
             } else if(question.type === questionType.STAR_RATING) {
               var ratingOptions = [ 1, 2, 3, 4, 5];
               return (
-                <div>
-                <Form.Field key={question.id}>
-                  <label>{question.text}</label>{removeQuestionIcon(question)}
-                </Form.Field>
-                <Form.Group>
-                {ratingOptions.map( (option, index) => {
-                  return (
-                    <Form.Field key={index}>
-                      <Radio key={index}
-                        label={option}
-                        name='rating'
-                        value={option}
-                      />
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  <Grid.Column>
+                    <Form.Field key={question.id}>
+                      <label>{order}. {question.text}</label>
                     </Form.Field>
-                  )
-                })}
-                </Form.Group>
-
-                </div>
+                    <Form.Group>
+                    {ratingOptions.map( (option, index) => {
+                      return (
+                        <Form.Field key={index}>
+                          <Radio key={index}
+                            label={option}
+                            name='rating'
+                            value={option}
+                          />
+                        </Form.Field>
+                      )
+                    })}
+                    </Form.Group>
+                </Grid.Column>
+                </Grid>
               )
             }
             else 
               return 'help'
-
           })
           
         
