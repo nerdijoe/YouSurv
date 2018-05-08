@@ -34,6 +34,7 @@ import {
   Radio,
   Dropdown,
   Rating,
+  
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -48,12 +49,11 @@ import { CLIENT_RENEG_LIMIT } from 'tls';
 import * as questionType from '../../actions/surveyConstants';
 
 const mcqOptions = [
-  { key: questionType.MCQ_TEXT_RADIO, value: questionType.MCQ_TEXT_RADIO, text: 'Text Radio' },
-  { key: questionType.MCQ_TEXT_CHECKBOX, value:questionType.MCQ_TEXT_CHECKBOX , text: 'Text Checkbox' },
-  { key: questionType.MCQ_TEXT_DROPDOWN, value: questionType.MCQ_TEXT_DROPDOWN, text: 'Text Dropdown' },
-
-  { key: questionType.MCQ_IMAGE_CHECKBOX, value: questionType.MCQ_IMAGE_CHECKBOX, text: 'Image Checkbox' },
-  { key: questionType.MCQ_IMAGE_RADIO, value: questionType.MCQ_IMAGE_RADIO, text: 'Image Radio' },
+  { key: questionType.MCQ_TEXT_RADIO, value: questionType.MCQ_TEXT_RADIO, text: 'Text Radio', flag: 'ly' },
+  { key: questionType.MCQ_TEXT_CHECKBOX, value:questionType.MCQ_TEXT_CHECKBOX , text: 'Text Checkbox', flag: 'ly'  },
+  { key: questionType.MCQ_TEXT_DROPDOWN, value: questionType.MCQ_TEXT_DROPDOWN, text: 'Text Dropdown', flag: 'ly'  },
+  { key: questionType.MCQ_IMAGE_RADIO, value: questionType.MCQ_IMAGE_RADIO, text: 'Image Radio', flag: 'so'  },
+  { key: questionType.MCQ_IMAGE_CHECKBOX, value: questionType.MCQ_IMAGE_CHECKBOX, text: 'Image Checkbox', flag: 'so'  },
 ];
 
 
@@ -522,7 +522,10 @@ class SurveyDetail extends Component {
                 <label>Enter your text</label>
                 <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
               </Form.Field>
-              <Form.Field><label>Options</label>
+              <Form.Field>
+                <label>Options</label><label>(For Image options, enter image URL)</label>
+              </Form.Field>
+              <Form.Field>
                 <Button basic color="green" onClick={e => this.addOption(e)} icon='plus' />
                 <Button basic color="red" onClick={e => this.removeOption(e)} icon='minus'/>
               </Form.Field>
@@ -759,6 +762,74 @@ class SurveyDetail extends Component {
                     })}
                     </Form.Group>
                 </Grid.Column>
+                </Grid>
+              )
+            } else if(question.type === questionType.MCQ_IMAGE_RADIO) {
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  <Grid.Column>
+                  <Form.Field>
+                    <label>{order}. {question.text}</label>
+                  </Form.Field>
+                  {question.options.map(option => {
+                    return (
+                      <Form.Field key={option.id}>
+                      <Grid columns='equal'>
+                      <Grid.Row>
+                        <Grid.Column width={1}>
+                          <Radio key={option.id}
+                          label=''
+                          name={question.id}
+                          value={option.text}
+                          // checked={this.state.value === 'this'}
+                          // onChange={this.handleChange}
+                        />
+                        </Grid.Column>
+                        <Grid.Column>
+                        <Image src={option.text} size="medium" />
+                        </Grid.Column>
+                      </Grid.Row>
+                      </Grid>
+                      </Form.Field>
+                    )
+                  })}
+                  </Grid.Column>
+                  
+                </Grid>
+              )
+            } else if(question.type === questionType.MCQ_IMAGE_CHECKBOX) {
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                <Grid.Column>
+                <Form.Field key={question.id}>
+                  <label>{order}. {question.text}</label>
+                </Form.Field>
+                  {question.options.map(option => {
+                    return (
+                      <Form.Field key={option.id}>
+                      <Grid columns='equal'>
+                      <Grid.Row>
+                        <Grid.Column width={1}>
+                          <Checkbox key={option.id}
+                          label=''
+                          name={question.id}
+                          value={option.text}
+                          // checked={this.state.value === 'this'}
+                          // onChange={this.handleChange}
+                        />
+                        </Grid.Column>
+                        <Grid.Column>
+                        <Image src={option.text} size="medium" />
+                        </Grid.Column>
+                      </Grid.Row>
+                      </Grid>
+                      </Form.Field>
+
+                    )
+                  })}
+                  </Grid.Column>
                 </Grid>
               )
             }

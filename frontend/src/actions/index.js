@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cuid from 'cuid';
 
 import * as actionType from './constants';
 
@@ -192,7 +193,7 @@ question object
   
   const res = {
     data: {
-      id: '1',
+      id: cuid(),
       surveyorEmail: localStorage.getItem('user_email'),
       invitedEmailList: [],
       title: data.title,
