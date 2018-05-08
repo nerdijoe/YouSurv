@@ -8,7 +8,8 @@ import org.mapstruct.factory.Mappers;
 import javax.validation.Constraint;
 import java.util.List;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper
+//@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface OptionMapper {
     OptionMapper MAPPER = Mappers.getMapper( OptionMapper.class );
 

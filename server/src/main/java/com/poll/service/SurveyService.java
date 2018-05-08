@@ -7,6 +7,7 @@ import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
 import com.poll.persistence.model.AppUser;
+import com.poll.persistence.model.Question;
 import com.poll.persistence.model.Survey;
 import com.poll.persistence.model.SurveyType;
 import com.poll.persistence.repository.AppUserRepository;
@@ -68,12 +69,23 @@ public class SurveyService {
     }
 
     public Survey save(long surveyId, SurveySaveDTO surveyDTO) {
-
+        System.out.println("==> SurveyService.save");
+//        System.out.println("surveyId = " + surveyId);
+//        System.out.println("surveyDTO.getQuestions() = " + surveyDTO.getQuestions());
         Survey survey = surveyRepository.findById(surveyId);
         survey.setTitle(surveyDTO.getTitle());
         survey.setInvitedEmailList(surveyDTO.getInvitedEmailList());
-        survey.setQuestions(QuestionMapper.MAPPER.toQuestionList(surveyDTO.getQuestions()));
-        survey.setExpire(TimeUtil.getDateFromString(surveyDTO.getExpire(), "yyyy.MM.dd HH:mm:ss"));
+
+
+        List<Question> questions = new ArrayList<>();
+        List<QuestionDTO> dtoList = surveyDTO.getQuestions();
+        for (QuestionDTO dto: dtoList){
+            Question question = QuestionMapper.MAPPER.toQuestion(dto);
+            questions.add(question);
+        }
+        survey.setQuestions(questions);
+
+//        survey.setQuestions(QuestionMapper.MAPPER.map(surveyDTO.getQuestions()));
         surveyRepository.save(survey);
         return survey;
     }

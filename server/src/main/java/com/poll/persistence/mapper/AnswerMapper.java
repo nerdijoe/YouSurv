@@ -10,7 +10,8 @@ import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper
+//@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AnswerMapper {
     AnswerMapper MAPPER = Mappers.getMapper( AnswerMapper.class );
 

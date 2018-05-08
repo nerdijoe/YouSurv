@@ -6,7 +6,7 @@ import com.poll.persistence.model.Survey;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = QuestionMapper.class)
 public interface SurveyMapper {
     SurveyMapper MAPPER = Mappers.getMapper( SurveyMapper.class );
 
