@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 public class QuestionOption extends AbstractTimestampModel {
+
     private String text;
 
     private String image;

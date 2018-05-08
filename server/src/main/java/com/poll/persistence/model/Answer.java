@@ -15,14 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Question extends AbstractTimestampModel {
+public class Answer extends AbstractTimestampModel {
 
-    @Enumerated(EnumType.STRING)
-    private QuestionType type;
-
-    private String text;
-
-    private String image;
+    private String surveyeeEmail;
 
     @JsonIgnore
     @ManyToOne
@@ -33,18 +28,10 @@ public class Question extends AbstractTimestampModel {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            mappedBy = "question"
+            mappedBy = "answer"
     )
-    private List<QuestionOption> options;
+    private List<AnswerChoice> choices;
 
-//    @OneToOne(
-//            fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            mappedBy = "question"
-//    )
-//    private QuestionAnswer answer;
-
-    private boolean required;
+    private boolean submitted;
 
 }

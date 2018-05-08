@@ -19,20 +19,15 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Survey extends AbstractTimestampModel {
 
-
-    @ManyToOne(
-            fetch = FetchType.LAZY
-    )
-    private AppUser surveyor;
+    private String surveyorEmail;
 
     @ElementCollection(targetClass=String.class)
     private List<String> invitedEmailList;
 
-    @Enumerated(EnumType.STRING)
-    private SurveyType type;
-
     private String title;
 
+    @Enumerated(EnumType.STRING)
+    private SurveyType type;
 
     @OneToMany(
             fetch = FetchType.LAZY,
@@ -42,28 +37,42 @@ public class Survey extends AbstractTimestampModel {
     )
     private List<Question> questions;
 
-    private boolean published;
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "survey",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Answer> answers;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date expire;
+    @Embedded
+    private Publish publish;
 
     public Survey(){
         super();
         this.invitedEmailList = new ArrayList<>();
         this.questions = new ArrayList<>();
-        this.published = false;
+        this.answers = new ArrayList<>();
     }
 
-    public Survey(AppUser surveyor, SurveyType type) {
+    public Survey(String surveyorEmail, String title, String type) {
         this();
-        this.surveyor = surveyor;
-        this.type = type;
+        this.surveyorEmail = surveyorEmail;
+        this.title = title;
+        this.type = SurveyType.getType(type);
     }
 
     public void setQuestions(List<Question> questions) {
         this.questions.clear();
         if (questions != null){
             this.questions.addAll(questions);
+        }
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers.clear();
+        if (answers != null){
+            this.answers.addAll(answers);
         }
     }
 }

@@ -18,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -34,78 +36,86 @@ public class SurveyRestController {
     @Autowired
     UserService userService;
 
-
-    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<List<SurveyDTO>> findAllBySurveyorId(@PathVariable String id, UriComponentsBuilder ucBuilder) {
-        if (id == null){
-            System.out.println("surveyor id is not included in url");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Long surveyorId = Long.valueOf(id);
-        System.out.println("findAllBySurveyorId, surveyorId = " + surveyorId);
-
-
-        if (!userService.isUserExist(surveyorId)){
-            System.out.println("surveyor with id: " + surveyorId + "does not exists");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        List<SurveyDTO> surveys = surveyService.findAllBySurveyorId(surveyorId);
-
-        if (surveys == null){
-            System.out.println("fail to create survey");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        System.out.println("surveys = " + surveys);
-        log.info("surveys.size() = " + surveys.size());
-
-        return new ResponseEntity<>(surveys, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<SurveyDTO> createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
+    public @ResponseBody ResponseEntity createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
         String surveyorEmail = auth.getName();
         System.out.println("==> POST /survey/, surveyor Email = " + surveyorEmail);
 
         if (!userService.existsByEmail(surveyorEmail)){
-            System.out.println("surveyor with email: " + surveyorEmail + "does not exists");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            String message = "surveyor with email: " + surveyorEmail + "does not exists";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
         }
 
         SurveyDTO survey = surveyService.createSurvey(surveyorEmail, surveyDTO);
 
         if (survey == null){
-            System.out.println("fail to create survey");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            String message = "fail to create survey";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(survey, HttpStatus.CREATED);
+        return new ResponseEntity(survey, HttpStatus.CREATED);
 
     }
 
-    @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Survey> saveSurvey(@PathVariable("id") long id, @RequestBody SurveySaveDTO surveyDTO) {
-        System.out.println("Saving survey with id " + id);
 
-        Survey survey = surveyService.save(id, surveyDTO);
-
-        if (survey == null){
-            System.out.println("Survey with id: " + id + " can't be saved");
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return new ResponseEntity<>(survey, HttpStatus.OK);
-
-    }
-
-    @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<SurveyDTO> getSurveyById(@PathVariable("id") long id) {
-        System.out.println("Fetching survey with id " + id);
-
-        SurveyDTO surveyDTO = surveyService.findById(id);
-        return new ResponseEntity<>(surveyDTO, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
+//    public @ResponseBody ResponseEntity<List<SurveyDTO>> findAllBySurveyorId(@PathVariable String id, UriComponentsBuilder ucBuilder) {
+//        if (id == null){
+//            System.out.println("surveyor id is not included in url");
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        Long surveyorId = Long.valueOf(id);
+//        System.out.println("findAllBySurveyorId, surveyorId = " + surveyorId);
+//
+//
+//        if (!userService.isUserExist(surveyorId)){
+//            System.out.println("surveyor with id: " + surveyorId + "does not exists");
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<SurveyDTO> surveys = surveyService.findAllBySurveyorId(surveyorId);
+//
+//        if (surveys == null){
+//            System.out.println("fail to create survey");
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//        System.out.println("surveys = " + surveys);
+//        log.info("surveys.size() = " + surveys.size());
+//
+//        return new ResponseEntity<>(surveys, HttpStatus.OK);
+//    }
+//
+//
+//
+//    @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
+//    public ResponseEntity<Survey> saveSurvey(@PathVariable("id") long id, @RequestBody SurveySaveDTO surveyDTO) {
+//        System.out.println("Saving survey with id " + id);
+//
+//        Survey survey = surveyService.save(id, surveyDTO);
+//
+//        if (survey == null){
+//            System.out.println("Survey with id: " + id + " can't be saved");
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//        return new ResponseEntity<>(survey, HttpStatus.OK);
+//
+//    }
+//
+//    @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+//    public ResponseEntity<SurveyDTO> getSurveyById(@PathVariable("id") long id) {
+//        System.out.println("Fetching survey with id " + id);
+//
+//        SurveyDTO surveyDTO = surveyService.findById(id);
+//        return new ResponseEntity<>(surveyDTO, HttpStatus.OK);
+//    }
 
 }
