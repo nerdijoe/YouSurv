@@ -30,6 +30,7 @@ import {
   Checkbox,
   Radio,
   Dropdown,
+  Rating,
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -41,15 +42,15 @@ import uuid from 'uuid';
 import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
-import * as mcqType from '../../actions/surveyConstants';
+import * as questionType from '../../actions/surveyConstants';
 
 const mcqOptions = [
-  { key: mcqType.MCQ_TEXT_RADIO, value: mcqType.MCQ_TEXT_RADIO, text: 'Text Radio' },
-  { key: mcqType.MCQ_TEXT_CHECKBOX, value:mcqType.MCQ_TEXT_CHECKBOX , text: 'Text Checkbox' },
-  { key: mcqType.MCQ_TEXT_DROPDOWN, value: mcqType.MCQ_TEXT_DROPDOWN, text: 'Text Dropdown' },
+  { key: questionType.MCQ_TEXT_RADIO, value: questionType.MCQ_TEXT_RADIO, text: 'Text Radio' },
+  { key: questionType.MCQ_TEXT_CHECKBOX, value:questionType.MCQ_TEXT_CHECKBOX , text: 'Text Checkbox' },
+  { key: questionType.MCQ_TEXT_DROPDOWN, value: questionType.MCQ_TEXT_DROPDOWN, text: 'Text Dropdown' },
 
-  { key: mcqType.MCQ_IMAGE_CHECKBOX, value: mcqType.MCQ_IMAGE_CHECKBOX, text: 'Image Checkbox' },
-  { key: mcqType.MCQ_IMAGE_RADIO, value: mcqType.MCQ_IMAGE_RADIO, text: 'Image Radio' },
+  { key: questionType.MCQ_IMAGE_CHECKBOX, value: questionType.MCQ_IMAGE_CHECKBOX, text: 'Image Checkbox' },
+  { key: questionType.MCQ_IMAGE_RADIO, value: questionType.MCQ_IMAGE_RADIO, text: 'Image Radio' },
 ];
 
 
@@ -185,7 +186,7 @@ class SurveyDetail extends Component {
         option_1: '',
         option_2: '',
       },
-      mcqType: mcqType.MCQ_TEXT_RADIO,
+      questionType: questionType.MCQ_TEXT_RADIO,
       dropdownOptions: '',
     }
 
@@ -251,7 +252,7 @@ class SurveyDetail extends Component {
     var id = cuid();
     var newQuestion = {
       "id": id,
-      "type": 'string',
+      "type": questionType.Q_STRING,
       "name": id,
       "text": this.state.questionText,
       "image": "",
@@ -281,7 +282,7 @@ class SurveyDetail extends Component {
     var id = cuid();
     var newQuestion = {
       "id": id,
-      "type": this.state.mcqType,
+      "type": this.state.questionType,
       "name": id,
       "text": this.state.questionText,
       "image": "",
@@ -316,9 +317,9 @@ class SurveyDetail extends Component {
 
   }
 
-  handleChangeMcqType(e, data) {
+  handleChangeQuestionType(e, data) {
     var target = e.target;
-    console.log(`handleChangeMcqType data=`, data);
+    console.log(`handleChangeQuestionType data=`, data);
     // console.log('e = ', e);
     
     this.setState({
@@ -365,6 +366,35 @@ class SurveyDetail extends Component {
     this.setState({options});
   }
 
+  handleAddRating() {
+    console.log("handleAddRating");
+    console.log('this=', this)
+    var id = cuid();
+    var newQuestion = {
+      "id": id,
+      "type": questionType.STAR_RATING,
+      "name": id,
+      "text": this.state.questionText,
+      "image": "",
+      "options": [
+        {
+          "id":"",
+          "text":"",
+          "image":"",
+        }
+      ],
+      "answer":{
+        "id":"",
+        "text":"",
+      },
+      "required": false,
+    }
+    console.log('  newQuestion=', newQuestion);
+    this.props.questionAdd(newQuestion);
+
+  }
+
+
   updateState(e) {
     var target = e.target
     console.log(`id=[${target.id}] value=[${target.value}] `)
@@ -398,6 +428,10 @@ class SurveyDetail extends Component {
 
   }
 
+  handleRating(e) {
+    
+    console.log('handleRating e=', e);
+  }
   
   componentWillMount() {
     var text = {}
@@ -434,7 +468,7 @@ class SurveyDetail extends Component {
               <h3>Multiple Choice Question</h3>
               <Form onSubmit={e => this.handleAddMCQ()} >
               <Form.Field>
-              <Dropdown name='mcqType' placeholder='Select Type' fluid search selection options={mcqOptions} value={this.state.mcqType} onChange={(e, data) => this.handleChangeMcqType(e, data)}/>
+              <Dropdown name='questionType' placeholder='Select Type' fluid search selection options={mcqOptions} value={this.state.questionType} onChange={(e, data) => this.handleChangeQuestionType(e, data)}/>
               </Form.Field>
               <Form.Field>
                 <label>Enter your text</label>
@@ -465,6 +499,19 @@ class SurveyDetail extends Component {
             </div>
           
         ) 
+      } else if ( activeItem === 'Rating' ) {
+        return (
+          <div>
+            <h3>Rating</h3>
+            <Form onSubmit={e => this.handleAddRating()} >
+              <Form.Field>
+                <label>Enter your text</label>
+                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
+              </Form.Field>
+            <Button basic color="green" type="submit">Add Rating</Button>
+            </Form>
+          </div>
+        ) 
       } else if ( activeItem === 'Edit' ) {
         return (
           <div>
@@ -487,6 +534,7 @@ class SurveyDetail extends Component {
         <Menu attached='top' tabular>
           <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
           <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
+          <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
           <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} />
 
           <Menu.Menu position='right'>
@@ -529,7 +577,7 @@ class SurveyDetail extends Component {
                   <input id={question.id} name={question.id} /> 
                 </Form.Field>
               )
-            } else if(question.type === mcqType.MCQ_TEXT_RADIO) {
+            } else if(question.type === questionType.MCQ_TEXT_RADIO) {
               return (
                 <Form.Field key={question.id}>
                   <label>{question.text}</label>
@@ -547,7 +595,7 @@ class SurveyDetail extends Component {
                 </Form.Field>
               )
             } 
-            else if(question.type === mcqType.MCQ_TEXT_CHECKBOX) {
+            else if(question.type === questionType.MCQ_TEXT_CHECKBOX) {
               return (
                 <Form.Field key={question.id}>
                   <label>{question.text}</label>
@@ -566,7 +614,7 @@ class SurveyDetail extends Component {
                 </Form.Field>
               )
             }
-            else if(question.type === mcqType.MCQ_TEXT_DROPDOWN) {
+            else if(question.type === questionType.MCQ_TEXT_DROPDOWN) {
               // create the dropdown options array
               var dropdownOptions = [];
               question.options.map(option => {
@@ -581,6 +629,13 @@ class SurveyDetail extends Component {
                 <Form.Field key={question.id}>
                   <label>{question.text}</label>
                   <Dropdown key={question.id} name={question.id} placeholder='Please choose' fluid search selection options={dropdownOptions} value={this.state.dropdownOptions} />
+                </Form.Field>
+              )
+            } else if(question.type === questionType.STAR_RATING) {
+              return (
+                <Form.Field key={question.id}>
+                  <label>{question.text}</label>
+                  <Rating icon='star' size="huge" defaultRating={0} maxRating={5} onChange={e => this.handleRating(e)} />
                 </Form.Field>
               )
             }

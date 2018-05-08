@@ -25,6 +25,6 @@ export const MCQ_TEXT_DROPDOWN = 'MCQ_TEXT_DROPDOWN';
 
 export const MCQ_IMAGE_RADIO = 'MCQ_IMAGE_RADIO';
 export const MCQ_IMAGE_CHECKBOX = 'MCQ_IMAGE_CHECKBOX';
-
+export const STAR_RATING = 'STAR_RATING';
 
 
