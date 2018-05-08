@@ -3,7 +3,9 @@ package com.poll.controller;
 import com.poll.persistence.dto.SurveyLinkDTO;
 import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.SurveyLinks;
+import com.poll.persistence.repository.SurveyLinkRepository;
 import com.poll.response.SurveyResponse;
+import com.poll.response.TakeSurveyValidationResponse;
 import com.poll.service.SurveyLinkService;
 import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +34,16 @@ import java.util.UUID;
 @RestController
 public class SurveyTypeController {
 
-
     @Autowired
     SurveyLinkService surveyLinkService;
 
     @Autowired
     private EmailService emailService;
+
+
+    @Autowired
+    private SurveyLinkRepository surveyLinkRepository;
+
 
     @PostMapping(value = "/publish")
     public org.springframework.http.ResponseEntity<?> publishSurvey(@RequestBody SurveyLinkDTO body) {
@@ -76,8 +82,9 @@ public class SurveyTypeController {
             //QR code Generation
             try {
                 String qrCodeData = link;
-                String filePath = fileName+".png";
+                String filePath = "/QR_CODES/"+fileName+".png";
                 String charset = "UTF-8"; // or "ISO-8859-1"
+
                 Map < EncodeHintType, ErrorCorrectionLevel > hintMap = new HashMap < EncodeHintType, ErrorCorrectionLevel > ();
                 hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
                 BitMatrix matrix = new MultiFormatWriter().encode(
@@ -85,11 +92,11 @@ public class SurveyTypeController {
                         BarcodeFormat.QR_CODE, 200, 200, hintMap);
                 MatrixToImageWriter.writeToFile(matrix, filePath.substring(filePath
                         .lastIndexOf('.') + 1), new File(filePath));
-
                 InputStream in = getClass()
                         .getResourceAsStream(filePath);
                 surveyResponse.setQr_img(org.apache.commons.io.IOUtils.toByteArray(in));
                 System.out.println("QR Code image created successfully!");
+
             } catch (Exception e) {
                 System.err.println(e);
             }
@@ -121,13 +128,22 @@ public class SurveyTypeController {
     }
 
     @GetMapping(value="/takeSurvey",produces = "application/json")
-    public org.springframework.http.ResponseEntity<?> validateLink(@RequestParam String token){
+    public org.springframework.http.ResponseEntity<TakeSurveyValidationResponse> validateLink(@RequestParam String token){
         boolean isValid=true;
-        isValid=surveyLinkService.validate(token);
-        if(isValid) {
-            return new org.springframework.http.ResponseEntity<Authenticator.Success>(HttpStatus.OK);
-        }else{
-            return new org.springframework.http.ResponseEntity<Authenticator.Failure>(HttpStatus.IM_USED);
+        TakeSurveyValidationResponse takeSurveyValidationResponse=new TakeSurveyValidationResponse();
+        try {
+            SurveyLinks surveyLinks = surveyLinkRepository.findByLink("localhost:3000/takeSurvey?token=" + token);
+            takeSurveyValidationResponse.setSurveyId(surveyLinks.getSurveyId());
+            isValid = surveyLinkService.validate(token, surveyLinks);
+            if (isValid) {
+                return new org.springframework.http.ResponseEntity<TakeSurveyValidationResponse>(takeSurveyValidationResponse,HttpStatus.OK);
+            } else {
+                return new org.springframework.http.ResponseEntity<TakeSurveyValidationResponse>(takeSurveyValidationResponse,HttpStatus.IM_USED);
+            }
+
+        }catch (Exception e){
+
         }
+        return  null;
     }
 }

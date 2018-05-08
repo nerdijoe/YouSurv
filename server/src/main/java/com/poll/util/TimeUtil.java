@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 public class TimeUtil {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
+
+    public static final String format ="yyyy-MM-dd'T'HH:mm:ss";
     /**
      * @param dateString date in String format
      * @return Date format
