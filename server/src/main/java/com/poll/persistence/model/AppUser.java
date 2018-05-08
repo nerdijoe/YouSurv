@@ -28,11 +28,7 @@ public class AppUser implements IEntity {
 //    List<Role> roles;
 
     public AppUser(){
-        role = Role.ANONYMOUS;
-    }
-
-    public boolean auth(String email, String password){
-        return this.email.equals(email) && this.password.equals(password);
+        role = Role.USER;
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScans;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -37,17 +38,6 @@ public class Application  extends SpringBootServletInitializer {
     }
 
 
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(){
-//        return new AuthenticationManager() {
-//            @Override
-//            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-//                return null;
-//            }
-//        }
-//    }
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class);
     }
@@ -55,13 +45,7 @@ public class Application  extends SpringBootServletInitializer {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-
-//            AppUser registeredUser = new AppUser();
-//            registeredUser.setEmail("frank.qjq@outlook.com");
-//            registeredUser.setPassword("123");
-//            registeredUser.setRole(Role.USER);
-//            userService.signup(registeredUser);
-
+            //some code to run after initialization
         };
     }
 
