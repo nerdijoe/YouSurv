@@ -737,7 +737,7 @@ class SurveyDetail extends Component {
                 </Grid>
               )
             } else if(question.type === questionType.STAR_RATING) {
-              var ratingOptions = [ 1, 2, 3, 4, 5];
+              var ratingOptions = [ 0, 1, 2, 3, 4, 5];
               return (
                 <Grid key={question.id} columns='equal'>
                   <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
