@@ -49,6 +49,7 @@ class SurveyList extends Component {
   render() {
     return (
       <Container>
+        <h2>Survey List</h2>
         <SurveyForm />
         <Divider />
         { this.props.surveys.length === 0 ? (

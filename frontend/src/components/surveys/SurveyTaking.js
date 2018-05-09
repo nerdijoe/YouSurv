@@ -41,7 +41,7 @@ class SurveyTaking extends Component {
   render() {
     return (
       <Container>
-      
+        <h2>Survey Taking</h2>
         { this.props.surveys.length === 0 ? (
             <Message compact>
               You have no surveys.

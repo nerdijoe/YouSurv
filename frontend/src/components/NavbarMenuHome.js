@@ -41,8 +41,11 @@ class NavbarMenu extends Component {
             
               {/* <Menu.Item name={userEmail} /> */}
               <Menu.Item>{userEmail}</Menu.Item>
+              <Link to='/home'>
+                <Menu.Item><Icon name="home"/></Menu.Item>
+              </Link>
               <Link to='/home/surveyee'>
-                <Menu.Item name='surveyee' />
+                <Menu.Item><Icon name="write"/></Menu.Item>
               </Link>
               <Link to='/'>
                 <Menu.Item onClick={this.handleSignOut} ><Icon name="sign out"/></Menu.Item>

@@ -51,7 +51,7 @@ class Home extends Component {
       <MyContainer>
         <NavbarHome />
         <Container>
-          <h2>Home</h2>
+          {/* <h2>Home</h2> */}
           {/* <Button onClick={this.handleSignOut}>Sign out</Button> */}
 
           {/* <SurveyForm /> */}

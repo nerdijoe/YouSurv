@@ -66,7 +66,7 @@ class SurveyForm extends Component {
   render() {
     return (
       <Container>
-        <h3>Survey Form</h3>
+        <h3>Create your survey</h3>
 
         <Form onSubmit={ (e) => { this.handleSubmit(e) }} >
           <Form.Field>
