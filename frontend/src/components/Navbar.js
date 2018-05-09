@@ -20,7 +20,7 @@ const styles = {
   header: {
     paddingTop: 20,
     // justifyContent: 'center',
-    // backgroundColor: 'red',
+    backgroundColor: 'white',
   },
 
 };

@@ -5,43 +5,85 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Survey extends AbstractTimestampModel {
 
-
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    private AppUser surveyor;
+    private String surveyorEmail;
 
     @ElementCollection(targetClass=String.class)
-//    @ElementCollection
     private List<String> invitedEmailList;
+
+    private String title;
 
     @Enumerated(EnumType.STRING)
     private SurveyType type;
 
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "survey")
+//    @OneToMany(
+//            fetch = FetchType.LAZY,
+//            mappedBy = "survey",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+//    @Embedded
+//    @Size(max = 10000)
+    @ElementCollection(targetClass = Question.class)
     private List<Question> questions;
 
-    private boolean isPublished;
+//    @OneToMany(
+//            fetch = FetchType.LAZY,
+//            mappedBy = "survey",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+//    @Embedded
+    @ElementCollection(targetClass = Answer.class)
+    private List<Answer> answers;
 
-    public Survey(AppUser surveyor, SurveyType type) {
+    @Embedded
+
+    private Publish publish;
+
+    public Survey(){
         super();
-        this.surveyor = surveyor;
         this.invitedEmailList = new ArrayList<>();
-        this.type = type;
         this.questions = new ArrayList<>();
-        this.isPublished = false;
+        this.answers = new ArrayList<>();
+    }
+
+    public Survey(String surveyorEmail, String title, String type) {
+        this();
+        this.surveyorEmail = surveyorEmail;
+        this.title = title;
+        this.type = SurveyType.getType(type);
+    }
+
+    public void setQuestions(List<Question> questions) {
+        if (this.questions != null){
+            this.questions.clear();
+        } else{
+            this.questions = new ArrayList<>();
+        }
+        this.questions.addAll(questions);
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        if (this.answers != null){
+            this.answers.clear();
+        } else{
+            this.answers = new ArrayList<>();
+        }
+        this.answers.addAll(answers);
     }
 }

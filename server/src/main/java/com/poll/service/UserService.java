@@ -1,19 +1,23 @@
 package com.poll.service;
 
 import com.poll.exception.CustomException;
+import com.poll.persistence.dto.AppUserDTO;
+import com.poll.persistence.mapper.AppUserMapper;
+import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.AppUser;
+//import com.poll.persistence.repository.mongo.AppUserRepository;
 import com.poll.persistence.repository.AppUserRepository;
 import com.poll.security.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -28,7 +32,15 @@ public class UserService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
+
+    String link="";
+    String domain="localhost:";
+    String port="3000/";
+    String route="user/verify?emailVerificationToken=";
 
     public List<AppUser> findAllUsers() {
         return appUserRepository.findAll();
@@ -67,59 +79,59 @@ public class UserService {
         appUserRepository.deleteAll();
     }
 
-    public String signup(AppUser user) {
+    public boolean existsByEmail(String surveyorEmail) {
+        return appUserRepository.existsByEmail(surveyorEmail);
+    }
 
-        if (!appUserRepository.existsByEmail(user.getEmail())) {
-            System.out.println("UserService.signup user.password=" + user.getPassword());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            appUserRepository.save(user);
+    public void signup(AppUserDTO dto) {
+        if (appUserRepository.existsByEmail(dto.getEmail())){
+            throw new CustomException("Email has been registered", HttpStatus.BAD_REQUEST);
+        }
+
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        AppUser appUser = AppUserMapper.toAppUser(dto);
+
+        String token = UUID.randomUUID().toString();
+        appUser.setEmailVerificationToken(token);
+        appUserRepository.save(appUser);
+
+        link = domain + port + route + token;
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom("postmaster@localhost");
+        mailMessage.setTo(appUser.getEmail());
+        mailMessage.setSubject("MyPoll - Account Registration Confirmation");
+        mailMessage.setText("Please confirm your account:\n" + link);
+        emailService.sendEmail(mailMessage);
+    }
+
+    public String signin(AppUserDTO dto) {
+        System.out.println("UserService.signin");
+        if (!appUserRepository.existsByEmail(dto.getEmail())){
+            throw new CustomException("Wrong email or password", HttpStatus.UNAUTHORIZED);
+        }
+
+        AppUser user = appUserRepository.findByEmail(dto.getEmail());
+
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new CustomException("Wrong email or password", HttpStatus.UNAUTHORIZED);
+        } else{
             return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
-        } else {
-            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    public String signin(String username, String password) {
+
+
+    public void verifyUser(String emailVerificationToken){
         try {
-            System.out.println("UserService.signin=" + username +", " + password);
-            System.out.println("   password encoded" + passwordEncoder.encode(password));
+            AppUser user =appUserRepository.findByEmailVerificationToken(emailVerificationToken);
+            System.out.print("Before Save"+user.getId());
+            user.setVerified(true);
+            appUserRepository.save(user);
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            System.out.println("    after authenticate");
-
-            return jwtTokenProvider.createToken(username, Arrays.asList(findByEmail(username).getRole()));
-        } catch (AuthenticationException e) {
-            System.out.println(e);
-            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    public String signinV2(String username, String password) {
-        try {
-            System.out.println("UserService.signinV2=" + username +", " + password);
-            System.out.println("   password encoded" + passwordEncoder.encode(password));
-            if (appUserRepository.existsByEmail(username)) {
-                AppUser user = appUserRepository.findByEmail(username);
-                System.out.println("user.password =" + user.getPassword());
-                if(passwordEncoder.matches(password, user.getPassword())) {
-
-                    return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
-                }
-                else {
-                    throw new CustomException("Password is incorrect", HttpStatus.UNPROCESSABLE_ENTITY);
-                }
-            } else {
-                throw new CustomException("Email is incorrect ", HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-
-
-
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
-//            return jwtTokenProvider.createToken(username, Arrays.asList(findByEmail(username).getRole()));
-        } catch (AuthenticationException e) {
-            System.out.println(e);
-            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        }catch (Exception e){
+            throw new CustomException("Relation not found", HttpStatus.NOT_FOUND);
         }
     }
 

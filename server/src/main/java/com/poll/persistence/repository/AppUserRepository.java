@@ -17,4 +17,6 @@ public interface AppUserRepository extends CrudRepository<AppUser, Long> {
 
     AppUser findByEmail(String email);
 
+    AppUser findByEmailVerificationToken(String emailVerificationToken);
+
 }

@@ -1,5 +1,19 @@
 package com.poll.persistence.model;
 
 public enum QuestionType {
-    SHORT_ANSWER, MULTIPLE_CHOICE, CHECKBOX, DROPDOWN, RATINGS, DATE, YES_NO
+    Q_STRING,
+    MCQ_TEXT_RADIO,
+    MCQ_TEXT_CHECKBOX,
+    MCQ_TEXT_DROPDOWN,
+    MCQ_IMAGE_RADIO,
+    MCQ_IMAGE_CHECKBOX;
+
+    public static QuestionType getType(String type) {
+        for (QuestionType value: QuestionType.values()){
+            if (type.equalsIgnoreCase(value.name())){
+                return value;
+            }
+        }
+        return null;
+    }
 }

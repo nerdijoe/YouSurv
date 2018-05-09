@@ -1,19 +1,23 @@
 package com.poll.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity
+//@Embeddable
 @Getter
+@Setter
 @NoArgsConstructor
-public class QuestionOption extends AbstractTimestampModel {
+@ToString
+public class QuestionOption implements Serializable {
+
+    private String id;
     private String text;
 
     private String image;
-
-    @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question question;
 }

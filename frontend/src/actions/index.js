@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cuid from 'cuid';
 
 import * as actionType from './constants';
 
@@ -28,9 +29,9 @@ export const axiosSignUp = (data, router) => (dispatch) => {
     //     })
 
   console.log(" before axiosSignUp", data);
-  
-  axios.post('http://localhost:8300/signup', {
-    username: data.email,
+
+  axios.post('http://localhost:8080/signup', {
+    email: data.email,
     password: data.password,
     // firstname: data.firstname,
     // lastname: data.lastname,
@@ -92,14 +93,14 @@ export const userSignUp = (data) => {
 export const axiosSignIn = (data, router) => (dispatch) => {
   console.log('axiosSignIn');
 
-  axios.post('http://localhost:8300/login', {
-    username: data.email,
+  axios.post('http://localhost:8080/signin', {
+    email: data.email,
     password: data.password,
   }).then( res => {
     console.log('after axiosSignIn, res:', res);
 
     // save token to localStorage
-    localStorage.setItem('token', res.data);
+    localStorage.setItem('token', res.data.token);
     localStorage.setItem('user_email', data.email);
 
     dispatch(userSignIn(data));
@@ -137,50 +138,225 @@ export const userSignOut = () => {
   };
 };
 
-export const axiosCreateSurvey = data => dispatch => {
-  console.log('< Before axiosCreateSurvey');
-  // axios.post('http://localhost:8080/surveys', {
-  //   type: data.type,
-  // }, {
-  //   headers: {
-  //     token,
-  //   }
-  // })
-  // .then(res => {
-  //   console.log('> after axiosCreateSurvey res.data', res.data);
-  //   dispatch(createSurvey(data));
-  //   // router.push('/signin');
-  // })
-  // .catch(err => {
-  //   console.log("***error axiosCreateSurvey");
-  //   console.log(err);
-  // })
+export const axiosSurveyCreate = data => dispatch => {
+  console.log('<  before axiosSurveyCreate data=', data);
+  let token = 'Bearer ' + localStorage.getItem('token');
+  console.log('token = ', token);
+  axios.post('http://localhost:8080/survey/', {
+    title: data.title,
+    type: data.type,
+  }, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after axiosCreateSurvey res.data', res.data);
+    dispatch(surveyCreate(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosCreateSurvey");
+    console.log(err);
+  })
 
+  // Simulation using dummy response
+  /*
   const res = {
     data: {
-      id: '',
-      author: {
-        email: localStorage.getItem('user_email')
-      },
+      id: cuid(),
+      surveyorEmail: localStorage.getItem('user_email'),
       invitedEmailList: [],
+      title: data.title,
       type: data.type,
       questions: [],
-      isPublished: false,
-      isDeleted: false,
-      created: '2018-05-05 03:14:00',
-      updated: '2018-05-05 03:14:00',
+      answers: [],
+      publish: null,
+      deleted: false,
+      created: '2018-05-05 15:14:00',
+      updated: '2018-05-05 15:14:00',
+      start: null,
+      end: null,
     }
   }
   
-  dispatch(createSurvey(res.data));
+  dispatch(surveyCreate(res.data));
+  */
+}
+
+export const surveyCreate = (data) => {
+  return {
+    type: actionType.SURVEY_CREATE,
+    data,
+  }
+}
+
+export const axiosSurveyGetAll = (data) => (dispatch) => {
+  console.log('<  before axiosSurveyGetAll data=', data);
+  let token = 'Bearer ' + localStorage.getItem('token');
+
+  axios.get('http://localhost:8080/survey/', {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('> after axiosSurveyGetAll res.data', res.data);
+      dispatch(surveyGetAll(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyGetAll");
+    console.log(err);
+  })
+
+  // dispatch(surveyGetAllDummy());
 
 }
 
-export const createSurvey = (data) => {
+
+export const axiosSurveyUpdate = (data) => dispatch => {
+  console.log('<  before axiosSurveyUpdate data=', data);
+
+  // axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
+  //   headers: {
+  //     Authorization: token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosSurveyUpdate res.data', res.data);
+  //     dispatch(surveyUpdate(res.data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***  error axiosSurveyUpdate");
+  //   console.log(err);
+  // })
+
+  dispatch(surveyUpdate(data));
+
+}
+
+export const surveyUpdate = (data) => {
   return {
-    type: actionType.CREATE_SURVEY,
+    type: actionType.SURVEY_UPDATE,
     data,
   }
 }
 
 
+export const surveyGetAll = (data) => {
+  return {
+    type: actionType.SURVEY_GET_ALL,
+    data,
+  }
+}
+
+export const surveyGetAllDummy = () => {
+  return {
+    type: actionType.SURVEY_GET_ALL_DUMMY
+  }
+}
+
+export const surveyShowDetail = (data, router) => (dispatch) => {
+  router.push('/home/surveydetail');
+  dispatch(surveyShowDetailReduce(data));
+}
+
+export const surveyShowDetailReduce = (data) => {
+  return {
+    type: actionType.SURVEY_GET_ONE,
+    data,
+  }
+}
+
+export const questionAdd = data => dispatch => {
+  console.log('questionAdd data=', data);
+  dispatch(questionAddReduce(data))
+}
+
+export const questionAddReduce = (data) => {
+  return {
+    type: actionType.QUESTION_ADD,
+    data,
+  }
+}
+
+export const questionUpdateText = (data) => dispatch => {
+  console.log('questionUpdateText data=', data);
+
+  dispatch(questionUpdateTextReduce(data));
+  
+}
+
+export const questionUpdateTextReduce = (data) => {
+  return {
+    type: actionType.QUESTION_UPDATE_TEXT,
+    data,
+  }
+}
+
+
+// this is for dummy data
+export const surveySaveQuestion = () => dispatch => {
+  console.log('surveySave' );
+
+  dispatch(surveySaveQuestionReduce());
+}
+
+export const surveySaveQuestionReduce = () => {
+  return {
+    type: actionType.SURVEY_SAVE_QUESTION,
+
+  }
+}
+
+export const questionRemove = (data) => dispatch => {
+  console.log('questionRemove');
+
+  dispatch(questionRemoveReduce(data));
+}
+
+export const questionRemoveReduce = (data) => {
+  return {
+    type: actionType.QUESTION_REMOVE,
+    data,
+  }
+}
+
+// ==============================================================================
+// Surveyee Action
+// ==============================================================================
+
+export const surveyTakingGetById = (data) => dispatch => {
+  console.log('surveyGetById data=', data);
+
+  dispatch(surveyTakingGetByIdReduce(data));
+}
+
+export const surveyTakingGetByIdReduce = (data) => {
+  return {
+    type: actionType.SURVEY_TAKING_GET_BY_ID,
+    data,
+  }
+}
+
+export const surveyTakingSaveProgress = (data) => dispatch => {
+  console.log('surveyTakingSaveProgress data=', data);
+
+  // axios POST
+  // {
+  //   surveyId: surveyId,
+  //   choices: data,
+  // }
+
+  dispatch(surveyTakingSaveProgressReduce(data));
+
+}
+
+export const surveyTakingSaveProgressReduce = (data) => {
+  return {
+    type: actionType.SURVEY_TAKING_SAVE_PROGRESS,
+    data,
+  }
+}

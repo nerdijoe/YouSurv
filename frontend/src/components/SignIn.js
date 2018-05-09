@@ -162,14 +162,14 @@ class SignIn extends Component {
                   </Form.Field> */}
                   <Form.Field>
                     <label>Email</label>
-                    <input placeholder='john.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
+                    <input placeholder='jon.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
                   </Form.Field>
                   <Form.Field>
                     <label>Password</label>
                     <input type='password' placeholder='iKnowNothing!' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
-                  <Button color='green' type='submit' disabled={!this.state.formValid}>Sign In</Button>
+                  <Button color='youtube' type='submit' disabled={!this.state.formValid}>Sign In</Button>
                 </Form>
 
                 <ErrorMessage formErrors={this.state.formErrors} />

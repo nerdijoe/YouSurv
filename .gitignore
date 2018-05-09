@@ -24,4 +24,5 @@ server/.gradle
 server/.idea
 server/build
 server/out
+server/src/main/resources/applicaton.properties
 frontend/.idea

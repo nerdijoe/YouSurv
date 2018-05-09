@@ -32,14 +32,12 @@ public class SurveyLinkService {
         surveyLinkRepository.save(surveyLinks);
         return "";
     }
-    public boolean validate(String token){
+    public boolean validate(String token, SurveyLinks surveyLinks){
 
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             Date date = new Date();
             Date today = dateFormat.parse(dateFormat.format(date));
-            SurveyLinks surveyLinks=surveyLinkRepository.findByLink("localhost:3000/takeSurvey?token="+token);
-
             if(today.after(surveyLinks.getStartTime()) && today.before(surveyLinks.getEndTime()) && surveyLinks.getStatus().equals("active")){
                 return true;
             }

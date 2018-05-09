@@ -30,13 +30,17 @@ class NavbarMenu extends Component {
 
   render() {
     const { activeItem } = this.state;
+    const userEmail = localStorage.getItem('user_email');
+    console.log('userEmail=', userEmail);
     return (
       <Container>
         <Menu secondary>
 
           { this.props.is_authenticated || this.state.is_token_exist? (
             <Menu.Menu position='right'>
-            <Link to='/'>
+            
+              <Menu.Item name={userEmail} />
+              <Link to='/'>
                 <Menu.Item name='signOut' onClick={this.handleSignOut} />
               </Link>
           </Menu.Menu>

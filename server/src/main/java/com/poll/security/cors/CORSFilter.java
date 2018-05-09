@@ -21,7 +21,10 @@ public class CORSFilter extends CorsFilter{
             throws ServletException, IOException {
 
         response.addHeader("Access-Control-Allow-Headers",
-                "Access-Control-Allow-Origin, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+                "Access-Control-Allow-Origin, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
+
+        response.addHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+
         if (response.getHeader("Access-Control-Allow-Origin") == null)
             response.addHeader("Access-Control-Allow-Origin", "*");
         filterChain.doFilter(request, response);

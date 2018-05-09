@@ -19,10 +19,13 @@ import styled from 'styled-components';
 // import './App.css';
 import './style/youtube.css';
 
+import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import Home from './components/Home';
+import SurveyDetail from './components/surveys/SurveyDetail';
+
 import SurveyType from './components/SurveyType';
 import SurveyMetric from './components/SurveyMetric';
 
@@ -33,7 +36,7 @@ const MyContainer = styled.div`
   height: 100%;
   margin: 0px;
   padding: 0px;
-  ${'' /* background: #0099FF; */}
+  ${'' /* background: #FAFAFA; */}
   
 `;
 
@@ -55,17 +58,25 @@ class App extends Component {
 
       <Provider store={store}>
         <Router>
-          
+          <div>
+          {/* <Navbar /> */}
+         
           <MyContainer>
-          
+            
             <Route exact path='/' component={Landing} />
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
             <Route path='/surveyType' component={SurveyType} />
             <Route path='/home' component={Home} />
+<<<<<<< HEAD
             <Route path='/surveyMetric' component={SurveyMetric}/>
           </MyContainer>
+=======
+            {/* <Route path='/surveydetail' component={SurveyDetail} /> */}
+>>>>>>> develop
 
+          </MyContainer>
+          </div>
         </Router>
       </Provider>
 
