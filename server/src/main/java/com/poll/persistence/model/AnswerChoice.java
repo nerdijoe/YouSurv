@@ -7,16 +7,21 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class QuestionOption{
+public class AnswerChoice{
 
-    private String id;
-    private String text;
+//    @ManyToOne
+//    @JoinColumn(name = "answer_id", nullable = true)
+//    private Answer answer;
 
-    private String image;
+    private String questionId;
+
+    @ElementCollection(targetClass=String.class)
+    private List<String> selection;
 }

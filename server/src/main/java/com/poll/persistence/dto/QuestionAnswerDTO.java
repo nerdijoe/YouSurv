@@ -1,16 +1,17 @@
 package com.poll.persistence.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUserDTO {
-    private String email;
-    private String password;
+public class QuestionAnswerDTO {
+    private List<String> text;
 }
+

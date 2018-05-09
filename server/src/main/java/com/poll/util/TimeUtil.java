@@ -4,36 +4,46 @@ import com.poll.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Date;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 
 public class TimeUtil {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    /**
-     * @param dateString date in String format
-     * @return Date format
-     */
-    public static Date getFlightDate(String dateString){
-        return getSQLDateFromString(dateString, "yyyy-MM-dd-HH");
-    }
+//    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
 
     /**
      * @param dateString
-     * @param formatString
-     * @return Date format from date in String format using the defined format, example: "yyyy-MM-dd-HH"
+     * @return
      */
-    private static Date getSQLDateFromString(String dateString, String formatString){
-        SimpleDateFormat sdf = new SimpleDateFormat(formatString);
-        java.sql.Date sqlDate = null;
+    public static Date getDate(String dateString, String formatString){
+        Date date = null;
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         try {
-            java.util.Date date = sdf.parse(dateString);
-            sqlDate = new java.sql.Date(date.getTime());
+            date = sdf.parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return sqlDate;
+        return date;
     }
+
+    public static Date getDate(String dateString){
+        return getDate(dateString, DATE_FORMAT);
+    }
+
+    public static String getDateString(Date date){
+        Format formatter = new SimpleDateFormat(DATE_FORMAT);
+        String dateString = formatter.format(date);
+        return dateString;
+    }
+
 
 }

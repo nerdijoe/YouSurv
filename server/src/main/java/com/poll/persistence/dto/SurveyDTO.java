@@ -1,12 +1,12 @@
 package com.poll.persistence.dto;
 
+import com.poll.persistence.model.Answer;
+import com.poll.persistence.model.Publish;
 import com.poll.persistence.model.Question;
 import com.poll.persistence.model.SurveyType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -15,14 +15,17 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class SurveyDTO {
-    private String surveyorId;
-
+    private String id;
+    private String surveyorEmail;
     private List<String> invitedEmailList;
-
+    private String title;
     private String type;
-
-//    private List<QuestionDTO> questions;
-
-    private boolean isPublished;
+    private List<Question> questions;
+    private List<Answer> answers;
+    private Publish publish;
+    private boolean deleted;
+    private String created;
+    private String updated;
 }
