@@ -29,7 +29,6 @@ import SurveyDetail from './components/surveys/SurveyDetail';
 
 import SurveyRegister from './components/SurveyRegister';
 import GeneralSurvey from './components/GeneralSurvey';
-import SurveyType from './components/SurveyType';
 import SurveyMetric from './components/SurveyMetric';
 
 import store from './store/manageStore'
