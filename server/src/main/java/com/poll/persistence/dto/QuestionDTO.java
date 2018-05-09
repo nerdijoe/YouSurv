@@ -1,10 +1,8 @@
 package com.poll.persistence.dto;
 
 import com.poll.persistence.model.QuestionOption;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.ManyToAny;
 
 import java.util.List;
 
@@ -13,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class QuestionDTO {
     private String id;
     private String type;

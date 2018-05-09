@@ -40,6 +40,8 @@ import java.util.List;
 class QuestionMapper{
 
     public static Question toQuestion(QuestionDTO questionDTO) {
+        System.out.println("QuestionMapper.toQuestion");
+        System.out.println("questionDTO = " + questionDTO);
         Question question = new Question();
         question.setType(QuestionType.getType(questionDTO.getType()));
         question.setText(questionDTO.getText());

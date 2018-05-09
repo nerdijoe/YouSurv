@@ -111,6 +111,11 @@ class SurveyTakingDetail extends Component {
     });
   }
 
+  handleChangeMCQRadio = (e, {value}) => {
+    console.log('handleChangeMCQRadio e=', e);
+    console.log('value=', value);
+    
+  }
 
   handleSubmitSaveProgress(e) {
     e.preventDefault();
@@ -198,8 +203,9 @@ class SurveyTakingDetail extends Component {
                           label={option.text}
                           name={question.id}
                           value={option.text}
+                          checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
                           // checked={this.state.value === 'this'}
-                          // onChange={this.handleChange}
+                          onChange={this.handleChangeMCQRadio}
                         />
                         </Form.Field>
                       )

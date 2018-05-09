@@ -195,25 +195,37 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
   console.log('<  before axiosSurveyGetAll data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
 
-  axios.get('http://localhost:8080/survey/', {
-    headers: {
-      Authorization: token,
-    }
-  })
-  .then(res => {
-    console.log('> after axiosSurveyGetAll res.data', res.data);
-      dispatch(surveyGetAll(res.data));
-    // router.push('/signin');
-  })
-  .catch(err => {
-    console.log("***  error axiosSurveyGetAll");
-    console.log(err);
-  })
+  // axios.get('http://localhost:8080/survey/', {
+  //   headers: {
+  //     Authorization: token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosSurveyGetAll res.data', res.data);
+  //     dispatch(surveyGetAll(res.data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***  error axiosSurveyGetAll");
+  //   console.log(err);
+  // })
 
-  // dispatch(surveyGetAllDummy());
+  dispatch(surveyGetAllDummy());
 
 }
 
+export const surveyGetAll = (data) => {
+  return {
+    type: actionType.SURVEY_GET_ALL,
+    data,
+  }
+}
+
+export const surveyGetAllDummy = () => {
+  return {
+    type: actionType.SURVEY_GET_ALL_DUMMY
+  }
+}
 
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
@@ -245,18 +257,6 @@ export const surveyUpdate = (data) => {
 }
 
 
-export const surveyGetAll = (data) => {
-  return {
-    type: actionType.SURVEY_GET_ALL,
-    data,
-  }
-}
-
-export const surveyGetAllDummy = () => {
-  return {
-    type: actionType.SURVEY_GET_ALL_DUMMY
-  }
-}
 
 export const surveyShowDetail = (data, router) => (dispatch) => {
   router.push('/home/surveydetail');

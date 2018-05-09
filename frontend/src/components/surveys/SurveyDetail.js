@@ -218,7 +218,6 @@ class SurveyDetail extends Component {
     var newQuestion = {
       "id": id,
       "type": questionType.Q_STRING,
-      "name": id,
       "text": this.state.questionText,
       "image": "",
       "options": [
@@ -228,11 +227,8 @@ class SurveyDetail extends Component {
           "image":"",
         }
       ],
-      "answer":{
-        "id":"",
-        "text":"",
-      },
       "required": false,
+      "deleted": false,
     }
     console.log('  newQuestion=', newQuestion);
     this.props.questionAdd(newQuestion);
@@ -248,7 +244,6 @@ class SurveyDetail extends Component {
     var newQuestion = {
       "id": id,
       "type": this.state.questionType,
-      "name": id,
       "text": this.state.questionText,
       "image": "",
       "options": [
@@ -258,11 +253,8 @@ class SurveyDetail extends Component {
           "image":"",
         }
       ],
-      "answer":{
-        "id":"",
-        "text":"",
-      },
       "required": false,
+      "deleted": false,
     }
 
     var options = [];
@@ -341,7 +333,6 @@ class SurveyDetail extends Component {
     var newQuestion = {
       "id": id,
       "type": questionType.STAR_RATING,
-      "name": id,
       "text": this.state.questionText,
       "image": "",
       "options": [
@@ -351,11 +342,8 @@ class SurveyDetail extends Component {
           "image":"",
         }
       ],
-      "answer":{
-        "id":"",
-        "text":"",
-      },
       "required": false,
+      "deleted": false,
     }
     console.log('  newQuestion=', newQuestion);
     this.props.questionAdd(newQuestion);

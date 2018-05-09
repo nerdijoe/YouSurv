@@ -39,7 +39,7 @@ class SurveyList extends Component {
 
   componentDidMount() {
     console.log('SurveyList componentDidMount');
-    // this.props.axiosSurveyGetAll();
+    this.props.axiosSurveyGetAll();
   }
 
   handleShowDetail(survey) {
