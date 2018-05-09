@@ -29,6 +29,8 @@ import SurveyDetail from './components/surveys/SurveyDetail';
 
 import SurveyRegister from './components/SurveyRegister';
 import GeneralSurvey from './components/GeneralSurvey';
+import SurveyType from './components/SurveyType';
+import SurveyMetric from './components/SurveyMetric';
 
 import store from './store/manageStore'
 
@@ -71,7 +73,12 @@ class App extends Component {
             <Route path='/general/survey' component={GeneralSurvey} />
             <Route path='/surveyRegister' component={SurveyRegister} />
             <Route path='/home' component={Home} />
+<<<<<<< HEAD
+            <Route path='/surveyMetric' component={SurveyMetric}/>
+          </MyContainer>
+=======
             {/* <Route path='/surveydetail' component={SurveyDetail} /> */}
+>>>>>>> develop
 
           </MyContainer>
           </div>
