@@ -38,6 +38,9 @@ public class SurveyRestController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    SurveyMapper surveyMapper;
+
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
         String surveyorEmail = auth.getName();
@@ -90,7 +93,7 @@ public class SurveyRestController {
             System.out.println("Survey with id: " + id + " can't be saved");
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity(SurveyMapper.toSurveyDTO(survey), HttpStatus.OK);
+        return new ResponseEntity(surveyMapper.toSurveyDTO(survey), HttpStatus.OK);
 
     }
 
@@ -108,7 +111,7 @@ public class SurveyRestController {
         }
 
         Survey survey = surveyService.findById(id);
-        return new ResponseEntity(SurveyMapper.toSurveyDTO(survey), HttpStatus.OK);
+        return new ResponseEntity(surveyMapper.toSurveyDTO(survey), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -6,8 +6,13 @@ import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
 import com.poll.persistence.model.*;
 import com.poll.util.TimeUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.UUID;
@@ -29,9 +34,16 @@ import java.util.UUID;
 //
 //}
 
+@Getter
+@Setter
+@Service
+@Configurable
 public class SurveyMapper {
 
-    public static SurveyDTO toSurveyDTO(Survey survey) {
+    @Autowired
+    QuestionMapper questionMapper;
+
+    public SurveyDTO toSurveyDTO(Survey survey) {
         SurveyDTO dto = new SurveyDTO();
         dto.setId(String.valueOf(survey.getId()));
         dto.setSurveyorEmail(survey.getSurveyorEmail());
@@ -67,7 +79,7 @@ public class SurveyMapper {
 
 
 
-    public static void updateSurvey(SurveyDTO surveyDTO, Survey survey) {
+    public void updateSurvey(SurveyDTO surveyDTO, Survey survey) {
         survey.setSurveyorEmail(surveyDTO.getSurveyorEmail());
         survey.setInvitedEmailList(surveyDTO.getInvitedEmailList());
         survey.setTitle(surveyDTO.getTitle());
@@ -75,7 +87,7 @@ public class SurveyMapper {
 
         survey.getQuestions().clear();
         for (QuestionDTO questionDTO: surveyDTO.getQuestions()) {
-            Question question = QuestionMapper.toQuestion(questionDTO);
+            Question question = questionMapper.toQuestion(questionDTO);
             question.setSurvey(survey);
 
             survey.getQuestions().add(question);
