@@ -67,8 +67,6 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity saveSurvey(@PathVariable("id") long id, @RequestBody SurveyDTO surveyDTO) {
         System.out.println("Saving survey with id " + id);
-        Date now = new Date();
-        System.out.println("now.toString() = " + now.toString());
         if (!surveyService.existsById(id)){
             String message = "survey with id: " + id + " does not exists";
             System.out.println(message);

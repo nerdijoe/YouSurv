@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionOptionDTO {
+    private String id;
     private String text;
     private String image;
 }

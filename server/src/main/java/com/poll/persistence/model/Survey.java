@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,9 @@ public class Survey extends AbstractTimestampModel {
 //            cascade = CascadeType.ALL,
 //            orphanRemoval = true
 //    )
-    @Embedded
+//    @Embedded
+//    @Size(max = 10000)
+    @ElementCollection(targetClass = Question.class)
     private List<Question> questions;
 
 //    @OneToMany(
@@ -44,10 +47,12 @@ public class Survey extends AbstractTimestampModel {
 //            cascade = CascadeType.ALL,
 //            orphanRemoval = true
 //    )
-    @Embedded
+//    @Embedded
+    @ElementCollection(targetClass = Answer.class)
     private List<Answer> answers;
 
     @Embedded
+
     private Publish publish;
 
     public Survey(){

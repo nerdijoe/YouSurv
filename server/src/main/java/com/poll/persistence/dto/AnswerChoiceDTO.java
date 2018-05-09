@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionAnswerDTO {
-    private List<String> text;
+public class AnswerChoiceDTO {
+    private String text;
+    private String image;
 }
-
