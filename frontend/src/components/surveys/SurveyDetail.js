@@ -479,10 +479,17 @@ class SurveyDetail extends Component {
     })
   }
 
+  handlePublish(e) {
+    console.log('handlePublish');
+    e.preventDefault();
+    
+  }
+
   render() {
     const { activeItem } = this.state;
     const options = this.state.options;
     const _this = this;
+    const buttonColor = 'red';
     const segmentContent = activeItem => {
       if(activeItem === 'Short Answer') {
         return (
@@ -493,7 +500,7 @@ class SurveyDetail extends Component {
                 <label>Enter your text</label>
                 <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
               </Form.Field>
-              <Button basic color="green" type="submit">Add</Button>
+              <Button basic color={buttonColor} type="submit">Add Short Answer</Button>
             </Form>
             {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button> */}
           </div>
@@ -516,8 +523,8 @@ class SurveyDetail extends Component {
                 <label>Options</label><label>(For Image options, enter image URL)</label>
               </Form.Field>
               <Form.Field>
-                <Button basic color="green" onClick={e => this.addOption(e)} icon='plus' />
-                <Button basic color="red" onClick={e => this.removeOption(e)} icon='minus'/>
+                <Button basic color={buttonColor} onClick={e => this.addOption(e)} icon='plus' />
+                <Button basic color="grey" onClick={e => this.removeOption(e)} icon='minus'/>
               </Form.Field>
               <div id="dynamicInput">
                   {
@@ -538,7 +545,7 @@ class SurveyDetail extends Component {
 
               </div>
               <Form.Field>
-                <Button basic color="green" type="submit">Add MCQ</Button>
+                <Button basic color={buttonColor} type="submit">Add MCQ</Button>
               </Form.Field>
             </Form>
 
@@ -555,7 +562,7 @@ class SurveyDetail extends Component {
                 <label>Enter your text</label>
                 <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
               </Form.Field>
-            <Button basic color="green" type="submit">Add Rating</Button>
+            <Button basic color={buttonColor} type="submit">Add Rating</Button>
             </Form>
           </div>
         ) 
@@ -563,7 +570,7 @@ class SurveyDetail extends Component {
         return (
           <div>
             <h3>Edit</h3>
-            <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Edit</Button>
+            <Button basic color={buttonColor} onClick={e => {this.handleAddShortAnswer()}}>Edit</Button>
           </div>
         ) 
       }
@@ -571,7 +578,7 @@ class SurveyDetail extends Component {
     }
 
     const removeQuestionIcon = (question) => (
-      <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='red' size="large" name='remove'/></a>
+      <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='grey' size="large" name='remove'/></a>
     )
 
     
@@ -617,21 +624,15 @@ class SurveyDetail extends Component {
               />
             </Form.Field>
           </Form.Group> 
-          {/* <Form.Field><label>End Date</label></Form.Field>
-          <Form.Field>
-            <DatePicker
-              selected={this.state.endDate}
-              onChange={this.handleChangeEndDate}
-              showTimeSelect
-              timeFormat="HH:mm"
-              timeIntervals={15}
-              dateFormat="LLL"
-              timeCaption="time"
-            />
-          </Form.Field> */}
 
-
-          <Button color="youtube" type="submit">Update Survey</Button>
+          <Form.Group>
+            <Form.Field>
+              <Button basic color="red" type="submit">Update Survey</Button>
+            </Form.Field>
+            <Form.Field>
+              <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+            </Form.Field>
+          </Form.Group>
         </Form>
         
         
@@ -672,6 +673,12 @@ class SurveyDetail extends Component {
 
         <h3>Preview</h3>
           <Form onSubmit={e => this.handleSubmit(e)}>
+          { this.props.survey.questions.length === 0 ? (
+            <Message compact>
+              You have no questions for this survey, please add them.
+            </Message>
+          ) : ('')}
+
           { this.props.survey.questions.map((question, index) => {
             var order = index + 1;
             // left column width
@@ -871,26 +878,13 @@ class SurveyDetail extends Component {
 
           }
 
-                {/* <Form.Field>
-                  <Checkbox
-                    
-                    label='Choose this'
-                    name='checkboxRadioGroup'
-                    value='this'
-                    // checked={this.state.value === 'this'}
-                    
-                  />
-                  <Checkbox
-                    
-                    label='Choose thats'
-                    name='checkboxRadioGroup'
-                    value='this'
-                    // checked={this.state.value === 'this'}
-                    
-                  />
-                </Form.Field> */}
+
           <Divider />
-          <Button color='youtube' type='submit' >Save</Button>
+          { this.props.survey.questions.length > 0 ? (
+            <Button color='youtube' type='submit' >Save Questions</Button>
+          ) : ('')}
+
+          {/* <Button color='youtube' type='submit' >Save</Button> */}
           </Form>
 
           <Divider />
