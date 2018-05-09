@@ -23,6 +23,7 @@ import Navbar from './components/Navbar';
 import Landing from './components/Landing';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
+import Verify from './components/Verify';
 import Home from './components/Home';
 import SurveyDetail from './components/surveys/SurveyDetail';
 
@@ -65,6 +66,7 @@ class App extends Component {
             <Route exact path='/' component={Landing} />
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
+            <Route path='/verify' component={Verify} />
             <Route path='/surveyType' component={SurveyType} />
             <Route path='/home' component={Home} />
             {/* <Route path='/surveydetail' component={SurveyDetail} /> */}

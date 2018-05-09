@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -37,10 +38,27 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    String link="";
-    String domain="localhost:";
-    String port="3000/";
-    String route="user/verify?emailVerificationToken=";
+
+    static String OTP(int len)
+    {
+        // Using numeric values
+        String numbers = "0123456789";
+
+        // Using random method
+        Random rndm_method = new Random();
+
+//        char[] otp = new char[len];
+        String otp = "";
+        for (int i = 0; i < len; i++)
+        {
+            // Use of charAt() method : to get character value
+            // Use of nextInt() as it is scanning the value as int
+            otp +=
+                    numbers.charAt(rndm_method.nextInt(numbers.length()));
+        }
+
+        return otp;
+    }
 
     public List<AppUser> findAllUsers() {
         return appUserRepository.findAll();
@@ -91,18 +109,16 @@ public class UserService {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         AppUser appUser = AppUserMapper.toAppUser(dto);
-
-        String token = UUID.randomUUID().toString();
+        int length = 4;
+        String token = OTP(length);
         appUser.setEmailVerificationToken(token);
         appUserRepository.save(appUser);
-
-        link = domain + port + route + token;
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("postmaster@localhost");
         mailMessage.setTo(appUser.getEmail());
         mailMessage.setSubject("MyPoll - Account Registration Confirmation");
-        mailMessage.setText("Please confirm your account:\n" + link);
+        mailMessage.setText("Your verification code is :\n" + token);
         emailService.sendEmail(mailMessage);
     }
 
@@ -129,6 +145,12 @@ public class UserService {
             System.out.print("Before Save"+user.getId());
             user.setVerified(true);
             appUserRepository.save(user);
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom("postmaster@localhost");
+            mailMessage.setTo(user.getEmail());
+            mailMessage.setSubject("Account Confirmed");
+            mailMessage.setText("You have successfully registered!!");
+            emailService.sendEmail(mailMessage);
 
         }catch (Exception e){
             throw new CustomException("Relation not found", HttpStatus.NOT_FOUND);
