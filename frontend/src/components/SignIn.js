@@ -162,7 +162,7 @@ class SignIn extends Component {
                   </Form.Field> */}
                   <Form.Field>
                     <label>Email</label>
-                    <input placeholder='john.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
+                    <input placeholder='jon.snow@winterfell.com' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }} />
                   </Form.Field>
                   <Form.Field>
                     <label>Password</label>
