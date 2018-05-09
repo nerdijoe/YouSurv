@@ -49,16 +49,17 @@ public class SurveyService {
             answer.setSurvey(survey);
         }
 
-
-
-        survey.setAnswers(surveyDTO.getAnswers());
-
         SurveyMapper.convertToSurvey(surveyDTO, survey);
+
         return surveyRepository.save(survey);
     }
 
     public boolean existsById(long id){
         return surveyRepository.existsById(id);
+    }
+
+    public Survey findById(long id) {
+        return surveyRepository.findById(id);
     }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
