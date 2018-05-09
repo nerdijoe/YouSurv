@@ -117,16 +117,13 @@ class SurveyTakingDetail extends Component {
     console.log('question=', question);
 
     var answers = {...this.state.answers};
-    if(question.type == questionType.MCQ_TEXT_RADIO) {
-      answers[question.id] = [value];
-    }
+    answers[question.id] = [value];
+    
 
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
-    });
-
-    
+    });    
   }
 
   handleChangeMCQCheckbox = (e, {value}, question) => {
@@ -151,10 +148,44 @@ class SurveyTakingDetail extends Component {
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
+    }); 
+  }
+
+  handleChangeMCQDropdown = (e, {name, value}, question) => {
+    console.log('handleChangeMCQDropdown e=', e);
+    console.log('name=', name);
+    console.log('value=', value);
+    console.log('question=', question);
+    var target = e.target
+    console.log('target=', target);
+    // console.log(`e.target.id=[${target.id}] e.target.value=[${target.value}]   target.option=${target.option}`);
+    
+    var answers = {...this.state.answers};
+    answers[question.id] = [value];
+
+    console.log('--> answers=', answers);
+    this.setState({
+      answers: answers,
     });
 
     
   }
+
+  // handleTest(e, data) {
+  //   console.log( 'handleTest, data=', data );
+  //   console.log('data.text=', data.text)
+  // }
+  // handleTest = (e, {data}) => {
+  //   console.log( 'handleTest, data=', data );
+  //   console.log('e=', e)
+  //   // console.log('data.text=', data.text)
+  // }
+  // handleTest = (e, {name, value}) => {
+  //   console.log( 'handleTest, name=', name );
+  //   console.log( 'value=', value);
+  //   console.log('e=', e)
+  // }
+
 
   handleSubmitSaveProgress(e) {
     e.preventDefault();
@@ -274,7 +305,7 @@ class SurveyTakingDetail extends Component {
                           name={question.id}
                           value={option.text}
                           checked={found}
-                          onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}         
+                          onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}
                         />
                         </Form.Field>
                       )
@@ -289,17 +320,30 @@ class SurveyTakingDetail extends Component {
                 question.options.map(option => {
                   var newOption = {
                     key: option.value,
-                    value: option.value,
+                    value: option.text,
                     text: option.text,
                   }
                   dropdownOptions.push(newOption);
                 })
+                var getValue = '';
+                if (this.state.answers[question.id] != undefined) {
+                  getValue = this.state.answers[question.id][0];
+                }
                 return (
                   <Grid key={question.id} columns='equal'>
                     <Grid.Column>
                       <Form.Field key={question.id}>
                         <label>{order}. {question.text}</label>
-                        <Dropdown key={question.id} name={question.id} placeholder='Please choose' fluid search selection options={dropdownOptions} value={this.state.dropdownOptions} />
+                        <Dropdown
+                          key={question.id}
+                          name={question.id}
+                          placeholder='Please choose'
+                          fluid search selection
+                          options={dropdownOptions}
+                          value={getValue}
+                          onChange={(e, {name, value}) => this.handleChangeMCQDropdown(e, {name, value}, question)}
+                          // onChange={this.handleTest}
+                        />
                       </Form.Field>
                     </Grid.Column>
                   </Grid>
@@ -345,8 +389,9 @@ class SurveyTakingDetail extends Component {
                             label=''
                             name={question.id}
                             value={option.text}
-                            // checked={this.state.value === 'this'}
-                            // onChange={this.handleChange}
+                            checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
+                          // checked={this.state.value === 'this'}
+                          onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
                           />
                           </Grid.Column>
                           <Grid.Column>
@@ -369,6 +414,10 @@ class SurveyTakingDetail extends Component {
                     <label>{order}. {question.text}</label>
                   </Form.Field>
                     {question.options.map(option => {
+                      var found = false;
+                      if(this.state.answers[question.id] != undefined) {
+                        found = (this.state.answers[question.id].indexOf(option.text) > -1)
+                      }
                       return (
                         <Form.Field key={option.id}>
                         <Grid columns='equal'>
@@ -378,8 +427,8 @@ class SurveyTakingDetail extends Component {
                             label=''
                             name={question.id}
                             value={option.text}
-                            // checked={this.state.value === 'this'}
-                            // onChange={this.handleChange}
+                            checked={found}
+                            onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}
                           />
                           </Grid.Column>
                           <Grid.Column>
