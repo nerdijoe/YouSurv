@@ -2,7 +2,7 @@ package com.poll.security.authentication;
 
 import com.poll.persistence.model.AppUser;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
-import com.poll.persistence.repository.mysql.AppUserRepository;
+import com.poll.persistence.repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;

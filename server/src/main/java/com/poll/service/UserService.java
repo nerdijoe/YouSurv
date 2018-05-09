@@ -6,7 +6,7 @@ import com.poll.persistence.mapper.AppUserMapper;
 import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.AppUser;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
-import com.poll.persistence.repository.mysql.AppUserRepository;
+import com.poll.persistence.repository.AppUserRepository;
 import com.poll.security.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

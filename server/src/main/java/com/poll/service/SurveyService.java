@@ -7,10 +7,10 @@ import com.poll.persistence.model.*;
 //import com.poll.persistence.repository.mongo.AnswerRepository;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
 //import com.poll.persistence.repository.mongo.SurveyRepository;
-import com.poll.persistence.repository.mysql.AnswerRepository;
-import com.poll.persistence.repository.mysql.AppUserRepository;
-import com.poll.persistence.repository.mysql.QuestionRepository;
-import com.poll.persistence.repository.mysql.SurveyRepository;
+import com.poll.persistence.repository.AnswerRepository;
+import com.poll.persistence.repository.AppUserRepository;
+import com.poll.persistence.repository.QuestionRepository;
+import com.poll.persistence.repository.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

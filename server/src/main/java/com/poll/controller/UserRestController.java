@@ -146,7 +146,7 @@ public class UserRestController {
 
     @RequestMapping(value="/user/verify", method = RequestMethod.PUT)
     public void verifyUser(@RequestParam String emailVerificationToken){
-        System.out.println("Token"+emailVerificationToken);
+        System.out.println("Token" + emailVerificationToken);
         userService.verifyUser(emailVerificationToken);
     }
 }
