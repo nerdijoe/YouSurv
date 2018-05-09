@@ -34,7 +34,7 @@ public class SurveyMapper {
         dto.setSurveyorEmail(survey.getSurveyorEmail());
         dto.setInvitedEmailList(survey.getInvitedEmailList());
         dto.setTitle(survey.getTitle());
-        dto.setType(survey.getType().name());
+        dto.setType(dto.getType());
         dto.setQuestions(survey.getQuestions());
         dto.setAnswers(survey.getAnswers());
         dto.setPublish(survey.getPublish());
