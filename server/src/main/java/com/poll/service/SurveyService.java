@@ -68,6 +68,20 @@ public class SurveyService {
         return dtoList;
     }
 
+    public boolean isSurveyCreatedBy(Survey survey, String surveyorEmail) {
+        return survey.getSurveyorEmail().equals(surveyorEmail);
+    }
+
+    public SurveyDTO publishSurvey(Survey survey) {
+        Publish publish = survey.getPublish();
+        if (publish == null) publish = new Publish();
+        publish.setLink("http://localhost/survey/"+survey.getId());
+        publish.setQrCodeByteArray("0192380123087187230918230581230958");
+        survey.setPublish(publish);
+        surveyRepository.save(survey);
+        return SurveyMapper.toSurveyDTO(survey);
+    }
+
 //    public Survey createSurvey(AppUser surveyor, String type) {
 //        if (surveyor == null || type == null){
 //            return null;

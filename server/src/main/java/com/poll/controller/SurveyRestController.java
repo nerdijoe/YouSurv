@@ -101,6 +101,22 @@ public class SurveyRestController {
         return new ResponseEntity(survey, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity publishSurvey(@PathVariable("id") long id, Authentication auth) {
+        System.out.println("Publishing survey with id " + id);
+        String surveyorEmail = auth.getName();
+        Survey survey = surveyService.findById(id);
+        if (!surveyService.isSurveyCreatedBy(survey, surveyorEmail)) {
+            String message = "User with email: " + surveyorEmail + " have no authorization to publish survey with id: " + id;
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.FORBIDDEN);
+        }
+        SurveyDTO surveyDTO = surveyService.publishSurvey(survey);
+        return new ResponseEntity(surveyDTO, HttpStatus.OK);
+    }
+
 
 
 
