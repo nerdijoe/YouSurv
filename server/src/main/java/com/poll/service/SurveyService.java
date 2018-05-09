@@ -36,17 +36,20 @@ public class SurveyService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private SurveyMapper surveyMapper;
+
     public SurveyDTO createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
         Survey survey = SurveyMapper.toSurvey(surveyorEmail, surveyDTO);
         surveyRepository.save(survey);
-        return SurveyMapper.toSurveyDTO(survey);
+        return surveyMapper.toSurveyDTO(survey);
     }
 
     public Survey save(SurveyDTO surveyDTO) {
         System.out.println("surveyDTO = " + surveyDTO);
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
 
-        SurveyMapper.updateSurvey(surveyDTO, survey);
+        surveyMapper.updateSurvey(surveyDTO, survey);
 
 //        for (Question question: survey.getQuestions()){
 //            questionRepository.save(question);
@@ -71,7 +74,7 @@ public class SurveyService {
         List<SurveyDTO> dtoList = new ArrayList<>();
         List<Survey> surveys = surveyRepository.findAllBySurveyorEmail(surveyorEmail);
         for (Survey survey: surveys){
-            dtoList.add(SurveyMapper.toSurveyDTO(survey));
+            dtoList.add(surveyMapper.toSurveyDTO(survey));
         }
         return dtoList;
     }
@@ -112,7 +115,7 @@ public class SurveyService {
             surveyLinkRepository.save(surveyLinks);
 
         }
-        return SurveyMapper.toSurveyDTO(survey);
+        return surveyMapper.toSurveyDTO(survey);
     }
 
     public Answer answerSurvey(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {

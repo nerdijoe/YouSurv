@@ -30,7 +30,8 @@ import {
   Radio,
   Dropdown,
   Rating,
-  
+  Comment,
+
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -44,6 +45,8 @@ import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
 import * as questionType from '../../actions/surveyConstants';
+
+import avatarMatt from '../../assets/images/avatar/small/matt.jpg';
 
 class SurveyTakingDetail extends Component {
   constructor(props) {
@@ -220,7 +223,7 @@ class SurveyTakingDetail extends Component {
 
     console.log('choices=', choices);
 
-    this.props.surveyTakingSaveProgress(choices);
+    this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
   }
 
 
@@ -234,6 +237,25 @@ class SurveyTakingDetail extends Component {
           </Message>
         ) : (
           <div>
+          <Comment.Group>
+            <Comment>
+              <Comment.Avatar as='a' src={avatarMatt} />
+              <Comment.Content>
+                <Comment.Author>Survey by {this.props.survey.surveyorEmail}</Comment.Author>
+                <Comment.Metadata>
+                  <div>{this.props.survey.title}</div>
+                  <div>
+                    {/* <Icon name='star' />
+                    5 Faves */}
+                  </div>
+                </Comment.Metadata>
+                {/* <Comment.Text>
+                  Hey guys, I hope this example comment is helping you read this documentation.
+                </Comment.Text> */}
+              </Comment.Content>
+            </Comment>
+          </Comment.Group>
+
             <h3>Please fill this survey questions</h3>
             <Form onSubmit={e => this.handleSubmitSaveProgress(e)}>
             { this.props.survey.questions.length === 0 ? (
@@ -352,7 +374,7 @@ class SurveyTakingDetail extends Component {
                   </Grid>
                 )
               } else if(question.type === questionType.STAR_RATING) {
-                var ratingOptions = [ 0, 1, 2, 3, 4, 5];
+                var ratingOptions = [ "0", "1", "2", "3", "4", "5"];
                 return (
                   <Grid key={question.id} columns='equal'>
                     <Grid.Column>
@@ -486,7 +508,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     surveyTakingGetById: (data) => { dispatch(surveyTakingGetById(data)); },
-    surveyTakingSaveProgress: (data) => { dispatch(surveyTakingSaveProgress(data)); },
+    surveyTakingSaveProgress: (data, surveyId) => { dispatch(surveyTakingSaveProgress(data, surveyId)); },
 
   }
 }
