@@ -428,7 +428,7 @@ class SurveyDetail extends Component {
     // this.props.questionUpdateText(this.state.text);
     
     //save current survey
-    // this.props.surveySaveQuestion();
+    this.props.surveySaveQuestion();
     this.props.axiosSurveyUpdate(this.props.survey);
 
   }

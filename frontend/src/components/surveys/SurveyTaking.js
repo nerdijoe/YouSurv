@@ -32,7 +32,7 @@ import cardHeader01 from '../../assets/images/card/card_header_01.png'
 import cardHeader02 from '../../assets/images/card/card_header_02.png'
 
 
-class SurveyList extends Component {
+class SurveyTaking extends Component {
 
   handleShowDetail(survey) {
     this.props.surveyShowDetail(survey, this.props.history);
@@ -41,15 +41,24 @@ class SurveyList extends Component {
   render() {
     return (
       <Container>
+      
+        { this.props.surveys.length === 0 ? (
+            <Message compact>
+              You have no surveys.
+            </Message>
+          ) : ('')}
+
         <Card.Group>
         { this.props.surveys.map(survey => {
-
+          var link = `/home/takesurvey/${survey.id}`;
           return (
             <Card key={survey.id}>
-              <a onClick={() => {this.handleShowDetail(survey)}}>
+              {/* <a onClick={() => {this.handleShowDetail(survey)}}>
                 <Image src={cardHeader02} />
-              </a>
-              
+              </a> */}
+              <Link to={link}>
+                <Image src={cardHeader02} />
+              </Link>
               <Card.Content>
                 <Card.Header>{survey.id} {survey.title}</Card.Header>
                 <Card.Meta>{Moment(survey.created).format('L LT')}</Card.Meta>
@@ -94,7 +103,7 @@ class SurveyList extends Component {
 
 const mapStateToProps = state => {
   return {
-    surveys: state.SurveyReducer.surveys,
+    surveys: state.SurveyReducer.surveyTaking,
   }
 }
 
@@ -105,5 +114,5 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const connectedSurveyList = withRouter(connect(mapStateToProps, mapDispatchToProps)(SurveyList));
-export default connectedSurveyList;
+const connectedSurveyTaking = withRouter(connect(mapStateToProps, mapDispatchToProps)(SurveyTaking));
+export default connectedSurveyTaking;

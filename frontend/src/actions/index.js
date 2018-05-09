@@ -218,22 +218,22 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
 
-  axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
-    headers: {
-      Authorization: token,
-    }
-  })
-  .then(res => {
-    console.log('> after axiosSurveyUpdate res.data', res.data);
-      dispatch(surveyUpdate(res.data));
-    // router.push('/signin');
-  })
-  .catch(err => {
-    console.log("***  error axiosSurveyUpdate");
-    console.log(err);
-  })
+  // axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
+  //   headers: {
+  //     Authorization: token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosSurveyUpdate res.data', res.data);
+  //     dispatch(surveyUpdate(res.data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***  error axiosSurveyUpdate");
+  //   console.log(err);
+  // })
 
-  // dispatch(surveyUpdate(data));
+  dispatch(surveyUpdate(data));
 
 }
 
@@ -324,4 +324,33 @@ export const questionRemoveReduce = (data) => {
   }
 }
 
+// ==============================================================================
+// Surveyee Action
+// ==============================================================================
 
+export const surveyTakingGetById = (data) => dispatch => {
+  console.log('surveyGetById data=', data);
+
+  dispatch(surveyTakingGetByIdReduce(data));
+}
+
+export const surveyTakingGetByIdReduce = (data) => {
+  return {
+    type: actionType.SURVEY_TAKING_GET_BY_ID,
+    data,
+  }
+}
+
+export const surveyTakingSaveProgress = (data) => dispatch => {
+  console.log('surveyTakingSaveProgress data=', data);
+
+  dispatch(surveyTakingSaveProgressReduce(data));
+
+}
+
+export const surveyTakingSaveProgressReduce = (data) => {
+  return {
+    type: actionType.SURVEY_TAKING_SAVE_PROGRESS,
+    data,
+  }
+}

@@ -14,7 +14,7 @@ import {
 import LogoThunder from '../assets/images/logo/logo_thunder_01.png';
 import Logo01 from '../assets/images/logo/logo_01.png';
 import Logo05 from '../assets/images/logo/logo_05.png';
-import Menu from './NavbarMenu';
+import Menu from './NavbarMenuHome';
 
 const styles = {
   header: {

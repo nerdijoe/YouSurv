@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Menu } from 'semantic-ui-react';
+import { Container, Menu, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userSignOutRequest } from '../actions';
@@ -39,13 +39,14 @@ class NavbarMenu extends Component {
           { this.props.is_authenticated || this.state.is_token_exist? (
             <Menu.Menu position='right'>
             
-              <Menu.Item name={userEmail} />
-              <Link to='/'>
-                <Menu.Item name='signOut' onClick={this.handleSignOut} />
-              </Link>
-              {/* <Link to='/home/surveyee'>
+              {/* <Menu.Item name={userEmail} /> */}
+              <Menu.Item>{userEmail}</Menu.Item>
+              <Link to='/home/surveyee'>
                 <Menu.Item name='surveyee' />
-              </Link> */}
+              </Link>
+              <Link to='/'>
+                <Menu.Item onClick={this.handleSignOut} ><Icon name="sign out"/></Menu.Item>
+              </Link>
 
           </Menu.Menu>
 

@@ -1,8 +1,14 @@
 import * as actionType from '../actions/constants';
+import cuid from 'cuid';
+import moment from 'moment';
 
 const initialState = {
   surveys: [],
   surveyCurrent: {
+    questions:[],
+  },
+  surveyTaking: [],
+  surveyTakingCurrent: {
     questions:[],
   },
 }
@@ -16,9 +22,12 @@ const SurveyReducer = (state = initialState, action) => {
       const newSurvey = { 
         ...action.data,
       }
+
+      // takingSurveys only for testing
       return {
         ...state,
         surveys: [...state.surveys, newSurvey],
+        surveyTaking: [...state.surveyTaking, newSurvey],
       }
     }
     case actionType.SURVEY_GET_ALL: {
@@ -55,8 +64,7 @@ const SurveyReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        surveyCurrent: {...state.surveyCurrent, questions: updateQuestion}
-
+        surveyCurrent: {...state.surveyCurrent, questions: updateQuestion},
       }
     }
     case actionType.QUESTION_UPDATE_TEXT: {
@@ -107,6 +115,8 @@ const SurveyReducer = (state = initialState, action) => {
       return {
         ...state,
         surveys: updatedSurveys,
+        surveyTaking: updatedSurveys,
+
       }
     }
     case actionType.SURVEY_SAVE_QUESTION: {
@@ -120,6 +130,111 @@ const SurveyReducer = (state = initialState, action) => {
       return {
         ...state,
         surveys: updatedSurveys,
+        surveyTaking: updatedSurveys,
+
+      }
+    }
+    case actionType.SURVEY_TAKING_GET_BY_ID: {
+      console.log('SurveyReducer SURVEY_TAKING_GET_BY_ID');
+      console.log('action = ', action);
+      // const surveyDetail = state.surveys.filter(s => s.id === action.id )
+      const surveyTaking = [...state.surveyTaking];
+      const surveyTakingCurrent = surveyTaking.filter(s => s.id === action.data)
+      console.log('     surveyTaking=', surveyTaking);
+      console.log('     surveyTakingCurrent=', surveyTakingCurrent);
+      return {
+        ...state,
+        surveyTakingCurrent: surveyTakingCurrent[0],
+      }
+    }
+    case actionType.SURVEY_TAKING_SAVE_PROGRESS: {
+      console.log('SurveyReducer SURVEY_TAKING_SAVE_PROGRESS');
+      console.log('action = ', action);
+      const data = action.data;
+
+      // find by surveyee email
+      const UpdatedSurveyTakingCurrent = {...state.surveyTakingCurrent}
+      const updateAnswers = [...UpdatedSurveyTakingCurrent.answers];
+
+      const email = localStorage.getItem('user_email');
+      const pos = updateAnswers.findIndex(i => i.surveyeeEmail === email)
+
+      // if existing answer by this user exist, just update his answers
+      if(pos != -1) {
+        updateAnswers[pos].choices = data;
+
+        /*
+        // find the question id if exist
+        updateAnswers[pos].choices.map( c => {
+          if( data.hasOwnProperty(c.questionId) ) {
+            // update value
+            c.selection = data[c.questionId];
+          }
+        })
+
+        // insert choices if it does not exist
+        Object.keys(data).forEach( key => {
+          updateAnswers[pos].choices.findIndex(i => i.questionId === key)
+          if (pos == -1) {
+            var choice = {
+              questionId: key,
+              selection: data[key],
+            }
+            updateAnswers[pos].choices.push(choice);
+          }
+        })
+        */
+
+
+
+      } else {
+        // insert into answers array
+/*
+{
+			"id":"12",
+			"surveyeeEmail": "rudy@sjsu.edu",
+			"choices": [
+				{
+					"questionId": "11",
+					"selection": ["111", "113"]
+				}
+			],
+			"created": "2018-05-02 15:00:59",
+			"updated": "2018-05-02 15:00:59",
+			"deleted": false,
+			"submitted": true
+		},
+*/
+
+        var newAnswer = {
+          id: cuid(),
+          surveyeeEmail: email,
+          choices: data,
+          created: '',
+          updated: '',
+          deleted: false,
+          submitted: false,
+        }
+
+
+        updateAnswers.push(newAnswer);
+      }
+
+      const surveyTaking = [...state.surveyTaking];
+      const posfoo = surveyTaking.findIndex(i => i.id === UpdatedSurveyTakingCurrent.id)
+
+      // replace the whole survey with the updated survey
+      if(posfoo != -1)
+        surveyTaking[posfoo] = UpdatedSurveyTakingCurrent
+
+
+      UpdatedSurveyTakingCurrent.answers = updateAnswers;
+
+      return {
+        ...state,
+        surveyTaking: surveyTaking,
+        surveyTakingCurrent: UpdatedSurveyTakingCurrent,
+
       }
     }
     default: 

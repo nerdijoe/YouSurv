@@ -13,3 +13,13 @@ export const SURVEY_UPDATE = 'SURVEY_UPDATE';
 export const QUESTION_ADD = 'QUESTION_ADD';
 export const QUESTION_UPDATE_TEXT = 'QUESTION_UPDATE_TEXT';
 export const QUESTION_REMOVE = 'QUESTION_REMOVE';
+
+
+
+// ==============================================================================
+// Surveyee Action
+// ==============================================================================
+
+export const SURVEY_TAKING_GET_BY_ID = 'SURVEY_TAKING_GET_BY_ID';
+export const SURVEY_TAKING_SAVE_PROGRESS = 'SURVEY_TAKING_SAVE_PROGRESS';
+

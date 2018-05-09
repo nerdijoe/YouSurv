@@ -20,6 +20,8 @@ import NavbarHome from './NavbarHome';
 import SurveyForm from './surveys/SurveyForm';
 import SurveyList from './surveys/SurveyList';
 import SurveyDetail from './surveys/SurveyDetail';
+import SurveyTaking from './surveys/SurveyTaking';
+import SurveyTakingDetail from './surveys/SurveyTakingDetail';
 
 
 const MyContainer = styled.div`
@@ -59,8 +61,10 @@ class Home extends Component {
 
           <Route exact path='/home' component={SurveyList} />
           <Route path='/home/surveydetail' component={SurveyDetail} />
-          {/* <Route path='/home/interest' component={Interest} />
-          <Route path='/home/sharing' component={Sharing} />
+          <Route path='/home/surveyee' component={SurveyTaking} />
+
+          <Route path='/home/takesurvey/:id' component={SurveyTakingDetail} />
+          {/* <Route path='/home/sharing' component={Sharing} />
           <Route path='/home/starred' component={Main} />
           <Route path='/home/activities' component={Activities} /> */}
 
