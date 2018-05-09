@@ -34,7 +34,7 @@ const MyContainer = styled.div`
   height: 100%;
   margin: 0px;
   padding: 0px;
-  background: #FAFAFA;
+  ${'' /* background: #FAFAFA; */}
   
 `;
 
@@ -57,7 +57,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div>
-          <Navbar />
+          {/* <Navbar /> */}
          
           <MyContainer>
             

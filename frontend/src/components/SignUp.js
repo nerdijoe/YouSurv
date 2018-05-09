@@ -132,7 +132,7 @@ class SignUp extends Component {
   render() {
     return (
       <MyContainer>
-        {/* <Navbar /> */}
+        <Navbar />
         <Container>
           <Grid>
             <Grid.Row>

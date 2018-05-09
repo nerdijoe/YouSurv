@@ -132,7 +132,7 @@ class SignIn extends Component {
   render() {
     return (
       <MyContainer>
-        {/* <Navbar /> */}
+        <Navbar />
 
         <Container>
           <Grid>

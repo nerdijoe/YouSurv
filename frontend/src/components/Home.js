@@ -16,7 +16,7 @@ import {
 } from 'semantic-ui-react';
 import styled from 'styled-components';
 
-import Navbar from './Navbar';
+import NavbarHome from './NavbarHome';
 import SurveyForm from './surveys/SurveyForm';
 import SurveyList from './surveys/SurveyList';
 import SurveyDetail from './surveys/SurveyDetail';
@@ -47,7 +47,7 @@ class Home extends Component {
   render() {
     return (
       <MyContainer>
-        {/* <Navbar /> */}
+        <NavbarHome />
         <Container>
           <h2>Home</h2>
           {/* <Button onClick={this.handleSignOut}>Sign out</Button> */}
