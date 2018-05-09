@@ -50,7 +50,7 @@ const ErrorMessage = ({formErrors}) => (
   </Container>
 );
 
-class Verify extends Component {
+class SurveyRegister extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -92,11 +92,11 @@ class Verify extends Component {
     this.setState({ formValid: this.state.tokenValid });
   }
 
-  handleVerify(e) {
+  handleRegister(e) {
     e.preventDefault();
     console.log('handleSignIn', this.state.token);
     // this.props.axiosVerify(this.state.token, this.props.history);
-    axios.put('http://localhost:8300/user/verify?emailVerificationToken='+this.state.token).then( res => {
+    axios.put('http://localhost:8300/user/register'+this.state.token).then( res => {
       console.log("responseeee");
       if(res.status===200)
         this.props.history.push('/signin');
@@ -146,8 +146,8 @@ class Verify extends Component {
             <Grid.Row>
               <Grid.Column width={4} />
               <Grid.Column width={8}>
-                <Header size='huge'>Registration Confirmation</Header>
-                <h2>Enter the verification code sent to you by email</h2>
+                <Header size='huge'>Register for the Survey</Header>
+                <h2>Enter your Email ID or Sign In</h2>
               </Grid.Column>
               <Grid.Column width={4} />
             </Grid.Row>
@@ -159,21 +159,13 @@ class Verify extends Component {
               </Grid.Column>
               <Grid.Column width={8}>
               
-                <Form onSubmit={ (e) => { this.handleVerify(e) }} >
-                  {/* <Form.Field>
-                    <label>First Name</label>
-                    <input placeholder='John' name='firstname' value={this.state.firstname} onChange={ (e) => { this.handleChange(e); }} />
-                  </Form.Field>
+                <Form onSubmit={ (e) => { this.handleRegister(e) }} >
                   <Form.Field>
-                    <label>Last Name</label>
-                    <input placeholder='Snow' name='lastname' value={this.state.lastname} onChange={ (e) => { this.handleChange(e); }} />
-                  </Form.Field> */}
-                  <Form.Field>
-                    <label>Enter Verification Code</label>
-                    <input type='password' placeholder='xxxx' name='token' value={this.state.token} onChange={ (e) => { this.handleChange(e); }}/>
+                    <label>Enter Email</label>
+                    <input type='password' placeholder='Email' name='token' value={this.state.token} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
-                  <Button color='youtube' type='submit' disabled={!this.state.formValid}>Verify</Button>
+                  <Button color='youtube' type='submit' disabled={!this.state.formValid}>Submit</Button>
                 </Form>
 
                 <ErrorMessage formErrors={this.state.formErrors} />
@@ -182,7 +174,11 @@ class Verify extends Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-          
+
+
+
+
+
         </Container>
       </MyContainer>
     );
@@ -202,4 +198,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 // const connectedSignIn = connect(mapStateToProps,mapDispatchToProps)(SignIn);
-export default Verify;
+export default SurveyRegister;
