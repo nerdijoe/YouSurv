@@ -15,6 +15,7 @@ import javax.persistence.*;
 @ToString
 public class QuestionOption{
 
+    private String id;
     private String text;
 
     private String image;

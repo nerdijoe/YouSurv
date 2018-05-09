@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SurveyService {
@@ -37,11 +38,18 @@ public class SurveyService {
         System.out.println("surveyDTO = " + surveyDTO);
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
 
-        survey.setQuestions(surveyDTO.getQuestions());
-
-        for (int i = 0; i < surveyDTO.getAnswers().size(); i++) {
-            surveyDTO.getAnswers().get(i).setSurvey(survey);
+        for (Question question: surveyDTO.getQuestions()){
+            question.setId(String.valueOf(UUID.randomUUID()));
+            for (QuestionOption option: question.getOptions()){
+                option.setId(String.valueOf(UUID.randomUUID()));
+            }
         }
+
+        for (Answer answer: surveyDTO.getAnswers()){
+            answer.setSurvey(survey);
+        }
+
+
 
         survey.setAnswers(surveyDTO.getAnswers());
 

@@ -26,7 +26,7 @@ import org.mapstruct.factory.Mappers;
 //
 //}
 
-public class SurveyMapper{
+public class SurveyMapper {
 
     public static SurveyDTO toSurveyDTO(Survey survey) {
         SurveyDTO dto = new SurveyDTO();
@@ -53,14 +53,31 @@ public class SurveyMapper{
 
     public static void convertToSurvey(SurveyDTO dto, Survey survey) {
         survey.setId(Long.valueOf(dto.getId()));
-        survey.setInvitedEmailList(dto.getInvitedEmailList());
-        survey.setTitle(dto.getTitle());
-        survey.setType(SurveyType.getType(dto.getType()));
-        survey.setQuestions(dto.getQuestions());
-        survey.setAnswers(dto.getAnswers());
-        survey.setPublish(dto.getPublish());
+
+
+        if (dto.getInvitedEmailList() != null)
+            survey.setInvitedEmailList(dto.getInvitedEmailList());
+        if (dto.getTitle() != null)
+            survey.setTitle(dto.getTitle());
+
+        if (dto.getType() != null)
+            survey.setType(SurveyType.getType(dto.getType()));
+
+        if (dto.getQuestions() != null)
+            survey.setQuestions(dto.getQuestions());
+
+        if (dto.getAnswers() != null)
+            survey.setAnswers(dto.getAnswers());
+
+        if (dto.getPublish() != null)
+            survey.setPublish(dto.getPublish());
+
         survey.setDeleted(dto.isDeleted());
-        survey.setCreated(TimeUtil.getDate(dto.getCreated()));
-        survey.setUpdated(TimeUtil.getDate(dto.getUpdated()));
+
+        if (dto.getQuestions() != null)
+            survey.setCreated(TimeUtil.getDate(dto.getCreated()));
+
+        if (dto.getQuestions() != null)
+            survey.setUpdated(TimeUtil.getDate(dto.getUpdated()));
     }
 }

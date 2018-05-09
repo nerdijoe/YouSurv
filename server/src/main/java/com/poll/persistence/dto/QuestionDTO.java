@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionDTO {
-
+    private String id;
     private String type;
     private String text;
     private String image;

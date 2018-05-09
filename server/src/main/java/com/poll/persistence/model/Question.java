@@ -16,6 +16,7 @@ import java.util.List;
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @ToString
 public class Question{
+    private String id;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
