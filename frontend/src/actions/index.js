@@ -31,7 +31,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   console.log(" before axiosSignUp", data);
   
   axios.post('http://localhost:8080/signup', {
-    username: data.email,
+    email: data.email,
     password: data.password,
     // firstname: data.firstname,
     // lastname: data.lastname,
@@ -93,14 +93,14 @@ export const userSignUp = (data) => {
 export const axiosSignIn = (data, router) => (dispatch) => {
   console.log('axiosSignIn');
 
-  axios.post('http://localhost:8080/login', {
-    username: data.email,
+  axios.post('http://localhost:8080/signin', {
+    email: data.email,
     password: data.password,
   }).then( res => {
     console.log('after axiosSignIn, res:', res);
 
     // save token to localStorage
-    localStorage.setItem('token', res.data);
+    localStorage.setItem('token', res.data.token);
     localStorage.setItem('user_email', data.email);
 
     dispatch(userSignIn(data));
@@ -140,57 +140,28 @@ export const userSignOut = () => {
 
 export const axiosSurveyCreate = data => dispatch => {
   console.log('<  before axiosSurveyCreate data=', data);
-  // axios.post('http://localhost:8080/surveys', {
-  //   type: data.type,
-  //   title: data.title,
-  // }, {
-  //   headers: {
-  //     token,
-  //   }
-  // })
-  // .then(res => {
-  //   console.log('>  after axiosCreateSurvey res.data', res.data);
-  //   dispatch(createSurvey(data));
-  //   // router.push('/signin');
-  // })
-  // .catch(err => {
-  //   console.log("***  error axiosCreateSurvey");
-  //   console.log(err);
-  // })
+  let token = 'Bearer ' + localStorage.getItem('token');
+  console.log('token = ', token);
+  axios.post('http://localhost:8080/survey/', {
+    title: data.title,
+    type: data.type,
+  }, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after axiosCreateSurvey res.data', res.data);
+    dispatch(surveyCreate(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosCreateSurvey");
+    console.log(err);
+  })
 
-/*
-question object
-{
-			"id": "",
-			"type": "",
-			"text": "",
-			"image": "",
-			"options": [
-				{
-					"id":"",
-					"text":"",
-					"image":"",
-					"created": "2018-05-02 15:00:59",
-					"updated": "2018-05-02 15:00:59",
-					"isDeleted": false
-				}
-			]
-			"answer":{
-				"id":"",
-				"text":"",
-				"created": "2018-05-02 15:00:59",
-				"updated": "2018-05-02 15:00:59",
-				"isDeleted": false
-			}
-			"isRequired": true
-			"created": "2018-05-02 15:00:59",
-			"updated": "2018-05-02 15:00:59",
-			"isDeleted": false
-		}
-*/
-
-
-  
+  // Simulation using dummy response
+  /*
   const res = {
     data: {
       id: cuid(),
@@ -210,7 +181,7 @@ question object
   }
   
   dispatch(surveyCreate(res.data));
-
+  */
 }
 
 export const surveyCreate = (data) => {

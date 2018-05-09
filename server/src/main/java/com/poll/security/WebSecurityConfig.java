@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup").permitAll()
 //                .antMatchers("/anonymous").anonymous()
 //                .antMatchers(HttpMethod.POST, "/user/").permitAll()
-//                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated().and()
                 .httpBasic().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
