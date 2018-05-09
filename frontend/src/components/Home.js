@@ -52,10 +52,19 @@ class Home extends Component {
           <h2>Home</h2>
           {/* <Button onClick={this.handleSignOut}>Sign out</Button> */}
 
-          <SurveyForm />
+          {/* <SurveyForm /> */}
 
           <Divider />
-          <SurveyList />
+          {/* <SurveyList /> */}
+
+          <Route exact path='/home' component={SurveyList} />
+          <Route path='/home/surveydetail' component={SurveyDetail} />
+          {/* <Route path='/home/interest' component={Interest} />
+          <Route path='/home/sharing' component={Sharing} />
+          <Route path='/home/starred' component={Main} />
+          <Route path='/home/activities' component={Activities} /> */}
+
+
         </Container>
 
       </MyContainer>

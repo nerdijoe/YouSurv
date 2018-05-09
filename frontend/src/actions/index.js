@@ -289,7 +289,7 @@ export const surveyGetAllDummy = () => {
 }
 
 export const surveyShowDetail = (data, router) => (dispatch) => {
-  router.push('/surveydetail');
+  router.push('/home/surveydetail');
   dispatch(surveyShowDetailReduce(data));
 }
 

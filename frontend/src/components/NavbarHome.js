@@ -32,7 +32,7 @@ class Navbar extends Component {
       <Container style={styles.header}>
         <Grid columns='equal'>
           <Grid.Column width={4} align='left'>
-            <Link to='/'>
+            <Link to='/home'>
               <Image src={Logo05} shape='rounded' size='small' />
             </Link>
           </Grid.Column>

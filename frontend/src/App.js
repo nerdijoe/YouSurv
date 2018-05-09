@@ -65,7 +65,7 @@ class App extends Component {
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
             <Route path='/home' component={Home} />
-            <Route path='/surveydetail' component={SurveyDetail} />
+            {/* <Route path='/surveydetail' component={SurveyDetail} /> */}
 
           </MyContainer>
           </div>

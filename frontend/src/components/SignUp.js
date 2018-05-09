@@ -168,7 +168,7 @@ class SignUp extends Component {
                     <input type='password' placeholder='WinterIsComing123' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
-                  <Button color='green' type='submit' disabled={!this.state.formValid}>Sign up</Button>
+                  <Button color='youtube' type='submit' disabled={!this.state.formValid}>Sign up</Button>
                 </Form>
 
                 <ErrorMessage formErrors={this.state.formErrors} />

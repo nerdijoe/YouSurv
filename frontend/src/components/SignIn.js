@@ -169,7 +169,7 @@ class SignIn extends Component {
                     <input type='password' placeholder='iKnowNothing!' name='password' value={this.state.password} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
-                  <Button color='green' type='submit' disabled={!this.state.formValid}>Sign In</Button>
+                  <Button color='youtube' type='submit' disabled={!this.state.formValid}>Sign In</Button>
                 </Form>
 
                 <ErrorMessage formErrors={this.state.formErrors} />

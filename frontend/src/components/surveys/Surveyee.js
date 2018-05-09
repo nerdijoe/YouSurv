@@ -24,12 +24,9 @@ import {
   Image,
   Icon,
   List,
-  Divider,
 } from 'semantic-ui-react';
 
 import Moment from 'moment';
-
-import SurveyForm from './SurveyForm';
 
 import cardHeader01 from '../../assets/images/card/card_header_01.png'
 import cardHeader02 from '../../assets/images/card/card_header_02.png'
@@ -44,13 +41,6 @@ class SurveyList extends Component {
   render() {
     return (
       <Container>
-        <SurveyForm />
-        <Divider />
-        { this.props.surveys.length === 0 ? (
-            <Message compact>
-              You have no surveys.
-            </Message>
-          ) : ('')}
         <Card.Group>
         { this.props.surveys.map(survey => {
 
