@@ -5,7 +5,6 @@ import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.SurveyLinks;
 import com.poll.persistence.repository.SurveyLinkRepository;
 import com.poll.response.SurveyResponse;
-import com.poll.response.TakeSurveyValidationResponse;
 import com.poll.service.SurveyLinkService;
 import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,17 +127,15 @@ public class SurveyTypeController {
     }
 
     @GetMapping(value="/takeSurvey",produces = "application/json")
-    public org.springframework.http.ResponseEntity<TakeSurveyValidationResponse> validateLink(@RequestParam String token){
+    public org.springframework.http.ResponseEntity<?> validateLink(@RequestParam String token){
         boolean isValid=true;
-        TakeSurveyValidationResponse takeSurveyValidationResponse=new TakeSurveyValidationResponse();
         try {
             SurveyLinks surveyLinks = surveyLinkRepository.findByLink("localhost:3000/takeSurvey?token=" + token);
-            takeSurveyValidationResponse.setSurveyId(surveyLinks.getSurveyId());
             isValid = surveyLinkService.validate(token, surveyLinks);
             if (isValid) {
-                return new org.springframework.http.ResponseEntity<TakeSurveyValidationResponse>(takeSurveyValidationResponse,HttpStatus.OK);
+                return new org.springframework.http.ResponseEntity<Authenticator.Success>(HttpStatus.OK);
             } else {
-                return new org.springframework.http.ResponseEntity<TakeSurveyValidationResponse>(takeSurveyValidationResponse,HttpStatus.IM_USED);
+                return new org.springframework.http.ResponseEntity<Authenticator.Failure>(HttpStatus.IM_USED);
             }
 
         }catch (Exception e){

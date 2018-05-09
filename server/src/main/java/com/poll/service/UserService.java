@@ -1,11 +1,13 @@
 package com.poll.service;
 
 import com.poll.exception.CustomException;
+import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.AppUser;
 import com.poll.persistence.repository.AppUserRepository;
 import com.poll.security.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -28,7 +31,15 @@ public class UserService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
+
+    String link="";
+    String domain="localhost:";
+    String port="3000/";
+    String route="user/verify?emailVerificationToken=";
 
     public List<AppUser> findAllUsers() {
         return appUserRepository.findAll();
@@ -71,8 +82,19 @@ public class UserService {
 
         if (!appUserRepository.existsByEmail(user.getEmail())) {
             System.out.println("UserService.signup user.password=" + user.getPassword());
+            String token=UUID.randomUUID().toString();
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setEmailVerificationToken(token);
+            link=domain+port+route+token;
             appUserRepository.save(user);
+
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom("postmaster@localhost");
+            mailMessage.setTo(user.getEmail());
+            mailMessage.setSubject("Invitation to participate in Survey");
+            mailMessage.setText("Please confirm your account:\n" + link);
+            emailService.sendEmail(mailMessage);
             return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
         } else {
             throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -120,6 +142,19 @@ public class UserService {
         } catch (AuthenticationException e) {
             System.out.println(e);
             throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+
+    public void verifyUser(String emailVerificationToken){
+        try {
+            AppUser user =appUserRepository.findByEmailVerificationToken(emailVerificationToken);
+            System.out.print("Before Save"+user.getId());
+            user.setVerified(true);
+            appUserRepository.save(user);
+
+        }catch (Exception e){
+            throw new CustomException("Relation not found", HttpStatus.NOT_FOUND);
         }
     }
 
