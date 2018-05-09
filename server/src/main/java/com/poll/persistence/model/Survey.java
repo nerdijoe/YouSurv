@@ -1,16 +1,11 @@
 package com.poll.persistence.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -85,5 +80,18 @@ public class Survey extends AbstractTimestampModel {
             this.answers = new ArrayList<>();
         }
         this.answers.addAll(answers);
+    }
+
+    public List<Answer> getAnswers(){
+        if (answers == null){
+            answers = new ArrayList<>();
+        }
+        return answers;
+    }
+
+    public List<Question> getQuestions() {
+        if (questions == null)
+            questions = new ArrayList<>();
+        return questions;
     }
 }

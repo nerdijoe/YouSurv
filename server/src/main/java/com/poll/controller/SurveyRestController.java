@@ -1,11 +1,10 @@
 package com.poll.controller;
 
 
-import com.poll.persistence.dto.SurveyDTO;
-import com.poll.persistence.dto.SurveySaveDTO;
+import com.poll.persistence.dto.*;
+import com.poll.persistence.model.Answer;
 import com.poll.persistence.model.AppUser;
 import com.poll.persistence.model.Survey;
-import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.service.SurveyService;
 import com.poll.service.UserService;
 import org.slf4j.LoggerFactory;
@@ -97,6 +96,14 @@ public class SurveyRestController {
     public ResponseEntity getSurveyById(@PathVariable("id") long id) {
         System.out.println("Fetching survey with id " + id);
 
+        if (!surveyService.existsById(id)){
+            String message = "Survey with id: " + id + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
         Survey survey = surveyService.findById(id);
         return new ResponseEntity(survey, HttpStatus.OK);
     }
@@ -104,8 +111,17 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity publishSurvey(@PathVariable("id") long id, Authentication auth) {
         System.out.println("Publishing survey with id " + id);
+        if (!surveyService.existsById(id)){
+            String message = "Survey with id: " + id + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
         String surveyorEmail = auth.getName();
         Survey survey = surveyService.findById(id);
+
         if (!surveyService.isSurveyCreatedBy(survey, surveyorEmail)) {
             String message = "User with email: " + surveyorEmail + " have no authorization to publish survey with id: " + id;
             System.out.println(message);
@@ -117,40 +133,25 @@ public class SurveyRestController {
         return new ResponseEntity(surveyDTO, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/survey/{id}/answer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity answerSurvey(@PathVariable("id") long id, @RequestBody AnswerSaveDTO answerDTO, Authentication auth) {
 
+        if (!surveyService.existsById(id)){
+            String message = "Survey with id: " + id + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
 
+        String surveyeeEmail = auth.getName();
+        Survey survey = surveyService.findById(id);
 
-//    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
-//    public @ResponseBody ResponseEntity<List<SurveyDTO>> findAllBySurveyorId(@PathVariable String id, UriComponentsBuilder ucBuilder) {
-//        if (id == null){
-//            System.out.println("surveyor id is not included in url");
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        Long surveyorId = Long.valueOf(id);
-//        System.out.println("findAllBySurveyorId, surveyorId = " + surveyorId);
-//
-//
-//        if (!userService.isUserExist(surveyorId)){
-//            System.out.println("surveyor with id: " + surveyorId + "does not exists");
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        List<SurveyDTO> surveys = surveyService.findAllBySurveyorId(surveyorId);
-//
-//        if (surveys == null){
-//            System.out.println("fail to create survey");
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//        System.out.println("surveys = " + surveys);
-//        log.info("surveys.size() = " + surveys.size());
-//
-//        return new ResponseEntity<>(surveys, HttpStatus.OK);
-//    }
-//
-//
-//
+        Answer answer = surveyService.answerSurvey(surveyeeEmail, survey, answerDTO);
+
+        return new ResponseEntity(answer, HttpStatus.OK);
+    }
+
 
 
 
