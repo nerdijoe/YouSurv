@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 //@Mapper(uses = QuestionMapper.class)
@@ -42,6 +44,14 @@ public class SurveyMapper {
 
     @Autowired
     QuestionMapper questionMapper;
+
+    public List<SurveyDTO> toSurveyDTOList(List<Survey> surveys) {
+        List<SurveyDTO> dtoList = new ArrayList<>();
+        for (Survey survey: surveys){
+            dtoList.add(toSurveyDTO(survey));
+        }
+        return dtoList;
+    }
 
     public SurveyDTO toSurveyDTO(Survey survey) {
         SurveyDTO dto = new SurveyDTO();
@@ -71,7 +81,7 @@ public class SurveyMapper {
     }
 
 
-    public static Survey toSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
+    public Survey toSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
         Survey survey = new Survey(surveyorEmail, surveyDTO.getTitle(), surveyDTO.getType());
         return survey;
     }
@@ -105,4 +115,6 @@ public class SurveyMapper {
         survey.setCreated(TimeUtil.getDate(surveyDTO.getCreated()));
         survey.setUpdated(TimeUtil.getDate(surveyDTO.getUpdated()));
     }
+
+
 }
