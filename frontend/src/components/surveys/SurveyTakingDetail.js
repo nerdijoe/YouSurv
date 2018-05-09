@@ -68,6 +68,7 @@ class SurveyTakingDetail extends Component {
 
     this.props.surveyTakingGetById(surveyId);
 
+    // for general survey page, call axios to fetch the survey
 
     var answers = {}
     if(this.props.survey != undefined && this.props.survey.answers != undefined) {
@@ -364,6 +365,10 @@ class SurveyTakingDetail extends Component {
                               label={option}
                               name={question.id}
                               value={option}
+                              checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option : false}
+                          // checked={this.state.value === 'this'}
+                          onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
+
                             />
                           </Form.Field>
                         )

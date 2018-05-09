@@ -230,22 +230,22 @@ export const surveyGetAllDummy = () => {
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
 
-  axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
-    headers: {
-      Authorization: token,
-    }
-  })
-  .then(res => {
-    console.log('> after axiosSurveyUpdate res.data', res.data);
-      dispatch(surveyUpdate(res.data));
-    // router.push('/signin');
-  })
-  .catch(err => {
-    console.log("***  error axiosSurveyUpdate");
-    console.log(err);
-  })
+  // axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
+  //   headers: {
+  //     Authorization: token,
+  //   }
+  // })
+  // .then(res => {
+  //   console.log('> after axiosSurveyUpdate res.data', res.data);
+  //     dispatch(surveyUpdate(res.data));
+  //   // router.push('/signin');
+  // })
+  // .catch(err => {
+  //   console.log("***  error axiosSurveyUpdate");
+  //   console.log(err);
+  // })
 
-  // dispatch(surveyUpdate(data));
+  dispatch(surveyUpdate(data));
 
 }
 
