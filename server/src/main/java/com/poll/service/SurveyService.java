@@ -127,6 +127,24 @@ public class SurveyService {
             surveyLinks.setSurveyId(survey.getId());
             surveyLinkRepository.save(surveyLinks);
 
+        } else if(survey.getType() == SurveyType.SV_CLOSE){
+            String route="/close/survey?token=";
+            url=domain+port+route;
+            for (String email: survey.getInvitedEmailList()){
+                String token=UUID.randomUUID().toString();
+                String link=url+token;
+
+                SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+                generalSurveyLink.setFrom("postmaster@localhost");
+                generalSurveyLink.setTo(email);
+                generalSurveyLink.setSubject("Invitation to participate in Survey");
+                generalSurveyLink.setText("Use below link to participate:\n" +
+                        "" + link);
+                emailService.sendEmail(generalSurveyLink);
+                surveyLinks.setLink(token);
+                surveyLinks.setSurveyId(survey.getId());
+                surveyLinkRepository.save(surveyLinks);
+            }
         }
         return surveyMapper.toSurveyDTO(survey);
     }
