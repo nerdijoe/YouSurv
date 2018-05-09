@@ -184,19 +184,6 @@ class SurveyDetail extends Component {
   //   console.log("Data submitted: ",  formData);
   // }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    console.log('handleSubmit', this.state);
-    console.log('this=', this);
-
-    // this.props.axiosSignIn(this.state, this.props.history);
-    // // this.props.history.push('/signin');
-
-    this.props.questionUpdateText(this.state.text);
-    //save current survey
-    this.props.surveySaveQuestion();
-  }
-
   addQuestion(type) {
     var newQuestion = {
       "id": "0",
@@ -430,6 +417,22 @@ class SurveyDetail extends Component {
 
   }
 
+  handleSubmit(e) {
+    e.preventDefault();
+    console.log('handleSubmit', this.state);
+    console.log('this=', this);
+
+    // this.props.axiosSignIn(this.state, this.props.history);
+    // // this.props.history.push('/signin');
+
+    // this.props.questionUpdateText(this.state.text);
+    
+    //save current survey
+    // this.props.surveySaveQuestion();
+    this.props.axiosSurveyUpdate(this.props.survey);
+
+  }
+  
   handleSubmitUpdateSurvey(e) {
     e.preventDefault();
     console.log('handleSubmitUpdateSurvey state=', this.state);

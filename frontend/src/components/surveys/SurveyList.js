@@ -38,9 +38,10 @@ import cardHeader02 from '../../assets/images/card/card_header_02.png'
 class SurveyList extends Component {
 
   componentDidMount() {
-    this.props.axiosSurveyGetAll();
+    console.log('SurveyList componentDidMount');
+    // this.props.axiosSurveyGetAll();
   }
-  
+
   handleShowDetail(survey) {
     this.props.surveyShowDetail(survey, this.props.history);
   }

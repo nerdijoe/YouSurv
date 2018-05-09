@@ -296,9 +296,11 @@ export const questionUpdateTextReduce = (data) => {
   }
 }
 
+
+// this is for dummy data
 export const surveySaveQuestion = () => dispatch => {
   console.log('surveySave' );
-  
+
   dispatch(surveySaveQuestionReduce());
 }
 
