@@ -41,13 +41,13 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
         SurveyMapper.updateSurvey(surveyDTO, survey);
 
-        for (Question question: survey.getQuestions()){
-            questionRepository.save(question);
-        }
-
-        for (Answer answer: survey.getAnswers()){
-            answerRepository.save(answer);
-        }
+//        for (Question question: survey.getQuestions()){
+//            questionRepository.save(question);
+//        }
+//
+//        for (Answer answer: survey.getAnswers()){
+//            answerRepository.save(answer);
+//        }
 
         return surveyRepository.save(survey);
     }

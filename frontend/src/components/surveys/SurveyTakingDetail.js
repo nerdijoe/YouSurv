@@ -111,9 +111,48 @@ class SurveyTakingDetail extends Component {
     });
   }
 
-  handleChangeMCQRadio = (e, {value}) => {
+  handleChangeMCQRadio = (e, {value}, question) => {
     console.log('handleChangeMCQRadio e=', e);
     console.log('value=', value);
+    console.log('question=', question);
+
+    var answers = {...this.state.answers};
+    if(question.type == questionType.MCQ_TEXT_RADIO) {
+      answers[question.id] = [value];
+    }
+
+    console.log('--> answers=', answers);
+    this.setState({
+      answers: answers,
+    });
+
+    
+  }
+
+  handleChangeMCQCheckbox = (e, {value}, question) => {
+    console.log('handleChangeMCQCheckbox e=', e);
+    console.log('value=', value);
+    console.log('question=', question);
+
+    var answers = {...this.state.answers};
+
+    if(answers.hasOwnProperty(question.id)){
+      var pos = answers[question.id].indexOf(value)
+      if( pos > -1){
+        answers[question.id].splice(pos, 1);
+      } else {
+        answers[question.id].push(value);
+      }
+      
+    } else {
+      answers[question.id] = [value];
+    }
+
+    console.log('--> answers=', answers);
+    this.setState({
+      answers: answers,
+    });
+
     
   }
 
@@ -161,7 +200,7 @@ class SurveyTakingDetail extends Component {
           </Message>
         ) : (
           <div>
-            <h3>Preview</h3>
+            <h3>Please fill this survey questions</h3>
             <Form onSubmit={e => this.handleSubmitSaveProgress(e)}>
             { this.props.survey.questions.length === 0 ? (
               <Message compact>
@@ -205,7 +244,7 @@ class SurveyTakingDetail extends Component {
                           value={option.text}
                           checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
                           // checked={this.state.value === 'this'}
-                          onChange={this.handleChangeMCQRadio}
+                          onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
                         />
                         </Form.Field>
                       )
@@ -223,6 +262,10 @@ class SurveyTakingDetail extends Component {
                     <label>{order}. {question.text}</label>
                   </Form.Field>
                     {question.options.map(option => {
+                      var found = false;
+                      if(this.state.answers[question.id] != undefined) {
+                        found = (this.state.answers[question.id].indexOf(option.text) > -1)
+                      }
                       return (
                         <Form.Field key={option.id}>
                         <Checkbox
@@ -230,8 +273,8 @@ class SurveyTakingDetail extends Component {
                           label={option.text}
                           name={question.id}
                           value={option.text}
-                          // checked={this.state.value === 'this'}
-                          // onChange={this.handleChange}
+                          checked={found}
+                          onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}         
                         />
                         </Form.Field>
                       )
