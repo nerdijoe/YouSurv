@@ -7,14 +7,15 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-@Embeddable
+//@Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class AnswerChoice{
+public class AnswerChoice implements Serializable {
 
 //    @ManyToOne
 //    @JoinColumn(name = "answer_id", nullable = true)
@@ -24,4 +25,5 @@ public class AnswerChoice{
 
     @ElementCollection(targetClass=String.class)
     private List<String> selection;
+
 }

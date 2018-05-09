@@ -1,22 +1,21 @@
 package com.poll.service;
 
-import com.poll.persistence.dto.QuestionDTO;
-import com.poll.persistence.dto.SurveySaveDTO;
-import com.poll.persistence.mapper.QuestionMapper;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
 import com.poll.persistence.model.*;
-import com.poll.persistence.repository.*;
-import com.poll.util.TimeUtil;
+//import com.poll.persistence.repository.mongo.AnswerRepository;
+//import com.poll.persistence.repository.mongo.AppUserRepository;
+//import com.poll.persistence.repository.mongo.SurveyRepository;
+import com.poll.persistence.repository.mysql.AnswerRepository;
+import com.poll.persistence.repository.mysql.AppUserRepository;
+import com.poll.persistence.repository.mysql.QuestionRepository;
+import com.poll.persistence.repository.mysql.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class SurveyService {
@@ -27,6 +26,8 @@ public class SurveyService {
     private SurveyRepository surveyRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     public SurveyDTO createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
         Survey survey = SurveyMapper.toSurvey(surveyorEmail, surveyDTO);
@@ -37,19 +38,15 @@ public class SurveyService {
     public Survey save(SurveyDTO surveyDTO) {
         System.out.println("surveyDTO = " + surveyDTO);
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
+        SurveyMapper.updateSurvey(surveyDTO, survey);
 
-        for (Question question: surveyDTO.getQuestions()){
-            question.setId(String.valueOf(UUID.randomUUID()));
-            for (QuestionOption option: question.getOptions()){
-                option.setId(String.valueOf(UUID.randomUUID()));
-            }
+        for (Question question: survey.getQuestions()){
+            questionRepository.save(question);
         }
 
-        for (Answer answer: surveyDTO.getAnswers()){
-            answer.setSurvey(survey);
+        for (Answer answer: survey.getAnswers()){
+            answerRepository.save(answer);
         }
-
-        SurveyMapper.convertToSurvey(surveyDTO, survey);
 
         return surveyRepository.save(survey);
     }
@@ -60,6 +57,29 @@ public class SurveyService {
 
     public Survey findById(long id) {
         return surveyRepository.findById(id);
+    }
+
+    public List<SurveyDTO> findBySurveyorEmail(String surveyorEmail) {
+        List<SurveyDTO> dtoList = new ArrayList<>();
+        List<Survey> surveys = surveyRepository.findAllBySurveyorEmail(surveyorEmail);
+        for (Survey survey: surveys){
+            dtoList.add(SurveyMapper.toSurveyDTO(survey));
+        }
+        return dtoList;
+    }
+
+    public boolean isSurveyCreatedBy(Survey survey, String surveyorEmail) {
+        return survey.getSurveyorEmail().equals(surveyorEmail);
+    }
+
+    public SurveyDTO publishSurvey(Survey survey) {
+        Publish publish = survey.getPublish();
+        if (publish == null) publish = new Publish();
+        publish.setLink("http://localhost/survey/"+survey.getId());
+        publish.setQrCodeByteArray("0192380123087187230918230581230958");
+        survey.setPublish(publish);
+        surveyRepository.save(survey);
+        return SurveyMapper.toSurveyDTO(survey);
     }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {

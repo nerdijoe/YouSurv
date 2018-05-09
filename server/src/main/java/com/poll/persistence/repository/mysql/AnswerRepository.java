@@ -1,4 +1,4 @@
-package com.poll.persistence.repository;
+package com.poll.persistence.repository.mysql;
 
 import com.poll.persistence.model.Answer;
 import com.poll.persistence.model.Question;

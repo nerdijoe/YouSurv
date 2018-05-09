@@ -22,8 +22,10 @@ public class SurveyDTO {
     private List<String> invitedEmailList;
     private String title;
     private String type;
-    private List<Question> questions;
-    private List<Answer> answers;
+    private List<QuestionDTO> questions;
+    private List<AnswerDTO> answers;
+//    private List<QuestionDTO> questions;
+//    private List<AnswerDTO> answers;
     private Publish publish;
     private boolean deleted;
     private String created;

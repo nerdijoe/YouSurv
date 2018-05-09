@@ -1,13 +1,15 @@
 package com.poll.persistence.mapper;
 
+import com.poll.persistence.dto.AnswerDTO;
+import com.poll.persistence.dto.QuestionDTO;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
-import com.poll.persistence.model.Question;
-import com.poll.persistence.model.Survey;
-import com.poll.persistence.model.SurveyType;
+import com.poll.persistence.model.*;
 import com.poll.util.TimeUtil;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.UUID;
 
 //@Mapper(uses = QuestionMapper.class)
 //public interface SurveyMapper {
@@ -34,9 +36,9 @@ public class SurveyMapper {
         dto.setSurveyorEmail(survey.getSurveyorEmail());
         dto.setInvitedEmailList(survey.getInvitedEmailList());
         dto.setTitle(survey.getTitle());
-        dto.setType(dto.getType());
-        dto.setQuestions(survey.getQuestions());
-        dto.setAnswers(survey.getAnswers());
+        dto.setType(survey.getType().name());
+        dto.setQuestions(QuestionMapper.toQuestions(survey.getQuestions()));
+        dto.setAnswers(AnswerMapper.toAnswers(survey.getAnswers()));
         dto.setPublish(survey.getPublish());
         dto.setDeleted(survey.isDeleted());
         dto.setCreated(TimeUtil.getDateString(survey.getCreated()));
@@ -51,33 +53,31 @@ public class SurveyMapper {
     }
 
 
-    public static void convertToSurvey(SurveyDTO dto, Survey survey) {
-        survey.setId(Long.valueOf(dto.getId()));
 
 
-        if (dto.getInvitedEmailList() != null)
-            survey.setInvitedEmailList(dto.getInvitedEmailList());
-        if (dto.getTitle() != null)
-            survey.setTitle(dto.getTitle());
+    public static void updateSurvey(SurveyDTO surveyDTO, Survey survey) {
+        survey.setSurveyorEmail(surveyDTO.getSurveyorEmail());
+        survey.setInvitedEmailList(surveyDTO.getInvitedEmailList());
+        survey.setTitle(surveyDTO.getTitle());
+        survey.setType(SurveyType.getType(surveyDTO.getType()));
 
-        if (dto.getType() != null)
-            survey.setType(SurveyType.getType(dto.getType()));
+        survey.getQuestions().clear();
+        for (QuestionDTO questionDTO: surveyDTO.getQuestions()) {
+            Question question = QuestionMapper.toQuestion(questionDTO);
+            question.setSurvey(survey);
+            survey.getQuestions().add(question);
+        }
 
-        if (dto.getQuestions() != null)
-            survey.setQuestions(dto.getQuestions());
+        survey.getAnswers().clear();
+        for (AnswerDTO answerDTO: surveyDTO.getAnswers()){
+            Answer answer = AnswerMapper.toAnswer(answerDTO);
+            answer.setSurvey(survey);
+            survey.getAnswers().add(answer);
+        }
 
-        if (dto.getAnswers() != null)
-            survey.setAnswers(dto.getAnswers());
-
-        if (dto.getPublish() != null)
-            survey.setPublish(dto.getPublish());
-
-        survey.setDeleted(dto.isDeleted());
-
-        if (dto.getQuestions() != null)
-            survey.setCreated(TimeUtil.getDate(dto.getCreated()));
-
-        if (dto.getQuestions() != null)
-            survey.setUpdated(TimeUtil.getDate(dto.getUpdated()));
+        survey.setPublish(surveyDTO.getPublish());
+        survey.setDeleted(surveyDTO.isDeleted());
+        survey.setCreated(TimeUtil.getDate(surveyDTO.getCreated()));
+        survey.setUpdated(TimeUtil.getDate(surveyDTO.getUpdated()));
     }
 }

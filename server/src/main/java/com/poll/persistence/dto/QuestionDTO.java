@@ -1,5 +1,6 @@
 package com.poll.persistence.dto;
 
+import com.poll.persistence.model.QuestionOption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,10 @@ public class QuestionDTO {
     private String type;
     private String text;
     private String image;
-    private List<QuestionOptionDTO> options;
-    private QuestionAnswerDTO answer;
+    private List<QuestionOption> options;
     private boolean required;
+    private String created;
+    private String updated;
+    private boolean deleted;
+
 }

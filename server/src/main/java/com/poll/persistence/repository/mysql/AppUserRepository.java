@@ -1,4 +1,4 @@
-package com.poll.persistence.repository;
+package com.poll.persistence.repository.mysql;
 
 import com.poll.persistence.model.AppUser;
 import org.springframework.data.repository.CrudRepository;

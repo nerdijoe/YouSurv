@@ -30,7 +30,8 @@ public class Answer extends AbstractTimestampModel {
 //            orphanRemoval = true,
 //            mappedBy = "answer"
 //    )
-    @Embedded
+//    @Embedded
+    @ElementCollection(targetClass = AnswerChoice.class)
     private List<AnswerChoice> choices;
 
     private boolean submitted;

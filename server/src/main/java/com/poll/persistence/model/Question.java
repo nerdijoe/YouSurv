@@ -6,17 +6,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-@Embeddable
+//@Embeddable
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @ToString
-public class Question{
-    private String id;
+public class Question extends AbstractTimestampModel implements Serializable  {
+
+//    private String id;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -25,10 +28,10 @@ public class Question{
 
     private String image;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "survey_id")
-//    private Survey survey;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "survey_id")
+    private Survey survey;
 
 //    @OneToMany(
 //            fetch = FetchType.LAZY,
@@ -36,7 +39,8 @@ public class Question{
 //            orphanRemoval = true,
 //            mappedBy = "question"
 //    )
-    @Embedded
+//    @Embedded
+    @ElementCollection(targetClass = QuestionOption.class)
     private List<QuestionOption> options;
 
 //    @OneToOne(

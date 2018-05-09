@@ -7,13 +7,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
-@Embeddable
+//@Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class QuestionOption{
+public class QuestionOption implements Serializable {
 
     private String id;
     private String text;

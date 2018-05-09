@@ -61,14 +61,18 @@ public class SurveyRestController {
         }
 
         return new ResponseEntity(survey, HttpStatus.CREATED);
+    }
 
+    @RequestMapping(value = "/survey/", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
+        String surveyorEmail = auth.getName();
+        List<SurveyDTO> surveys = surveyService.findBySurveyorEmail(surveyorEmail);
+        return new ResponseEntity(surveys, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity saveSurvey(@PathVariable("id") long id, @RequestBody SurveyDTO surveyDTO) {
         System.out.println("Saving survey with id " + id);
-        Date now = new Date();
-        System.out.println("now.toString() = " + now.toString());
         if (!surveyService.existsById(id)){
             String message = "survey with id: " + id + " does not exists";
             System.out.println(message);
@@ -96,6 +100,24 @@ public class SurveyRestController {
         Survey survey = surveyService.findById(id);
         return new ResponseEntity(survey, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity publishSurvey(@PathVariable("id") long id, Authentication auth) {
+        System.out.println("Publishing survey with id " + id);
+        String surveyorEmail = auth.getName();
+        Survey survey = surveyService.findById(id);
+        if (!surveyService.isSurveyCreatedBy(survey, surveyorEmail)) {
+            String message = "User with email: " + surveyorEmail + " have no authorization to publish survey with id: " + id;
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.FORBIDDEN);
+        }
+        SurveyDTO surveyDTO = surveyService.publishSurvey(survey);
+        return new ResponseEntity(surveyDTO, HttpStatus.OK);
+    }
+
+
 
 
 //    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
