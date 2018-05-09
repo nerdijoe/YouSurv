@@ -39,6 +39,7 @@ public class SurveyService {
     public Survey save(SurveyDTO surveyDTO) {
         System.out.println("surveyDTO = " + surveyDTO);
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
+
         SurveyMapper.updateSurvey(surveyDTO, survey);
 
 //        for (Question question: survey.getQuestions()){
@@ -90,9 +91,14 @@ public class SurveyService {
         answer.setChoices(answerDTO.getChoices());
         answer.setSubmitted(false);
         answerRepository.save(answer);
-        survey.getAnswers().add(answer);
-        surveyRepository.save(survey);
+
         return answer;
+    }
+
+    public Answer submitAnswer(long answerId) {
+        Answer answer = answerRepository.findById(answerId);
+        answer.setSubmitted(true);
+        return answerRepository.save(answer);
     }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {

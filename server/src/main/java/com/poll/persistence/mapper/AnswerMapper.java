@@ -23,7 +23,7 @@ import java.util.List;
 //}
 
 
-class AnswerMapper{
+public class AnswerMapper{
     public static Answer toAnswer(AnswerDTO answerDTO) {
         Answer answer = new Answer();
         answer.setSurveyeeEmail(answerDTO.getSurveyeeEmail());
@@ -39,7 +39,7 @@ class AnswerMapper{
         return answerDTOs;
     }
 
-    private static AnswerDTO toAnswerDTO(Answer answer) {
+    public static AnswerDTO toAnswerDTO(Answer answer) {
         AnswerDTO dto = new AnswerDTO();
         dto.setId(String.valueOf(answer.getId()));
         dto.setSurveyeeEmail(answer.getSurveyeeEmail());
