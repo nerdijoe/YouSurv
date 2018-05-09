@@ -95,7 +95,8 @@ public class SurveyService {
         if(survey.getType() == SurveyType.SV_GENERAL) {
             String route="/general/survey?token=";
             url=domain+port+route;
-            String link=url+UUID.randomUUID().toString();
+            String token=UUID.randomUUID().toString();
+            String link=url+token;
             for (String email: survey.getInvitedEmailList()){
                 SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
                 generalSurveyLink.setFrom("postmaster@localhost");
@@ -105,7 +106,7 @@ public class SurveyService {
                         "" + link);
                 emailService.sendEmail(generalSurveyLink);
             }
-            surveyLinks.setLink(link);
+            surveyLinks.setLink(token);
             surveyLinks.setSurveyId(survey.getId());
             surveyLinkRepository.save(surveyLinks);
 
