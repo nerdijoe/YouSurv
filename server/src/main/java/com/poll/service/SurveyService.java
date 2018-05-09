@@ -76,6 +76,19 @@ public class SurveyService {
         return dtoList;
     }
 
+    public List<SurveyDTO> findBySurveyeeEmail(String userEmail) {
+        List<Survey> invitedSurveys = new ArrayList<>();
+        List<Survey> allSurveys = surveyRepository.findAll();
+
+        for (Survey survey: allSurveys){
+            if (survey.getInvitedEmailList().contains(userEmail)){
+                invitedSurveys.add(survey);
+            }
+        }
+//        List<Survey> invitedSurveys = surveyRepository.findAllByInvitedEmailListContains(userEmail);
+        return SurveyMapper.toSurveyDTOList(invitedSurveys);
+    }
+
     public boolean isSurveyCreatedBy(Survey survey, String surveyorEmail) {
         return survey.getSurveyorEmail().equals(surveyorEmail);
     }
@@ -167,6 +180,8 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
         return survey;
     }
+
+
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
 //        if (surveyor == null || type == null){

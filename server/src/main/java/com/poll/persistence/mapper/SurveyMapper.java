@@ -9,7 +9,9 @@ import com.poll.util.TimeUtil;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 //@Mapper(uses = QuestionMapper.class)
@@ -30,6 +32,14 @@ import java.util.UUID;
 //}
 
 public class SurveyMapper {
+
+    public static List<SurveyDTO> toSurveyDTOList(List<Survey> surveys) {
+        List<SurveyDTO> dtoList = new ArrayList<>();
+        for (Survey survey: surveys){
+            dtoList.add(toSurveyDTO(survey));
+        }
+        return dtoList;
+    }
 
     public static SurveyDTO toSurveyDTO(Survey survey) {
         SurveyDTO dto = new SurveyDTO();
@@ -93,4 +103,6 @@ public class SurveyMapper {
         survey.setCreated(TimeUtil.getDate(surveyDTO.getCreated()));
         survey.setUpdated(TimeUtil.getDate(surveyDTO.getUpdated()));
     }
+
+
 }

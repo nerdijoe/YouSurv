@@ -38,6 +38,7 @@ public class SurveyRestController {
     @Autowired
     UserService userService;
 
+
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
@@ -70,8 +71,13 @@ public class SurveyRestController {
     ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
         System.out.println("SurveyRestController.findAllSurveyBySurveyor");
         System.out.println("auth.getName() = " + auth.getName());
-        String surveyorEmail = auth.getName();
-        List<SurveyDTO> surveys = surveyService.findBySurveyorEmail(surveyorEmail);
+        String userEmail = auth.getName();
+        List<SurveyDTO> surveysAsSurveyor = surveyService.findBySurveyorEmail(userEmail);
+
+        List<SurveyDTO> surveysAsSurveyee = surveyService.findBySurveyeeEmail(userEmail);
+
+        SurveyAllDTO surveys = new SurveyAllDTO(surveysAsSurveyor, surveysAsSurveyee);
+
         return new ResponseEntity(surveys, HttpStatus.OK);
     }
 
