@@ -180,7 +180,7 @@ public class SurveyRestController {
             return new ResponseEntity(responseBody, HttpStatus.FORBIDDEN);
         }
         Survey survey = surveyService.findBySurveyLinkToken(token);
-        return new ResponseEntity(SurveyMapper.toSurveyDTO(survey), HttpStatus.OK);
+        return new ResponseEntity(surveyMapper.toSurveyDTO(survey), HttpStatus.OK);
     }
 
 
