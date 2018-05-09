@@ -1,6 +1,7 @@
 package com.poll.service;
 
 import com.poll.persistence.dto.AnswerSaveDTO;
+import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
@@ -8,15 +9,14 @@ import com.poll.persistence.model.*;
 //import com.poll.persistence.repository.mongo.AnswerRepository;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
 //import com.poll.persistence.repository.mongo.SurveyRepository;
-import com.poll.persistence.repository.AnswerRepository;
-import com.poll.persistence.repository.AppUserRepository;
-import com.poll.persistence.repository.QuestionRepository;
-import com.poll.persistence.repository.SurveyRepository;
+import com.poll.persistence.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SurveyService {
@@ -29,6 +29,11 @@ public class SurveyService {
     private AnswerRepository answerRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private SurveyLinkRepository surveyLinkRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public SurveyDTO createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
         Survey survey = SurveyMapper.toSurvey(surveyorEmail, surveyDTO);
@@ -81,6 +86,30 @@ public class SurveyService {
         publish.setQrCodeByteArray("0192380123087187230918230581230958");
         survey.setPublish(publish);
         surveyRepository.save(survey);
+
+        SurveyLinks surveyLinks = new SurveyLinks();
+
+        String url="";
+        String domain="http://localhost:";
+        String port="3000";
+        if(survey.getType() == SurveyType.SV_GENERAL) {
+            String route="/general/survey?token=";
+            url=domain+port+route;
+            String link=url+UUID.randomUUID().toString();
+            for (String email: survey.getInvitedEmailList()){
+                SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+                generalSurveyLink.setFrom("postmaster@localhost");
+                generalSurveyLink.setTo(email);
+                generalSurveyLink.setSubject("Invitation to participate in Survey");
+                generalSurveyLink.setText("Use below link to participate:\n" +
+                        "" + link);
+                emailService.sendEmail(generalSurveyLink);
+            }
+            surveyLinks.setLink(link);
+            surveyLinks.setSurveyId(survey.getId());
+            surveyLinkRepository.save(surveyLinks);
+
+        }
         return SurveyMapper.toSurveyDTO(survey);
     }
 

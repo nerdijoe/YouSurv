@@ -38,9 +38,9 @@ public class SurveyLinkService {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             Date date = new Date();
             Date today = dateFormat.parse(dateFormat.format(date));
-            if(today.after(surveyLinks.getStartTime()) && today.before(surveyLinks.getEndTime()) && surveyLinks.getStatus().equals("active")){
+//            if(today.after(surveyLinks.getStartTime()) && today.before(surveyLinks.getEndTime()) && surveyLinks.getStatus().equals("active")){
                 return true;
-            }
+//            }
         }catch (ParseException e){
 
         }
