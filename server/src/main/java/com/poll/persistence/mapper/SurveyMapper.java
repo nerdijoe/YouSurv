@@ -55,8 +55,6 @@ public class SurveyMapper {
             dto.setUpdated(TimeUtil.getDateString(survey.getUpdated()));
         }
 
-        dto.setCreated(TimeUtil.getDateString(survey.getCreated()));
-        dto.setUpdated(TimeUtil.getDateString(survey.getUpdated()));
         return dto;
     }
 
@@ -79,6 +77,7 @@ public class SurveyMapper {
         for (QuestionDTO questionDTO: surveyDTO.getQuestions()) {
             Question question = QuestionMapper.toQuestion(questionDTO);
             question.setSurvey(survey);
+
             survey.getQuestions().add(question);
         }
 

@@ -25,23 +25,23 @@ public class Survey extends AbstractTimestampModel {
     @Enumerated(EnumType.STRING)
     private SurveyType type;
 
-//    @OneToMany(
-//            fetch = FetchType.LAZY,
-//            mappedBy = "survey",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "survey",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
 //    @Embedded
 //    @Size(max = 10000)
     @ElementCollection(targetClass = Question.class)
     private List<Question> questions;
 
-//    @OneToMany(
-//            fetch = FetchType.LAZY,
-//            mappedBy = "survey",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "survey",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
 //    @Embedded
     @ElementCollection(targetClass = Answer.class)
     private List<Answer> answers;

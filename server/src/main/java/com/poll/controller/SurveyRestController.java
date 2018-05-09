@@ -2,6 +2,8 @@ package com.poll.controller;
 
 
 import com.poll.persistence.dto.*;
+import com.poll.persistence.mapper.AnswerMapper;
+import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.model.Answer;
 import com.poll.persistence.model.AppUser;
 import com.poll.persistence.model.Survey;
@@ -86,8 +88,7 @@ public class SurveyRestController {
             System.out.println("Survey with id: " + id + " can't be saved");
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity(survey, HttpStatus.OK);
+        return new ResponseEntity(SurveyMapper.toSurveyDTO(survey), HttpStatus.OK);
 
     }
 
@@ -105,7 +106,7 @@ public class SurveyRestController {
         }
 
         Survey survey = surveyService.findById(id);
-        return new ResponseEntity(survey, HttpStatus.OK);
+        return new ResponseEntity(SurveyMapper.toSurveyDTO(survey), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -134,7 +135,7 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/{id}/answer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity answerSurvey(@PathVariable("id") long id, @RequestBody AnswerSaveDTO answerDTO, Authentication auth) {
+    public ResponseEntity saveSurveyAnswer(@PathVariable("id") long id, @RequestBody AnswerSaveDTO answerDTO, Authentication auth) {
 
         if (!surveyService.existsById(id)){
             String message = "Survey with id: " + id + " doesn't exist";
@@ -150,6 +151,13 @@ public class SurveyRestController {
         Answer answer = surveyService.answerSurvey(surveyeeEmail, survey, answerDTO);
 
         return new ResponseEntity(answer, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/survey/{surveyId}/answer/{answerId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity submitSurveyAnswer(@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
+        String surveyorEmail = auth.getName();
+        Answer answer = surveyService.submitAnswer(answerId);
+        return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
 
 
