@@ -74,9 +74,6 @@ public class SurveyTypeController {
             link=url+fileName;
             surveyLinks.setSurveyId(body.getSurveyorId());
             surveyLinks.setLink(link);
-            surveyLinks.setStartTime(startDate);
-            surveyLinks.setEndTime(endDate);
-            surveyLinks.setStatus("active");
             surveyResponse.setLink(link);
             //QR code Generation
             try {
@@ -107,9 +104,6 @@ public class SurveyTypeController {
             link=url+UUID.randomUUID().toString();
             surveyLinks.setSurveyId(body.getSurveyorId());
             surveyLinks.setLink(link);
-            surveyLinks.setStartTime(startDate);
-            surveyLinks.setEndTime(endDate);
-            surveyLinks.setStatus("active");
 
             //email the link
             SimpleMailMessage closedLink = new SimpleMailMessage();
