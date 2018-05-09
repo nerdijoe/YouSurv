@@ -37,6 +37,10 @@ import cardHeader02 from '../../assets/images/card/card_header_02.png'
 
 class SurveyList extends Component {
 
+  componentDidMount() {
+    this.props.axiosSurveyGetAll();
+  }
+  
   handleShowDetail(survey) {
     this.props.surveyShowDetail(survey, this.props.history);
   }
@@ -61,7 +65,7 @@ class SurveyList extends Component {
               </a>
               
               <Card.Content>
-                <Card.Header>{survey.id} {survey.title}</Card.Header>
+                <Card.Header>{survey.id}-{survey.title}</Card.Header>
                 <Card.Meta>{Moment(survey.created).format('L LT')}</Card.Meta>
                 <Card.Description>
                   <List>

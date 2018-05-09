@@ -193,23 +193,24 @@ export const surveyCreate = (data) => {
 
 export const axiosSurveyGetAll = (data) => (dispatch) => {
   console.log('<  before axiosSurveyGetAll data=', data);
+  let token = 'Bearer ' + localStorage.getItem('token');
 
-  // axios.get('http://localhost:8080/surveys', {
-  //   headers: {
-  //     token,
-  //   }
-  // })
-  // .then(res => {
-  //   console.log('> after axiosSurveyGetAll res.data', res.data);
-  //     dispatch(surveyGetAll(res.data));
-  //   // router.push('/signin');
-  // })
-  // .catch(err => {
-  //   console.log("***  error axiosSurveyGetAll");
-  //   console.log(err);
-  // })
+  axios.get('http://localhost:8080/survey/', {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('> after axiosSurveyGetAll res.data', res.data);
+      dispatch(surveyGetAll(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyGetAll");
+    console.log(err);
+  })
 
-  dispatch(surveyGetAllDummy());
+  // dispatch(surveyGetAllDummy());
 
 }
 
@@ -217,24 +218,22 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
 
-  // axios.put('http://localhost:8080/surveys', {
-  //   survey: data
-  // },{
-  //   headers: {
-  //     token,
-  //   }
-  // })
-  // .then(res => {
-  //   console.log('> after axiosSurveyUpdate res.data', res.data);
-  //     dispatch(surveyGetAll(res.data));
-  //   // router.push('/signin');
-  // })
-  // .catch(err => {
-  //   console.log("***  error axiosSurveyUpdate");
-  //   console.log(err);
-  // })
+  axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('> after axiosSurveyUpdate res.data', res.data);
+      dispatch(surveyUpdate(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyUpdate");
+    console.log(err);
+  })
 
-  dispatch(surveyUpdate(data));
+  // dispatch(surveyUpdate(data));
 
 }
 

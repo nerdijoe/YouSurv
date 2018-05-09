@@ -43,6 +43,10 @@ class NavbarMenu extends Component {
               <Link to='/'>
                 <Menu.Item name='signOut' onClick={this.handleSignOut} />
               </Link>
+              {/* <Link to='/home/surveyee'>
+                <Menu.Item name='surveyee' />
+              </Link> */}
+
           </Menu.Menu>
 
           ): (

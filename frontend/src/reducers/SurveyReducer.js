@@ -23,7 +23,7 @@ const SurveyReducer = (state = initialState, action) => {
     }
     case actionType.SURVEY_GET_ALL: {
       console.log('SurveyReducer SURVEY_GET_ALL');
-      console.log('action = ', action);
+      console.log('action.data = ', action.data);
 
       return {
         ...state,
