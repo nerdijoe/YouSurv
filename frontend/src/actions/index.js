@@ -344,6 +344,12 @@ export const surveyTakingGetByIdReduce = (data) => {
 export const surveyTakingSaveProgress = (data) => dispatch => {
   console.log('surveyTakingSaveProgress data=', data);
 
+  // axios POST
+  // {
+  //   surveyId: surveyId,
+  //   choices: data,
+  // }
+
   dispatch(surveyTakingSaveProgressReduce(data));
 
 }
