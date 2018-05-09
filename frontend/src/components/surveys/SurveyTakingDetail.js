@@ -63,6 +63,8 @@ class SurveyTakingDetail extends Component {
 
   componentDidMount() {
     console.log('SurveyTakingDetail componentDidMount');
+
+    // get the survey id from the url
     var surveyId = this.props.match.params.id;
     console.log(`  surveyId=${surveyId}`);
 
