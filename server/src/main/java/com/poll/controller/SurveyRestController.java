@@ -89,6 +89,15 @@ public class SurveyRestController {
     }
 
 
+    @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity getSurveyById(@PathVariable("id") long id) {
+        System.out.println("Fetching survey with id " + id);
+
+        Survey survey = surveyService.findById(id);
+        return new ResponseEntity(survey, HttpStatus.OK);
+    }
+
+
 //    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
 //    public @ResponseBody ResponseEntity<List<SurveyDTO>> findAllBySurveyorId(@PathVariable String id, UriComponentsBuilder ucBuilder) {
 //        if (id == null){
@@ -121,13 +130,6 @@ public class SurveyRestController {
 //
 //
 
-//
-//    @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-//    public ResponseEntity<SurveyDTO> getSurveyById(@PathVariable("id") long id) {
-//        System.out.println("Fetching survey with id " + id);
-//
-//        SurveyDTO surveyDTO = surveyService.findById(id);
-//        return new ResponseEntity<>(surveyDTO, HttpStatus.OK);
-//    }
+
 
 }
