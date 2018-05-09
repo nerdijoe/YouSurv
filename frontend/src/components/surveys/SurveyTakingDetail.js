@@ -220,7 +220,7 @@ class SurveyTakingDetail extends Component {
 
     console.log('choices=', choices);
 
-    this.props.surveyTakingSaveProgress(choices);
+    this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
   }
 
 
@@ -486,7 +486,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     surveyTakingGetById: (data) => { dispatch(surveyTakingGetById(data)); },
-    surveyTakingSaveProgress: (data) => { dispatch(surveyTakingSaveProgress(data)); },
+    surveyTakingSaveProgress: (data, surveyId) => { dispatch(surveyTakingSaveProgress(data, surveyId)); },
 
   }
 }

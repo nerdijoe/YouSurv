@@ -248,22 +248,22 @@ export const surveyGetAllDummy = () => {
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
 
-  // axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
-  //   headers: {
-  //     Authorization: token,
-  //   }
-  // })
-  // .then(res => {
-  //   console.log('> after axiosSurveyUpdate res.data', res.data);
-  //     dispatch(surveyUpdate(res.data));
-  //   // router.push('/signin');
-  // })
-  // .catch(err => {
-  //   console.log("***  error axiosSurveyUpdate");
-  //   console.log(err);
-  // })
+  axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('> after axiosSurveyUpdate res.data', res.data);
+      dispatch(surveyUpdate(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyUpdate");
+    console.log(err);
+  })
 
-  dispatch(surveyUpdate(data));
+  // dispatch(surveyUpdate(data));
 
 }
 
@@ -359,17 +359,43 @@ export const surveyTakingGetByIdReduce = (data) => {
   }
 }
 
-export const surveyTakingSaveProgress = (data) => dispatch => {
+export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
   console.log('surveyTakingSaveProgress data=', data);
-
+  console.log('surveyId=', surveyId);
+  
   // axios POST
   // {
   //   surveyId: surveyId,
   //   choices: data,
   // }
 
-  dispatch(surveyTakingSaveProgressReduce(data));
+  let token = 'Bearer ' + localStorage.getItem('token');
+  axios.post(`http://localhost:8080/survey/${surveyId}/answer`, {
+    choices: data,
+  }, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after surveyTakingSaveProgress res.data', res.data);
+    dispatch(surveyTakingSaveProgressReduce(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosCreateSurvey");
+    console.log(err);
+  })
 
+  // dispatch(surveyTakingSaveProgressReduceDummy(data));
+
+}
+
+export const surveyTakingSaveProgressReduceDummy = (data) => {
+  return {
+    type: actionType.SURVEY_TAKING_SAVE_PROGRESS_DUMMY,
+    data,
+  }
 }
 
 export const surveyTakingSaveProgressReduce = (data) => {
