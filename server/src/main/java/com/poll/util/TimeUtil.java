@@ -25,7 +25,7 @@ public class TimeUtil {
      */
     public static Date getDate(String dateString, String formatString){
         Date date = null;
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(formatString);
         try {
             date = sdf.parse(dateString);
         } catch (ParseException e) {

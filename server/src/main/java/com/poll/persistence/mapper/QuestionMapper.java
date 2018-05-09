@@ -10,6 +10,7 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 ////@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -50,8 +51,18 @@ class QuestionMapper{
 
         question.setRequired(questionDTO.isRequired());
 
-        question.setCreated(TimeUtil.getDate(questionDTO.getCreated()));
-        question.setUpdated(TimeUtil.getDate(questionDTO.getUpdated()));
+        if (question.getCreated() == null){
+            question.setCreated(new Date());
+        } else{
+            question.setCreated(TimeUtil.getDate(questionDTO.getCreated()));
+        }
+
+        if (question.getUpdated() == null){
+            question.setUpdated(new Date());
+        } else{
+            question.setUpdated(TimeUtil.getDate(questionDTO.getUpdated()));
+        }
+
         question.setDeleted(questionDTO.isDeleted());
 
         return question;

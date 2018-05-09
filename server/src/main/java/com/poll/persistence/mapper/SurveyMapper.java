@@ -9,6 +9,7 @@ import com.poll.util.TimeUtil;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import java.util.Date;
 import java.util.UUID;
 
 //@Mapper(uses = QuestionMapper.class)
@@ -41,6 +42,19 @@ public class SurveyMapper {
         dto.setAnswers(AnswerMapper.toAnswers(survey.getAnswers()));
         dto.setPublish(survey.getPublish());
         dto.setDeleted(survey.isDeleted());
+
+        if (dto.getCreated() == null){
+            dto.setCreated(TimeUtil.getDateString(new Date()));
+        } else{
+            dto.setCreated(TimeUtil.getDateString(survey.getCreated()));
+        }
+
+        if (dto.getUpdated() == null){
+            dto.setUpdated(TimeUtil.getDateString(new Date()));
+        } else{
+            dto.setUpdated(TimeUtil.getDateString(survey.getUpdated()));
+        }
+
         dto.setCreated(TimeUtil.getDateString(survey.getCreated()));
         dto.setUpdated(TimeUtil.getDateString(survey.getUpdated()));
         return dto;

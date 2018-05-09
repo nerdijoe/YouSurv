@@ -1,5 +1,6 @@
 package com.poll.service;
 
+import com.poll.persistence.dto.AnswerSaveDTO;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
@@ -80,6 +81,18 @@ public class SurveyService {
         survey.setPublish(publish);
         surveyRepository.save(survey);
         return SurveyMapper.toSurveyDTO(survey);
+    }
+
+    public Answer answerSurvey(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
+        Answer answer = new Answer();
+        answer.setSurveyeeEmail(surveyeeEmail);
+        answer.setSurvey(survey);
+        answer.setChoices(answerDTO.getChoices());
+        answer.setSubmitted(false);
+        answerRepository.save(answer);
+        survey.getAnswers().add(answer);
+        surveyRepository.save(survey);
+        return answer;
     }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
