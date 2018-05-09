@@ -30,7 +30,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
 
   console.log(" before axiosSignUp", data);
 
-  axios.post('http://localhost:8080/signup', {
+  axios.post('http://localhost:8300/signup', {
     email: data.email,
     password: data.password,
     // firstname: data.firstname,
@@ -39,7 +39,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   .then(res => {
     console.log('** afteraxiosSignup res.data', res.data);
     dispatch(userSignUp(data));
-    router.push('/signin');
+    router.push('/verify');
   })
   .catch(err => {
     console.log("xxxxx");
@@ -93,7 +93,7 @@ export const userSignUp = (data) => {
 export const axiosSignIn = (data, router) => (dispatch) => {
   console.log('axiosSignIn');
 
-  axios.post('http://localhost:8080/signin', {
+  axios.post('http://localhost:8300/signin', {
     email: data.email,
     password: data.password,
   }).then( res => {
@@ -115,6 +115,24 @@ export const userSignIn = (data) => {
     data,
   };
 }
+
+// export const axiosVerify = (data, router) => (dispatch) => {
+//   console.log('axiosVerify');
+
+//   axios.post('http://localhost:8300/user/verify?emailVerificationToken='+data).then( res => {
+    
+//     dispatch(userVerify(data));
+
+//     // router.push('/signin');
+//   })
+// }
+
+// export const userVerify = (data) => {
+//   return {
+//     type: actionType.USER_VERIFY,
+//     data,
+//   };
+// }
 
 export const userSignOutRequest = () => (dispatch) => {
   console.log('userSignOutRequest');
@@ -142,7 +160,7 @@ export const axiosSurveyCreate = data => dispatch => {
   console.log('<  before axiosSurveyCreate data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
   console.log('token = ', token);
-  axios.post('http://localhost:8080/survey/', {
+  axios.post('http://localhost:8300/survey/', {
     title: data.title,
     type: data.type,
   }, {
@@ -195,7 +213,7 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
   console.log('<  before axiosSurveyGetAll data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
 
-  axios.get('http://localhost:8080/survey/', {
+  axios.get('http://localhost:8300/survey/', {
     headers: {
       Authorization: token,
     }
