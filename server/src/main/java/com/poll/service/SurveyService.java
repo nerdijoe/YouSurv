@@ -126,9 +126,16 @@ public class SurveyService {
         return answer;
     }
 
-    public Answer submitAnswer(long answerId) {
+    public Answer submitAnswer(long answerId, String userEmail) {
         Answer answer = answerRepository.findById(answerId);
         answer.setSubmitted(true);
+        SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+        generalSurveyLink.setFrom("postmaster@localhost");
+        generalSurveyLink.setTo(userEmail);
+        generalSurveyLink.setSubject("Survey Submission Details");
+        generalSurveyLink.setText("Survey Submitted Successfully:\n" +
+                "" );
+        emailService.sendEmail(generalSurveyLink);
         return answerRepository.save(answer);
     }
 

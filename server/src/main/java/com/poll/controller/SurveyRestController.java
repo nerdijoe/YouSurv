@@ -161,8 +161,8 @@ public class SurveyRestController {
 
     @RequestMapping(value = "/survey/{surveyId}/answer/{answerId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity submitSurveyAnswer(@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
-        String surveyorEmail = auth.getName();
-        Answer answer = surveyService.submitAnswer(answerId);
+        String userEmail = auth.getName();
+        Answer answer = surveyService.submitAnswer(answerId, userEmail);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
 
