@@ -147,7 +147,7 @@ const SurveyReducer = (state = initialState, action) => {
         surveyTakingCurrent: surveyTakingCurrent[0],
       }
     }
-    case actionType.SURVEY_TAKING_SAVE_PROGRESS: {
+    case actionType.SURVEY_TAKING_SAVE_PROGRESS_DUMMY: {
       console.log('SurveyReducer SURVEY_TAKING_SAVE_PROGRESS');
       console.log('action = ', action);
       const data = action.data;
@@ -223,12 +223,13 @@ const SurveyReducer = (state = initialState, action) => {
       const surveyTaking = [...state.surveyTaking];
       const posfoo = surveyTaking.findIndex(i => i.id === UpdatedSurveyTakingCurrent.id)
 
+      UpdatedSurveyTakingCurrent.answers = updateAnswers;
+
       // replace the whole survey with the updated survey
       if(posfoo != -1)
         surveyTaking[posfoo] = UpdatedSurveyTakingCurrent
 
 
-      UpdatedSurveyTakingCurrent.answers = updateAnswers;
 
       return {
         ...state,
@@ -237,6 +238,60 @@ const SurveyReducer = (state = initialState, action) => {
 
       }
     }
+    case actionType.SURVEY_TAKING_SAVE_PROGRESS: {
+      console.log('SurveyReducer SURVEY_TAKING_SAVE_PROGRESS');
+      console.log('action = ', action);
+      const data = action.data.choices;
+
+      // find by surveyee email
+      const UpdatedSurveyTakingCurrent = {...state.surveyTakingCurrent}
+      const updateAnswers = [...UpdatedSurveyTakingCurrent.answers];
+
+      const email = localStorage.getItem('user_email');
+      const pos = updateAnswers.findIndex(i => i.surveyeeEmail === email)
+
+      // if existing answer by this user exist, just update his answers
+      if(pos != -1) {
+        updateAnswers[pos].choices = data;
+      } else {
+        // insert into answers array
+        updateAnswers.push(action.data);
+      }
+
+      const surveyTaking = [...state.surveyTaking];
+      const posfoo = surveyTaking.findIndex(i => i.id === UpdatedSurveyTakingCurrent.id)
+
+      
+      UpdatedSurveyTakingCurrent.answers = updateAnswers;
+
+      // replace the whole survey with the updated survey
+      if(posfoo != -1)
+        surveyTaking[posfoo] = UpdatedSurveyTakingCurrent
+
+
+      return {
+        ...state,
+        surveyTaking: surveyTaking,
+        surveyTakingCurrent: UpdatedSurveyTakingCurrent,
+
+      }
+    }
+    case actionType.SURVEY_PUBLISH: {
+      console.log('SurveyReducer SURVEY_PUBLISH action.data=', action.data);
+
+      const updatedSurveys = [...state.surveys];
+      const pos = updatedSurveys.findIndex(i => i.id === action.data.id)
+
+      // replace the whole survey with the updated survey
+      updatedSurveys[pos] = action.data;
+  
+      return {
+        ...state,
+        surveys: updatedSurveys,
+
+      }
+    }
+
     default: 
       return state;
   }

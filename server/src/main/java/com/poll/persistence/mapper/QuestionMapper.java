@@ -5,9 +5,15 @@ import com.poll.persistence.dto.QuestionOptionDTO;
 import com.poll.persistence.model.Question;
 import com.poll.persistence.model.QuestionOption;
 import com.poll.persistence.model.QuestionType;
+import com.poll.persistence.repository.QuestionRepository;
 import com.poll.util.TimeUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,12 +44,28 @@ import java.util.List;
 ////    }
 //}
 
+@Service
+@Getter
+@Setter
+@Configurable
 class QuestionMapper{
 
-    public static Question toQuestion(QuestionDTO questionDTO) {
+    @Autowired
+    QuestionRepository questionRepository;
+
+    public Question toQuestion(QuestionDTO questionDTO) {
         System.out.println("QuestionMapper.toQuestion");
         System.out.println("questionDTO = " + questionDTO);
-        Question question = new Question();
+
+        Question question = null;
+        if ((questionDTO.getId() != null) && (questionDTO.getId().matches("\\d*"))){
+            question = questionRepository.findById(Long.valueOf(questionDTO.getId()));
+        }
+
+        if (question == null ){
+            question = new Question();
+        }
+
         question.setType(QuestionType.getType(questionDTO.getType()));
         question.setText(questionDTO.getText());
         question.setImage(questionDTO.getImage());
@@ -51,13 +73,13 @@ class QuestionMapper{
 
         question.setRequired(questionDTO.isRequired());
 
-        if (question.getCreated() == null){
+        if (questionDTO.getCreated() == null){
             question.setCreated(new Date());
         } else{
             question.setCreated(TimeUtil.getDate(questionDTO.getCreated()));
         }
 
-        if (question.getUpdated() == null){
+        if (questionDTO.getUpdated() == null){
             question.setUpdated(new Date());
         } else{
             question.setUpdated(TimeUtil.getDate(questionDTO.getUpdated()));

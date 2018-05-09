@@ -36,17 +36,20 @@ public class SurveyService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private SurveyMapper surveyMapper;
+
     public SurveyDTO createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
-        Survey survey = SurveyMapper.toSurvey(surveyorEmail, surveyDTO);
+        Survey survey = surveyMapper.toSurvey(surveyorEmail, surveyDTO);
         surveyRepository.save(survey);
-        return SurveyMapper.toSurveyDTO(survey);
+        return surveyMapper.toSurveyDTO(survey);
     }
 
     public Survey save(SurveyDTO surveyDTO) {
         System.out.println("surveyDTO = " + surveyDTO);
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
 
-        SurveyMapper.updateSurvey(surveyDTO, survey);
+        surveyMapper.updateSurvey(surveyDTO, survey);
 
 //        for (Question question: survey.getQuestions()){
 //            questionRepository.save(question);
@@ -71,9 +74,22 @@ public class SurveyService {
         List<SurveyDTO> dtoList = new ArrayList<>();
         List<Survey> surveys = surveyRepository.findAllBySurveyorEmail(surveyorEmail);
         for (Survey survey: surveys){
-            dtoList.add(SurveyMapper.toSurveyDTO(survey));
+            dtoList.add(surveyMapper.toSurveyDTO(survey));
         }
         return dtoList;
+    }
+
+    public List<SurveyDTO> findBySurveyeeEmail(String userEmail) {
+        List<Survey> invitedSurveys = new ArrayList<>();
+        List<Survey> allSurveys = surveyRepository.findAll();
+
+        for (Survey survey: allSurveys){
+            if (survey.getInvitedEmailList().contains(userEmail)){
+                invitedSurveys.add(survey);
+            }
+        }
+//        List<Survey> invitedSurveys = surveyRepository.findAllByInvitedEmailListContains(userEmail);
+        return surveyMapper.toSurveyDTOList(invitedSurveys);
     }
 
     public boolean isSurveyCreatedBy(Survey survey, String surveyorEmail) {
@@ -111,8 +127,26 @@ public class SurveyService {
             surveyLinks.setSurveyId(survey.getId());
             surveyLinkRepository.save(surveyLinks);
 
+        } else if(survey.getType() == SurveyType.SV_CLOSE){
+            String route="/close/survey?token=";
+            url=domain+port+route;
+            for (String email: survey.getInvitedEmailList()){
+                String token=UUID.randomUUID().toString();
+                String link=url+token;
+
+                SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+                generalSurveyLink.setFrom("postmaster@localhost");
+                generalSurveyLink.setTo(email);
+                generalSurveyLink.setSubject("Invitation to participate in Survey");
+                generalSurveyLink.setText("Use below link to participate:\n" +
+                        "" + link);
+                emailService.sendEmail(generalSurveyLink);
+                surveyLinks.setLink(token);
+                surveyLinks.setSurveyId(survey.getId());
+                surveyLinkRepository.save(surveyLinks);
+            }
         }
-        return SurveyMapper.toSurveyDTO(survey);
+        return surveyMapper.toSurveyDTO(survey);
     }
 
     public Answer answerSurvey(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
@@ -174,6 +208,8 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
         return survey;
     }
+
+
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
 //        if (surveyor == null || type == null){

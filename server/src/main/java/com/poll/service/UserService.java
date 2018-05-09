@@ -130,6 +130,10 @@ public class UserService {
 
         AppUser user = appUserRepository.findByEmail(dto.getEmail());
 
+        if (!user.isVerified()){
+            throw new CustomException("The user has not been verified", HttpStatus.UNAUTHORIZED);
+        }
+
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new CustomException("Wrong email or password", HttpStatus.UNAUTHORIZED);
         } else{

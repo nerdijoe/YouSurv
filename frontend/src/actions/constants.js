@@ -14,6 +14,7 @@ export const QUESTION_ADD = 'QUESTION_ADD';
 export const QUESTION_UPDATE_TEXT = 'QUESTION_UPDATE_TEXT';
 export const QUESTION_REMOVE = 'QUESTION_REMOVE';
 
+export const SURVEY_PUBLISH = 'SURVEY_PUBLISH';
 
 
 // ==============================================================================
@@ -22,4 +23,5 @@ export const QUESTION_REMOVE = 'QUESTION_REMOVE';
 
 export const SURVEY_TAKING_GET_BY_ID = 'SURVEY_TAKING_GET_BY_ID';
 export const SURVEY_TAKING_SAVE_PROGRESS = 'SURVEY_TAKING_SAVE_PROGRESS';
+export const SURVEY_TAKING_SAVE_PROGRESS_DUMMY = 'SURVEY_TAKING_SAVE_PROGRESS_DUMMY';
 

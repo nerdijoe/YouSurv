@@ -6,10 +6,17 @@ import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
 import com.poll.persistence.model.*;
 import com.poll.util.TimeUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 //@Mapper(uses = QuestionMapper.class)
@@ -29,9 +36,24 @@ import java.util.UUID;
 //
 //}
 
+@Getter
+@Setter
+@Service
+@Configurable
 public class SurveyMapper {
 
-    public static SurveyDTO toSurveyDTO(Survey survey) {
+    @Autowired
+    QuestionMapper questionMapper;
+
+    public List<SurveyDTO> toSurveyDTOList(List<Survey> surveys) {
+        List<SurveyDTO> dtoList = new ArrayList<>();
+        for (Survey survey: surveys){
+            dtoList.add(toSurveyDTO(survey));
+        }
+        return dtoList;
+    }
+
+    public SurveyDTO toSurveyDTO(Survey survey) {
         SurveyDTO dto = new SurveyDTO();
         dto.setId(String.valueOf(survey.getId()));
         dto.setSurveyorEmail(survey.getSurveyorEmail());
@@ -59,7 +81,7 @@ public class SurveyMapper {
     }
 
 
-    public static Survey toSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
+    public Survey toSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
         Survey survey = new Survey(surveyorEmail, surveyDTO.getTitle(), surveyDTO.getType());
         return survey;
     }
@@ -67,7 +89,7 @@ public class SurveyMapper {
 
 
 
-    public static void updateSurvey(SurveyDTO surveyDTO, Survey survey) {
+    public void updateSurvey(SurveyDTO surveyDTO, Survey survey) {
         survey.setSurveyorEmail(surveyDTO.getSurveyorEmail());
         survey.setInvitedEmailList(surveyDTO.getInvitedEmailList());
         survey.setTitle(surveyDTO.getTitle());
@@ -75,7 +97,7 @@ public class SurveyMapper {
 
         survey.getQuestions().clear();
         for (QuestionDTO questionDTO: surveyDTO.getQuestions()) {
-            Question question = QuestionMapper.toQuestion(questionDTO);
+            Question question = questionMapper.toQuestion(questionDTO);
             question.setSurvey(survey);
 
             survey.getQuestions().add(question);
@@ -93,4 +115,6 @@ public class SurveyMapper {
         survey.setCreated(TimeUtil.getDate(surveyDTO.getCreated()));
         survey.setUpdated(TimeUtil.getDate(surveyDTO.getUpdated()));
     }
+
+
 }

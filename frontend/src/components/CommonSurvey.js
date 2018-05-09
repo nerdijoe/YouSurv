@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import {
   surveyTakingGetById,
   surveyTakingSaveProgress,
-} from '../../actions';
+} from '../actions';
 
 import {
   Container,
@@ -30,8 +30,7 @@ import {
   Radio,
   Dropdown,
   Rating,
-  Comment,
-
+  
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -44,11 +43,9 @@ import uuid from 'uuid';
 import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
-import * as questionType from '../../actions/surveyConstants';
+import * as questionType from '../actions/surveyConstants';
 
-import avatarMatt from '../../assets/images/avatar/small/matt.jpg';
-
-class SurveyTakingDetail extends Component {
+class CommonSurvey extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,12 +65,13 @@ class SurveyTakingDetail extends Component {
     console.log('SurveyTakingDetail componentDidMount');
 
     // get the survey id from the url
-    var surveyId = this.props.match.params.id;
+    var surveyId = this.props.url_id;
     console.log(`  surveyId=${surveyId}`);
 
-    this.props.surveyTakingGetById(surveyId);
+    // this.props.surveyTakingGetById(surveyId);
 
     // for general survey page, call axios to fetch the survey
+    
 
     var answers = {}
     if(this.props.survey != undefined && this.props.survey.answers != undefined) {
@@ -223,7 +221,7 @@ class SurveyTakingDetail extends Component {
 
     console.log('choices=', choices);
 
-    this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
+    this.props.surveyTakingSaveProgress(choices);
   }
 
 
@@ -237,25 +235,6 @@ class SurveyTakingDetail extends Component {
           </Message>
         ) : (
           <div>
-          <Comment.Group>
-            <Comment>
-              <Comment.Avatar as='a' src={avatarMatt} />
-              <Comment.Content>
-                <Comment.Author>Survey by {this.props.survey.surveyorEmail}</Comment.Author>
-                <Comment.Metadata>
-                  <div>{this.props.survey.title}</div>
-                  <div>
-                    {/* <Icon name='star' />
-                    5 Faves */}
-                  </div>
-                </Comment.Metadata>
-                {/* <Comment.Text>
-                  Hey guys, I hope this example comment is helping you read this documentation.
-                </Comment.Text> */}
-              </Comment.Content>
-            </Comment>
-          </Comment.Group>
-
             <h3>Please fill this survey questions</h3>
             <Form onSubmit={e => this.handleSubmitSaveProgress(e)}>
             { this.props.survey.questions.length === 0 ? (
@@ -374,7 +353,7 @@ class SurveyTakingDetail extends Component {
                   </Grid>
                 )
               } else if(question.type === questionType.STAR_RATING) {
-                var ratingOptions = [ "0", "1", "2", "3", "4", "5"];
+                var ratingOptions = [ 0, 1, 2, 3, 4, 5];
                 return (
                   <Grid key={question.id} columns='equal'>
                     <Grid.Column>
@@ -508,10 +487,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     surveyTakingGetById: (data) => { dispatch(surveyTakingGetById(data)); },
-    surveyTakingSaveProgress: (data, surveyId) => { dispatch(surveyTakingSaveProgress(data, surveyId)); },
+    surveyTakingSaveProgress: (data) => { dispatch(surveyTakingSaveProgress(data)); },
 
   }
 }
 
-const connectedSurveyTakingDetail = withRouter(connect(mapStateToProps, mapDispatchToProps)(SurveyTakingDetail));
-export default connectedSurveyTakingDetail;
+const connectedCommonSurvey = withRouter(connect(mapStateToProps, mapDispatchToProps)(CommonSurvey));
+export default connectedCommonSurvey;

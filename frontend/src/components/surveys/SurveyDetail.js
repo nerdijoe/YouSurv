@@ -13,6 +13,7 @@ import {
   questionRemove,
   surveySaveQuestion,
   axiosSurveyUpdate,
+  axiosSurveyPublish,
 
 } from '../../actions';
 
@@ -474,6 +475,8 @@ class SurveyDetail extends Component {
     console.log('handlePublish');
     e.preventDefault();
     
+    // call to 
+    this.props.axiosSurveyPublish(this.props.survey);
   }
 
   render() {
@@ -905,6 +908,7 @@ const mapDispatchToProps = dispatch => {
     questionRemove: (data) => { dispatch(questionRemove(data)); },
     axiosSurveyUpdate: (data) => { dispatch(axiosSurveyUpdate(data)); },
     surveySaveQuestion: () => { dispatch(surveySaveQuestion()); },
+    axiosSurveyPublish: (data) => { dispatch(axiosSurveyPublish(data)); },
   }
 }
 
