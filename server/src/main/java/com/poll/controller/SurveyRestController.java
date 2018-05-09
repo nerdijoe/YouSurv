@@ -61,7 +61,13 @@ public class SurveyRestController {
         }
 
         return new ResponseEntity(survey, HttpStatus.CREATED);
+    }
 
+    @RequestMapping(value = "/survey/", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
+        String surveyorEmail = auth.getName();
+        List<SurveyDTO> surveys = surveyService.findBySurveyorEmail(surveyorEmail);
+        return new ResponseEntity(surveys, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -94,6 +100,8 @@ public class SurveyRestController {
         Survey survey = surveyService.findById(id);
         return new ResponseEntity(survey, HttpStatus.OK);
     }
+
+
 
 
 //    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)

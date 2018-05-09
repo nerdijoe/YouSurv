@@ -14,7 +14,8 @@ import com.poll.persistence.repository.mysql.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SurveyService {
@@ -56,6 +57,15 @@ public class SurveyService {
 
     public Survey findById(long id) {
         return surveyRepository.findById(id);
+    }
+
+    public List<SurveyDTO> findBySurveyorEmail(String surveyorEmail) {
+        List<SurveyDTO> dtoList = new ArrayList<>();
+        List<Survey> surveys = surveyRepository.findAllBySurveyorEmail(surveyorEmail);
+        for (Survey survey: surveys){
+            dtoList.add(SurveyMapper.toSurveyDTO(survey));
+        }
+        return dtoList;
     }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
