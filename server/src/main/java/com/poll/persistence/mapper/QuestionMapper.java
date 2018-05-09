@@ -58,9 +58,11 @@ class QuestionMapper{
         System.out.println("questionDTO = " + questionDTO);
 
         Question question = null;
-        if (questionDTO.getId() != null){
+        if ((questionDTO.getId() != null) && (questionDTO.getId().matches("\\d*"))){
             question = questionRepository.findById(Long.valueOf(questionDTO.getId()));
-        } else{
+        }
+
+        if (question == null ){
             question = new Question();
         }
 

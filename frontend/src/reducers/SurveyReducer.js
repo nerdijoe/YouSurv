@@ -276,6 +276,22 @@ const SurveyReducer = (state = initialState, action) => {
 
       }
     }
+    case actionType.SURVEY_PUBLISH: {
+      console.log('SurveyReducer SURVEY_PUBLISH action.data=', action.data);
+
+      const updatedSurveys = [...state.surveys];
+      const pos = updatedSurveys.findIndex(i => i.id === action.data.id)
+
+      // replace the whole survey with the updated survey
+      updatedSurveys[pos] = action.data;
+  
+      return {
+        ...state,
+        surveys: updatedSurveys,
+
+      }
+    }
+
     default: 
       return state;
   }
