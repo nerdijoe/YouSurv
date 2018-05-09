@@ -6,7 +6,9 @@ public enum QuestionType {
     MCQ_TEXT_CHECKBOX,
     MCQ_TEXT_DROPDOWN,
     MCQ_IMAGE_RADIO,
-    MCQ_IMAGE_CHECKBOX;
+    MCQ_IMAGE_CHECKBOX,
+    STAR_RATING
+    ;
 
     public static QuestionType getType(String type) {
         for (QuestionType value: QuestionType.values()){
