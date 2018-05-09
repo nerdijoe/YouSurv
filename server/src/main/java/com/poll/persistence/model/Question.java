@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@ToString
+//@ToString
 public class Question extends AbstractTimestampModel implements Serializable  {
 
 //    private String id;
@@ -53,4 +53,14 @@ public class Question extends AbstractTimestampModel implements Serializable  {
 
     private boolean required;
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "type=" + type +
+                ", text='" + text + '\'' +
+                ", image='" + image + '\'' +
+                ", options=" + options +
+                ", required=" + required +
+                '}';
+    }
 }
