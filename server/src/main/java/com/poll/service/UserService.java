@@ -3,18 +3,21 @@ package com.poll.service;
 import com.poll.exception.CustomException;
 import com.poll.persistence.dto.AppUserDTO;
 import com.poll.persistence.mapper.AppUserMapper;
+import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.model.AppUser;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
 import com.poll.persistence.repository.mysql.AppUserRepository;
 import com.poll.security.authentication.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -29,7 +32,15 @@ public class UserService {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
+
+    String link="";
+    String domain="localhost:";
+    String port="3000/";
+    String route="user/verify?emailVerificationToken=";
 
     public List<AppUser> findAllUsers() {
         return appUserRepository.findAll();
@@ -78,8 +89,21 @@ public class UserService {
         }
 
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+
         AppUser appUser = AppUserMapper.toAppUser(dto);
+
+        String token = UUID.randomUUID().toString();
+        appUser.setEmailVerificationToken(token);
         appUserRepository.save(appUser);
+
+        link = domain + port + route + token;
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom("postmaster@localhost");
+        mailMessage.setTo(appUser.getEmail());
+        mailMessage.setSubject("MyPoll - Account Registration Confirmation");
+        mailMessage.setText("Please confirm your account:\n" + link);
+        emailService.sendEmail(mailMessage);
     }
 
     public String signin(AppUserDTO dto) {
@@ -96,4 +120,19 @@ public class UserService {
             return jwtTokenProvider.createToken(user.getEmail(), Arrays.asList(user.getRole()));
         }
     }
+
+
+
+    public void verifyUser(String emailVerificationToken){
+        try {
+            AppUser user =appUserRepository.findByEmailVerificationToken(emailVerificationToken);
+            System.out.print("Before Save"+user.getId());
+            user.setVerified(true);
+            appUserRepository.save(user);
+
+        }catch (Exception e){
+            throw new CustomException("Relation not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

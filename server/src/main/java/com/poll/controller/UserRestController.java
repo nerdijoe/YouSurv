@@ -25,6 +25,9 @@ public class UserRestController {
     @Autowired
     UserService userService;  //Service which will do all data retrieval/manipulation work
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostMapping("/signin")
     public ResponseEntity signin(@RequestBody AppUserDTO dto) {
         System.out.println("RestUserController.login");
@@ -140,4 +143,10 @@ public class UserRestController {
 //        return new ResponseEntity<AppUser>(HttpStatus.NO_CONTENT);
 //    }
 
+
+    @RequestMapping(value="/user/verify", method = RequestMethod.PUT)
+    public void verifyUser(@RequestParam String emailVerificationToken){
+        System.out.println("Token"+emailVerificationToken);
+        userService.verifyUser(emailVerificationToken);
+    }
 }

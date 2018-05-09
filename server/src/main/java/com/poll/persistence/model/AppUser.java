@@ -25,6 +25,15 @@ public class AppUser implements IEntity {
     @Column(nullable = false)
     private String password;
 
+
+    @Column
+    private String emailVerificationToken;
+
+
+    @Column
+    private boolean verified;
+
+
     private Role role;
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    List<Role> roles;

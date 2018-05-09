@@ -29,7 +29,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
     //     })
 
   console.log(" before axiosSignUp", data);
-  
+
   axios.post('http://localhost:8080/signup', {
     email: data.email,
     password: data.password,
