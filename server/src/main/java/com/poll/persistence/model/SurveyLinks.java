@@ -15,8 +15,8 @@ import java.util.Date;
 public class SurveyLinks {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
     private String link;
-    private Long surveyId;
+    private long surveyId;
 
 }

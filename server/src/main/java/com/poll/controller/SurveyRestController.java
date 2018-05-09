@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 
 @RestController
-@RequestMapping(path="")
+@RequestMapping(path = "")
 public class SurveyRestController {
 
     private Logger log = Logger.getLogger(this.getClass().getName());
@@ -39,11 +39,12 @@ public class SurveyRestController {
     UserService userService;
 
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
+    public @ResponseBody
+    ResponseEntity createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
         String surveyorEmail = auth.getName();
         System.out.println("==> POST /survey/, surveyor Email = " + surveyorEmail);
 
-        if (!userService.existsByEmail(surveyorEmail)){
+        if (!userService.existsByEmail(surveyorEmail)) {
             String message = "surveyor with email: " + surveyorEmail + "does not exists";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
@@ -53,7 +54,7 @@ public class SurveyRestController {
 
         SurveyDTO survey = surveyService.createSurvey(surveyorEmail, surveyDTO);
 
-        if (survey == null){
+        if (survey == null) {
             String message = "fail to create survey";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
@@ -65,7 +66,10 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
+    public @ResponseBody
+    ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
+        System.out.println("SurveyRestController.findAllSurveyBySurveyor");
+        System.out.println("auth.getName() = " + auth.getName());
         String surveyorEmail = auth.getName();
         List<SurveyDTO> surveys = surveyService.findBySurveyorEmail(surveyorEmail);
         return new ResponseEntity(surveys, HttpStatus.OK);
@@ -76,7 +80,7 @@ public class SurveyRestController {
         System.out.println("SurveyRestController.saveSurvey");
         System.out.println("surveyDTO = " + surveyDTO);
         System.out.println("Saving survey with id " + id);
-        if (!surveyService.existsById(id)){
+        if (!surveyService.existsById(id)) {
             String message = "survey with id: " + id + " does not exists";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
@@ -86,7 +90,7 @@ public class SurveyRestController {
 
         Survey survey = surveyService.save(surveyDTO);
 
-        if (survey == null){
+        if (survey == null) {
             System.out.println("Survey with id: " + id + " can't be saved");
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -99,7 +103,7 @@ public class SurveyRestController {
     public ResponseEntity getSurveyById(@PathVariable("id") long id) {
         System.out.println("Fetching survey with id " + id);
 
-        if (!surveyService.existsById(id)){
+        if (!surveyService.existsById(id)) {
             String message = "Survey with id: " + id + " doesn't exist";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
@@ -114,7 +118,7 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity publishSurvey(@PathVariable("id") long id, Authentication auth) {
         System.out.println("Publishing survey with id " + id);
-        if (!surveyService.existsById(id)){
+        if (!surveyService.existsById(id)) {
             String message = "Survey with id: " + id + " doesn't exist";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
@@ -139,7 +143,7 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/{id}/answer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity saveSurveyAnswer(@PathVariable("id") long id, @RequestBody AnswerSaveDTO answerDTO, Authentication auth) {
 
-        if (!surveyService.existsById(id)){
+        if (!surveyService.existsById(id)) {
             String message = "Survey with id: " + id + " doesn't exist";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
@@ -162,7 +166,19 @@ public class SurveyRestController {
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/survey/token/{token}", method = RequestMethod.GET)
+    public ResponseEntity validateSurveyLink(@PathVariable("token") String token) {
 
+        if (!surveyService.validSurveyLinkToken(token)){
+            String message = "You have no access to the survey";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.FORBIDDEN);
+        }
+        Survey survey = surveyService.findBySurveyLinkToken(token);
+        return new ResponseEntity(SurveyMapper.toSurveyDTO(survey), HttpStatus.OK);
+    }
 
 
 }

@@ -15,6 +15,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -129,6 +130,42 @@ public class SurveyService {
         Answer answer = answerRepository.findById(answerId);
         answer.setSubmitted(true);
         return answerRepository.save(answer);
+    }
+
+
+    public boolean validSurveyLinkToken(String token) {
+
+        if (!surveyLinkRepository.existsByLink(token)) {
+            return false;
+        }
+
+        SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
+        Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
+
+        if (!validSurvey(survey) || survey.getPublish() == null){
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validSurvey(Survey survey) {
+        Date now = new Date();
+        Date start = survey.getPublish().getStart();
+        Date end = survey.getPublish().getEnd();
+        if (start != null && now.before(start)){
+            return false;
+        }
+        if (end != null && now.after(end)){
+            return false;
+        }
+        return true;
+    }
+
+    public Survey findBySurveyLinkToken(String token) {
+        SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
+        Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
+        return survey;
     }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
