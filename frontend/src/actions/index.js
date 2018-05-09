@@ -404,3 +404,30 @@ export const surveyTakingSaveProgressReduce = (data) => {
     data,
   }
 }
+
+export const axiosSurveyPublish = (data) => dispatch => {
+  console.log('axiosSurveyPublish data=', data);
+  var surveyId = data.id;
+  let token = 'Bearer ' + localStorage.getItem('token');
+  axios.post(`http://localhost:8080/survey/${surveyId}/publish`, {}, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after axiosSurveyPublish res.data', res.data);
+    dispatch(surveyPublish(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyPublish");
+    console.log(err);
+  })
+}
+
+export const surveyPublish = (data) => {
+  return {
+    type: actionType.SURVEY_PUBLISH,
+    data,
+  }
+}
