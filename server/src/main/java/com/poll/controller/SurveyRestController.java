@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,30 @@ public class SurveyRestController {
 
     }
 
+    @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity saveSurvey(@PathVariable("id") long id, @RequestBody SurveyDTO surveyDTO) {
+        System.out.println("Saving survey with id " + id);
+        Date now = new Date();
+        System.out.println("now.toString() = " + now.toString());
+        if (!surveyService.existsById(id)){
+            String message = "survey with id: " + id + " does not exists";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.save(surveyDTO);
+
+        if (survey == null){
+            System.out.println("Survey with id: " + id + " can't be saved");
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(survey, HttpStatus.OK);
+
+    }
+
 
 //    @RequestMapping(value = "/user/{id}/survey/", method = RequestMethod.GET)
 //    public @ResponseBody ResponseEntity<List<SurveyDTO>> findAllBySurveyorId(@PathVariable String id, UriComponentsBuilder ucBuilder) {
@@ -95,20 +120,7 @@ public class SurveyRestController {
 //
 //
 //
-//    @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
-//    public ResponseEntity<Survey> saveSurvey(@PathVariable("id") long id, @RequestBody SurveySaveDTO surveyDTO) {
-//        System.out.println("Saving survey with id " + id);
-//
-//        Survey survey = surveyService.save(id, surveyDTO);
-//
-//        if (survey == null){
-//            System.out.println("Survey with id: " + id + " can't be saved");
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//        return new ResponseEntity<>(survey, HttpStatus.OK);
-//
-//    }
+
 //
 //    @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
 //    public ResponseEntity<SurveyDTO> getSurveyById(@PathVariable("id") long id) {

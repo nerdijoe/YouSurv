@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,7 +16,8 @@ import java.util.Locale;
 public class TimeUtil {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+//    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
 
     /**
@@ -23,10 +25,13 @@ public class TimeUtil {
      * @return
      */
     public static Date getDate(String dateString, String formatString){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatString, Locale.ENGLISH);
-        LocalDate localDate = LocalDate.parse(dateString, formatter);
-
-        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date = null;
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            date = sdf.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return date;
     }
 

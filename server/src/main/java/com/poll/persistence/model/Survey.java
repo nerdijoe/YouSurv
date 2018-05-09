@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Survey extends AbstractTimestampModel {
 
     private String surveyorEmail;
@@ -29,20 +29,22 @@ public class Survey extends AbstractTimestampModel {
     @Enumerated(EnumType.STRING)
     private SurveyType type;
 
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "survey",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+//    @OneToMany(
+//            fetch = FetchType.LAZY,
+//            mappedBy = "survey",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+    @Embedded
     private List<Question> questions;
 
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            mappedBy = "survey",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+//    @OneToMany(
+//            fetch = FetchType.LAZY,
+//            mappedBy = "survey",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+    @Embedded
     private List<Answer> answers;
 
     @Embedded
@@ -63,16 +65,20 @@ public class Survey extends AbstractTimestampModel {
     }
 
     public void setQuestions(List<Question> questions) {
-        this.questions.clear();
-        if (questions != null){
-            this.questions.addAll(questions);
+        if (this.questions != null){
+            this.questions.clear();
+        } else{
+            this.questions = new ArrayList<>();
         }
+        this.questions.addAll(questions);
     }
 
     public void setAnswers(List<Answer> answers) {
-        this.answers.clear();
-        if (answers != null){
-            this.answers.addAll(answers);
+        if (this.answers != null){
+            this.answers.clear();
+        } else{
+            this.answers = new ArrayList<>();
         }
+        this.answers.addAll(answers);
     }
 }

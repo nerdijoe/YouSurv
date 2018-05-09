@@ -4,6 +4,7 @@ import com.poll.security.authentication.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Email;
 @Entity
 @Getter
 @Setter
+@ToString
 public class AppUser implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

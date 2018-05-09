@@ -2,6 +2,7 @@ package com.poll.persistence.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Date;
 @MappedSuperclass
 @Getter
 @Setter
+@ToString
 public abstract class AbstractTimestampModel {
 
     @Id
@@ -16,11 +18,11 @@ public abstract class AbstractTimestampModel {
     protected Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created", nullable = false)
+    @Column(name = "created", nullable = true)
     protected Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", nullable = false)
+    @Column(name = "updated", nullable = true)
     protected Date updated;
 
     @PrePersist
@@ -34,7 +36,7 @@ public abstract class AbstractTimestampModel {
         updated = new Date();
     }
 
-    @Column(name = "deleted", nullable = false)
+    @Column(name = "deleted", nullable = true)
     private boolean deleted;
 
 

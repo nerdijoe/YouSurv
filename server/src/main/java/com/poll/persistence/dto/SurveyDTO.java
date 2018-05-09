@@ -15,9 +15,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class SurveyDTO {
     private String id;
-    private String authorEmail;
+    private String surveyorEmail;
     private List<String> invitedEmailList;
     private String title;
     private String type;

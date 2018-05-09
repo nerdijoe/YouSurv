@@ -6,14 +6,11 @@ import com.poll.persistence.mapper.QuestionMapper;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
-import com.poll.persistence.model.AppUser;
-import com.poll.persistence.model.Question;
-import com.poll.persistence.model.Survey;
-import com.poll.persistence.model.SurveyType;
-import com.poll.persistence.repository.AppUserRepository;
-import com.poll.persistence.repository.SurveyRepository;
+import com.poll.persistence.model.*;
+import com.poll.persistence.repository.*;
 import com.poll.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,14 +24,34 @@ public class SurveyService {
     private AppUserRepository appUserRepository;
     @Autowired
     private SurveyRepository surveyRepository;
+    @Autowired
+    private AnswerRepository answerRepository;
 
     public SurveyDTO createSurvey(String surveyorEmail, SurveyCreateDTO surveyDTO) {
-
-        Survey survey = new Survey(surveyorEmail, surveyDTO.getTitle(), surveyDTO.getType());
+        Survey survey = SurveyMapper.toSurvey(surveyorEmail, surveyDTO);
         surveyRepository.save(survey);
         return SurveyMapper.toSurveyDTO(survey);
     }
 
+    public Survey save(SurveyDTO surveyDTO) {
+        System.out.println("surveyDTO = " + surveyDTO);
+        Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
+
+        survey.setQuestions(surveyDTO.getQuestions());
+
+        for (int i = 0; i < surveyDTO.getAnswers().size(); i++) {
+            surveyDTO.getAnswers().get(i).setSurvey(survey);
+        }
+
+        survey.setAnswers(surveyDTO.getAnswers());
+
+        SurveyMapper.convertToSurvey(surveyDTO, survey);
+        return surveyRepository.save(survey);
+    }
+
+    public boolean existsById(long id){
+        return surveyRepository.existsById(id);
+    }
 
 //    public Survey createSurvey(AppUser surveyor, String type) {
 //        if (surveyor == null || type == null){

@@ -3,19 +3,19 @@ package com.poll.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
+@Embeddable
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Question extends AbstractTimestampModel {
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@ToString
+public class Question{
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -24,17 +24,18 @@ public class Question extends AbstractTimestampModel {
 
     private String image;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "survey_id")
-    private Survey survey;
+//    @JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "survey_id")
+//    private Survey survey;
 
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            mappedBy = "question"
-    )
+//    @OneToMany(
+//            fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            mappedBy = "question"
+//    )
+    @Embedded
     private List<QuestionOption> options;
 
 //    @OneToOne(

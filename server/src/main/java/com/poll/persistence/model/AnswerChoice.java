@@ -3,23 +3,24 @@ package com.poll.persistence.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.List;
 
-@Entity
+@Embeddable
 @Getter
+@Setter
 @NoArgsConstructor
-public class AnswerChoice extends AbstractTimestampModel {
+@ToString
+public class AnswerChoice{
 
+//    @ManyToOne
+//    @JoinColumn(name = "answer_id", nullable = true)
+//    private Answer answer;
 
-
-    @ManyToOne
-    @JoinColumn(name = "answer_id", nullable = false)
-    private Answer answer;
+    private String questionId;
 
     @ElementCollection(targetClass=String.class)
     private List<String> selection;
