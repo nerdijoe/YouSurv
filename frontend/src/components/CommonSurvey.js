@@ -513,5 +513,5 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const connectedSurveyTakingDetail = withRouter(connect(mapStateToProps, mapDispatchToProps)(CommonSurvey));
-export default connectedSurveyTakingDetail;
+const connectedCommonSurvey = withRouter(connect(mapStateToProps, mapDispatchToProps)(CommonSurvey));
+export default connectedCommonSurvey;
