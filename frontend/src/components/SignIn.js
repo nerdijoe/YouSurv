@@ -93,8 +93,10 @@ class SignIn extends Component {
         formErrorsValidation.password = passwordValid ? '' : ' is too short. Minimum password length is 4 characters.';
         break;
       case 'error':
-        errorValid = this.props.error ? true : false;
-        formErrorsValidation.erro = errorValid ? '' : this.props.error;
+        // errorValid = this.props.error ? false : true;
+        if(this.props.error)
+          errorValid = false;
+        formErrorsValidation.error = errorValid ? '' : this.props.error;
         break;
       default:
         break;
@@ -106,6 +108,7 @@ class SignIn extends Component {
       lastnameValid,
       emailValid,
       passwordValid,
+      errorValid
     }, this.validateForm);
   }
 
@@ -117,7 +120,7 @@ class SignIn extends Component {
     e.preventDefault();
     console.log('handleSignIn', this.state);
     this.props.axiosSignIn(this.state, this.props.history);
-
+    
     // // this.props.history.push('/signin');
   }
 
@@ -136,6 +139,9 @@ class SignIn extends Component {
 
 
   render() {
+    let errorMSG = null;
+    if(this.props.error)
+      errorMSG = (<Message negative><p>{this.props.error}</p></Message>);
     return (
       <MyContainer>
         <Navbar />
@@ -179,6 +185,7 @@ class SignIn extends Component {
                 </Form>
 
                 <ErrorMessage formErrors={this.state.formErrors} />
+                {errorMSG}
               </Grid.Column>
               <Grid.Column width={4}>
               </Grid.Column>
@@ -197,7 +204,7 @@ class SignIn extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    error: state.error
+    error: state.UserReducer.error
   }
 }
 
