@@ -78,7 +78,9 @@ public class SurveyRestController {
 
         List<SurveyDTO> surveysAsSurveyee = surveyService.findBySurveyeeEmail(userEmail);
 
-        SurveyAllDTO surveys = new SurveyAllDTO(surveysAsSurveyor, surveysAsSurveyee);
+        SurveyAllDTO surveys = new SurveyAllDTO();
+        surveys.setSurveysAsSurveyee(surveysAsSurveyee);
+        surveys.setSurveysAsSurveyor(surveysAsSurveyor);
 
         return new ResponseEntity(surveys, HttpStatus.OK);
     }
