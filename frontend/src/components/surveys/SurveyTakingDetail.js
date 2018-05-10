@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import {
   surveyTakingGetById,
   surveyTakingSaveProgress,
+  axiosSurveyTakingSubmit,
 } from '../../actions';
 
 import {
@@ -224,6 +225,13 @@ class SurveyTakingDetail extends Component {
     console.log('choices=', choices);
 
     this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
+  }
+
+  handleSurveySubmit(e) {
+    e.preventDefault();
+    console.log('handleSurveySubmit');
+
+    this.props.axiosSurveyTakingSubmit(this.props.survey);
   }
 
 
@@ -484,7 +492,11 @@ class SurveyTakingDetail extends Component {
 
             <Divider />
             { this.props.survey.questions.length > 0 ? (
-              <Button basic color='red' type='submit' >Save Progress</Button>
+              <Form.Group>
+                <Form.Field><Button basic color='red' type='submit' >Save Progress</Button></Form.Field>
+                <Form.Field><Button color='youtube' onClick={e => this.handleSurveySubmit(e)} >Submit</Button></Form.Field>
+              </Form.Group>
+
             ) : ('')}
 
             {/* <Button color='youtube' type='submit' >Save</Button> */}
@@ -509,7 +521,7 @@ const mapDispatchToProps = dispatch => {
   return {
     surveyTakingGetById: (data) => { dispatch(surveyTakingGetById(data)); },
     surveyTakingSaveProgress: (data, surveyId) => { dispatch(surveyTakingSaveProgress(data, surveyId)); },
-
+    axiosSurveyTakingSubmit: (data) => { dispatch(axiosSurveyTakingSubmit(data)); },
   }
 }
 

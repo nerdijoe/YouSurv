@@ -431,3 +431,42 @@ export const surveyPublish = (data) => {
     data,
   }
 }
+
+
+export const axiosSurveyTakingSubmit = (data) => dispatch => {
+  console.log('axiosSurveySubmit data=', data);
+  var surveyId = data.id;
+  const userEmail = localStorage.getItem('user_email');
+  // Find the correct answer object
+  const pos = data.answers.findIndex(i => i.surveyeeEmail === userEmail)
+  // if existing answer by this user exist, just update his answers
+  var answerId = '';
+  if(pos != -1) {
+    answerId = data.answers[pos].id;
+  }
+
+  console.log(`---surveyId=${surveyId}, answerId=${answerId}`);
+
+  let token = 'Bearer ' + localStorage.getItem('token');
+  axios.post(`http://localhost:8080/survey/${surveyId}/answer/${answerId}`, {}, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after axiosSurveySubmit res.data', res.data);
+    dispatch(surveyTakingSubmit(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveySubmit");
+    console.log(err);
+  })
+}
+
+export const surveyTakingSubmit = (data) => {
+  return {
+    type: actionType.SURVEY_TAKING_SUBMIT,
+    data,
+  }
+}
