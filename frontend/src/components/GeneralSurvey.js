@@ -51,7 +51,7 @@ const ErrorMessage = ({formErrors}) => (
   </Container>
 );
 
-class SurveyRegister extends Component {
+class GeneralSurvey extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,25 +66,27 @@ class SurveyRegister extends Component {
     // this.props.axiosVerify(this.state.token, this.props.history);
     axios.get('http://localhost:8300/survey/token/'+this.props.location.search.split('?token=')[1]).then( res => {
       console.log("responseeee");
-      // if(res.status===200)
-      //   this.props.history.push('/signin');
-      // else {
-      //   console.log("error 404");
-      //   this.setState({
-      //     tokenValid: false,
-      //   }, () => {
-      //     this.validateField('token');
-      //   });
-      // }
+      if(res.status===200)
+        this.setState({
+          surveyLoad: res
+        })
+      else {
+        console.log("error invalid 404");
+        // this.setState({
+        //   tokenValid: false,
+        // }, () => {
+        //   this.validateField('token');
+        // });
+      }
 
     })
     .catch( res => {
       console.log("error 404");
-        // this.setState({
-        //   tokenValid: false,
-        // }, () => {
-        //   this.validateField('token', this.state.token);
-        // });
+        this.setState({
+          tokenValid: false,
+        }, () => {
+          this.validateField('token', this.state.token);
+        });
     })
     // this.props.history.push('/signin');
   }
@@ -139,11 +141,12 @@ class SurveyRegister extends Component {
       let surveyLoad = null;
       if(this.state.surveyLoad)
         surveyLoad = (
-            <CommonSurvey survey={this.state.surveyLoad} />
+            <CommonSurvey surveyLoad={this.state.surveyLoad} />
         )
     return (
       <MyContainer>
         <Navbar />
+        <br/>
         {surveyLoad}
       </MyContainer>
     );
@@ -163,4 +166,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 // const connectedSignIn = connect(mapStateToProps,mapDispatchToProps)(SignIn);
-export default SurveyRegister;
+export default GeneralSurvey;

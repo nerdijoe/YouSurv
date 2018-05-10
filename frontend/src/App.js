@@ -69,7 +69,7 @@ class App extends Component {
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
             <Route path='/verify' component={Verify} />
-            <Route path='/general/survey' component={GeneralSurvey} />
+            <Route path='/close/survey' component={GeneralSurvey} />
             <Route path='/surveyRegister' component={SurveyRegister} />
             <Route path='/home' component={Home} />
             <Route path='/surveyMetric' component={SurveyMetric}/>

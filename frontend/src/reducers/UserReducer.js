@@ -3,6 +3,7 @@ import * as actionType from '../actions/constants';
 const initialState = {
   user: {},
   is_authenticated: false,
+  error: null
 };
 
 const UserReducer = (state = initialState, action) => {
@@ -19,6 +20,12 @@ const UserReducer = (state = initialState, action) => {
           email: action.data.email,
         },
         is_authenticated: true,
+      };
+    }
+    case actionType.USER_SIGN_IN_FAIL: {
+      return {
+        ...state,
+        error: action.data
       };
     }
     case actionType.USER_SIGN_OUT: {

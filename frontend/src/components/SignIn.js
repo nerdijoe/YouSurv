@@ -56,11 +56,12 @@ class SignIn extends Component {
       lastname: '',
       email: '',
       password: '',
-      formErrors: { firstname: '', lastname: '', email: '', password: '' },
+      formErrors: { firstname: '', lastname: '', email: '', password: '', error: '' },
       emailValid: false,
       passwordValid: false,
       firstnameValid: true,
       lastnameValid: true,
+      errorValid: true,
       formValid: false,
     }
   }
@@ -72,6 +73,7 @@ class SignIn extends Component {
     
     let emailValid = this.state.emailValid;
     let passwordValid = this.state.passwordValid;
+    let errorValid = this.state.errorValid;
     
     switch (fieldName) {
       case 'firstname':
@@ -89,6 +91,10 @@ class SignIn extends Component {
       case 'password':
         passwordValid = value.length >= 4;
         formErrorsValidation.password = passwordValid ? '' : ' is too short. Minimum password length is 4 characters.';
+        break;
+      case 'error':
+        errorValid = this.props.error ? true : false;
+        formErrorsValidation.erro = errorValid ? '' : this.props.error;
         break;
       default:
         break;
@@ -191,7 +197,7 @@ class SignIn extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    
+    error: state.error
   }
 }
 
