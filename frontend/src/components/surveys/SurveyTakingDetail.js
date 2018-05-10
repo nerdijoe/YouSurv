@@ -236,6 +236,19 @@ class SurveyTakingDetail extends Component {
 
 
   render() {
+
+    // if existing answer by this user exist, just update his answers
+    var answer = {submitted: false};
+
+    if(this.props.survey != undefined && this.props.survey.answers != undefined) {
+      const pos = this.props.survey.answers.findIndex(i => i.surveyeeEmail === localStorage.getItem('user_email'))
+      if(pos != -1) {
+        answer = this.props.survey.answers[pos];
+      }
+    }
+
+    console.log('        **** answer object=', answer);
+
     return (
       <Container>
         {/* {this.state.survey.id}-{this.state.survey.title} */}
@@ -491,13 +504,17 @@ class SurveyTakingDetail extends Component {
 
 
             <Divider />
-            { this.props.survey.questions.length > 0 ? (
+            { (this.props.survey.questions.length > 0   && !answer.submitted) ? (
               <Form.Group>
                 <Form.Field><Button basic color='red' type='submit' >Save Progress</Button></Form.Field>
                 <Form.Field><Button color='youtube' onClick={e => this.handleSurveySubmit(e)} >Submit</Button></Form.Field>
               </Form.Group>
 
-            ) : ('')}
+            ) : (
+              <Message compact>
+                Survey is completed.
+              </Message>
+            )}
 
             {/* <Button color='youtube' type='submit' >Save</Button> */}
             </Form>

@@ -302,6 +302,7 @@ const SurveyReducer = (state = initialState, action) => {
 
       const email = localStorage.getItem('user_email');
       const pos = updateAnswers.findIndex(i => i.surveyeeEmail === email)
+      console.log('---->>>>> updateAnswers[pos]=', updateAnswers[pos])
 
       // if existing answer by this user exist, just update his answers
       if(pos != -1) {
