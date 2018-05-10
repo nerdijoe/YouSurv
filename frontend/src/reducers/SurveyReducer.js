@@ -36,7 +36,8 @@ const SurveyReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        surveys: [...action.data],
+        surveys: [...action.data.surveysAsSurveyor],
+        surveyTaking: [...action.data.surveysAsSurveyee],
       }
     }
 
@@ -131,6 +132,21 @@ const SurveyReducer = (state = initialState, action) => {
         ...state,
         surveys: updatedSurveys,
         surveyTaking: updatedSurveys,
+
+      }
+    }
+    case actionType.SURVEY_PUBLISH: {
+      console.log('SurveyReducer SURVEY_PUBLISH action.data=', action.data);
+
+      const updatedSurveys = [...state.surveys];
+      const pos = updatedSurveys.findIndex(i => i.id === action.data.id)
+
+      // replace the whole survey with the updated survey
+      updatedSurveys[pos] = action.data;
+  
+      return {
+        ...state,
+        surveys: updatedSurveys,
 
       }
     }
@@ -276,22 +292,38 @@ const SurveyReducer = (state = initialState, action) => {
 
       }
     }
-    case actionType.SURVEY_PUBLISH: {
-      console.log('SurveyReducer SURVEY_PUBLISH action.data=', action.data);
 
-      const updatedSurveys = [...state.surveys];
-      const pos = updatedSurveys.findIndex(i => i.id === action.data.id)
+    case actionType.SURVEY_TAKING_SUBMIT: {
+      console.log('SurveyReducer SURVEY_SUBMIT action.data=', action.data);
 
+      // find by surveyee email
+      const UpdatedSurveyTakingCurrent = {...state.surveyTakingCurrent}
+      const updateAnswers = [...UpdatedSurveyTakingCurrent.answers];
+
+      const email = localStorage.getItem('user_email');
+      const pos = updateAnswers.findIndex(i => i.surveyeeEmail === email)
+      console.log('---->>>>> updateAnswers[pos]=', updateAnswers[pos])
+
+      // if existing answer by this user exist, just update his answers
+      if(pos != -1) {
+        updateAnswers[pos] = action.data;
+      } 
+
+      UpdatedSurveyTakingCurrent.answers = updateAnswers;
+
+      const surveyTaking = [...state.surveyTaking];
+      const posfoo = surveyTaking.findIndex(i => i.id === UpdatedSurveyTakingCurrent.id)
       // replace the whole survey with the updated survey
-      updatedSurveys[pos] = action.data;
-  
+      if(posfoo != -1)
+        surveyTaking[posfoo] = UpdatedSurveyTakingCurrent
+
       return {
         ...state,
-        surveys: updatedSurveys,
-
+        surveyTaking: surveyTaking,
+        surveyTakingCurrent: UpdatedSurveyTakingCurrent,
       }
-    }
 
+    }
     default: 
       return state;
   }
