@@ -300,6 +300,8 @@ const SurveyReducer = (state = initialState, action) => {
       const UpdatedSurveyTakingCurrent = {...state.surveyTakingCurrent}
       const updateAnswers = [...UpdatedSurveyTakingCurrent.answers];
 
+      console.log("updatedddd");
+
       const email = localStorage.getItem('user_email');
       const pos = updateAnswers.findIndex(i => i.surveyeeEmail === email)
       console.log('---->>>>> updateAnswers[pos]=', updateAnswers[pos])

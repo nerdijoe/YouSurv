@@ -81,11 +81,11 @@ class GeneralSurvey extends Component {
 
     })
     .catch( res => {
-      console.log("error 404");
+      console.log("error 404",res);
+
         this.setState({
           tokenValid: false,
-        }, () => {
-          this.validateField('token', this.state.token);
+          tokenMsg: res.response.data.message
         });
     })
     // this.props.history.push('/signin');
@@ -141,13 +141,21 @@ class GeneralSurvey extends Component {
       let surveyLoad = null;
       if(this.state.surveyLoad)
         surveyLoad = (
-            <CommonSurvey surveyLoad={this.state.surveyLoad} />
+            <CommonSurvey surveyLoad={this.state.surveyLoad} tokenurl={urllll} />
         )
     return (
       <MyContainer>
-        <Navbar />
-        <br/>
-        {surveyLoad}
+        {(this.state.tokenValid == false) ? (
+          <Message compact>
+            {this.state.tokenMsg}
+          </Message>
+        ) : (
+          <div>
+            <Navbar />
+            <br/>
+            {surveyLoad}
+          </div>
+        )}
       </MyContainer>
     );
   }

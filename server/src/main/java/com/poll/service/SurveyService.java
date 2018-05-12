@@ -167,13 +167,15 @@ public class SurveyService {
     public Answer submitAnswer(long answerId, String userEmail, String token) {
         Answer answer = answerRepository.findById(answerId);
         answer.setSubmitted(true);
-        SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
-        generalSurveyLink.setFrom("postmaster@localhost");
-        generalSurveyLink.setTo(userEmail);
-        generalSurveyLink.setSubject("Survey Submission Details");
-        generalSurveyLink.setText("Survey Submitted Successfully:\n" +
-                "" );
-
+        if(!userEmail.isEmpty()) {
+            SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+            generalSurveyLink.setFrom("postmaster@localhost");
+            generalSurveyLink.setTo(userEmail);
+            generalSurveyLink.setSubject("Survey Submission Details");
+            generalSurveyLink.setText("Survey Submitted Successfully:\n" +
+                    "");
+            emailService.sendEmail(generalSurveyLink);
+        }
         if(!token.isEmpty()){
             SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
 
@@ -183,7 +185,7 @@ public class SurveyService {
             }
         }
 
-        emailService.sendEmail(generalSurveyLink);
+
         return answerRepository.save(answer);
     }
 
@@ -197,7 +199,10 @@ public class SurveyService {
         SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
         Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
 
-        if (!validSurvey(survey) || survey.getPublish() == null || "active"!=surveyLinks.getStatus()){
+
+        if (!validSurvey(survey) || survey.getPublish() == null || !surveyLinks.getStatus().equals("active")){
+            System.out.println("getstatus" + surveyLinks.getStatus() + "getpublish" + survey.getPublish());
+            System.out.println();
             return false;
         }
 

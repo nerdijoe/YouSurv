@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.json.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -168,6 +169,8 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/{surveyId}/answer/{answerId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity submitSurveyAnswer(@RequestBody String token ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
         String userEmail = auth.getName();
+        JSONObject obj = new JSONObject(token);
+        token = obj.getString("token");
         Answer answer = surveyService.submitAnswer(answerId, userEmail, token);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
@@ -176,7 +179,7 @@ public class SurveyRestController {
     public ResponseEntity validateSurveyLink(@PathVariable("token") String token) {
 
         if (!surveyService.validSurveyLinkToken(token)){
-            String message = "You have no access to the survey";
+            String message = "Either Link does not exist or is invalid";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("message", message);

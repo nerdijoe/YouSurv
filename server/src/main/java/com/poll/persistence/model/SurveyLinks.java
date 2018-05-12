@@ -18,6 +18,7 @@ public class SurveyLinks {
     private long id;
     private String link;
     private String status;
+    @Enumerated(EnumType.STRING)
     private SurveyType type;
     private long surveyId;
 
