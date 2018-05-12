@@ -17,6 +17,8 @@ public class SurveyLinks {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String link;
+    private String status;
+    private SurveyType type;
     private long surveyId;
 
 }

@@ -71,8 +71,6 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/", method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
-        System.out.println("SurveyRestController.findAllSurveyBySurveyor");
-        System.out.println("auth.getName() = " + auth.getName());
         String userEmail = auth.getName();
         List<SurveyDTO> surveysAsSurveyor = surveyService.findBySurveyorEmail(userEmail);
 
@@ -87,9 +85,7 @@ public class SurveyRestController {
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity saveSurvey(@PathVariable("id") long id, @RequestBody SurveyDTO surveyDTO) {
-        System.out.println("SurveyRestController.saveSurvey");
-        System.out.println("surveyDTO = " + surveyDTO);
-        System.out.println("Saving survey with id " + id);
+
         if (!surveyService.existsById(id)) {
             String message = "survey with id: " + id + " does not exists";
             System.out.println(message);
@@ -127,7 +123,7 @@ public class SurveyRestController {
 
     @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity publishSurvey(@PathVariable("id") long id, Authentication auth) {
-        System.out.println("Publishing survey with id " + id);
+
         if (!surveyService.existsById(id)) {
             String message = "Survey with id: " + id + " doesn't exist";
             System.out.println(message);
@@ -170,9 +166,9 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/{surveyId}/answer/{answerId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity submitSurveyAnswer(@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
+    public ResponseEntity submitSurveyAnswer(@RequestBody String token ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
         String userEmail = auth.getName();
-        Answer answer = surveyService.submitAnswer(answerId, userEmail);
+        Answer answer = surveyService.submitAnswer(answerId, userEmail, token);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
 
