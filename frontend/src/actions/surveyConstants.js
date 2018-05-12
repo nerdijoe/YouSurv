@@ -22,7 +22,6 @@ export const SV_GENERAL = 'SV_GENERAL';
 export const SV_CLOSE = 'SV_CLOSE';
 export const SV_OPEN = 'SV_OPEN';
 
-export const Q_STRING = 'Q_STRING'
 export const MCQ_TEXT_RADIO = 'MCQ_TEXT_RADIO';
 export const MCQ_TEXT_CHECKBOX = 'MCQ_TEXT_CHECKBOX';
 export const MCQ_TEXT_DROPDOWN = 'MCQ_TEXT_DROPDOWN';
@@ -30,5 +29,9 @@ export const MCQ_TEXT_DROPDOWN = 'MCQ_TEXT_DROPDOWN';
 export const MCQ_IMAGE_RADIO = 'MCQ_IMAGE_RADIO';
 export const MCQ_IMAGE_CHECKBOX = 'MCQ_IMAGE_CHECKBOX';
 export const STAR_RATING = 'STAR_RATING';
+
+export const Q_YESNO = 'Q_YESNO';
+export const Q_STRING = 'Q_STRING'
+export const Q_DATE = 'Q_DATE';
 
 
