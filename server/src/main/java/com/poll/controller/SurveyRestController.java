@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.json.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -71,8 +72,6 @@ public class SurveyRestController {
     @RequestMapping(value = "/survey/", method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
-        System.out.println("SurveyRestController.findAllSurveyBySurveyor");
-        System.out.println("auth.getName() = " + auth.getName());
         String userEmail = auth.getName();
         List<SurveyDTO> surveysAsSurveyor = surveyService.findBySurveyorEmail(userEmail);
 
@@ -87,9 +86,7 @@ public class SurveyRestController {
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.PUT, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity saveSurvey(@PathVariable("id") long id, @RequestBody SurveyDTO surveyDTO) {
-        System.out.println("SurveyRestController.saveSurvey");
-        System.out.println("surveyDTO = " + surveyDTO);
-        System.out.println("Saving survey with id " + id);
+
         if (!surveyService.existsById(id)) {
             String message = "survey with id: " + id + " does not exists";
             System.out.println(message);
@@ -127,7 +124,7 @@ public class SurveyRestController {
 
     @RequestMapping(value = "/survey/{id}/publish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity publishSurvey(@PathVariable("id") long id, Authentication auth) {
-        System.out.println("Publishing survey with id " + id);
+
         if (!surveyService.existsById(id)) {
             String message = "Survey with id: " + id + " doesn't exist";
             System.out.println(message);
@@ -170,17 +167,43 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/survey/{surveyId}/answer/{answerId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity submitSurveyAnswer(@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
-        String userEmail = auth.getName();
-        Answer answer = surveyService.submitAnswer(answerId, userEmail);
+    public ResponseEntity submitSurveyAnswer(@RequestBody String token ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
+        String userEmail = auth.getName() ;
+        JSONObject obj = new JSONObject(token);
+        token = obj.getString("token");
+        Answer answer = surveyService.submitAnswer(answerId, userEmail, token);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/survey/{surveyId}/savesubmitanswer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity savesubmitSurveyAnswer(@RequestBody String body ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId) {
+//        String userEmail = auth.getName() ;
+        if (!surveyService.existsById(surveyId)) {
+            String message = "Survey with id: " + surveyId + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.findById(surveyId);
+        JSONObject obj = new JSONObject(body);
+        String token = obj.getString("token");
+        String userEmail = obj.getString("email");
+        AnswerSaveDTO answerDTO = (AnswerSaveDTO)obj.get("choices");
+
+        Answer answer = surveyService.answerSurvey(userEmail, survey, answerDTO);
+//        return new ResponseEntity(answer, HttpStatus.OK);
+
+        Answer submitanswer = surveyService.submitAnswer(answerId, userEmail, token);
+        return new ResponseEntity(AnswerMapper.toAnswerDTO(submitanswer), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/survey/token/{token}", method = RequestMethod.GET)
     public ResponseEntity validateSurveyLink(@PathVariable("token") String token) {
 
         if (!surveyService.validSurveyLinkToken(token)){
-            String message = "You have no access to the survey";
+            String message = "Either Link does not exist or is invalid";
             System.out.println(message);
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("message", message);

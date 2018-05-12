@@ -15,10 +15,7 @@ import {
   Grid,
   Message,
   Header,
-  Comment
 } from 'semantic-ui-react';
-
-
 import styled from 'styled-components';
 
 import Navbar from './Navbar';
@@ -37,16 +34,31 @@ ${'' /* background: #0099FF; */}
 `;
 
 
+const ErrorMessage = ({formErrors}) => (
+  <Container>
+    <div></div>
+    {Object.keys(formErrors).map((fieldName, i) => {
+      if (formErrors[fieldName].length > 0) {
+        return (
+         
+          <Message negative>
+            <p key={i}>{fieldName} {formErrors[fieldName]}</p>
+          </Message>
 
+        );
+      }
+    })}
+  </Container>
+);
 
-class GeneralSurvey extends Component {
+class CloseSurvey extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formErrors: { email: '' },
+      formErrors: { Token: '' },
       formValid: false,
-      email: '',
-      emailValid: true
+      token: '',
+      tokenValid: true
     }
   }
 
@@ -79,16 +91,14 @@ class GeneralSurvey extends Component {
     // this.props.history.push('/signin');
   }
   
-  validateField(fieldName,value) {
+  validateField(fieldName) {
     const formErrorsValidation = this.state.formErrors;
     
-    let emailValid = this.state.emailValid;
+    let tokenValid = this.state.tokenValid;
     
     switch (fieldName) {
-      case 'email':
-        emailValid = (/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i).test(value);
-        emailValid = value==''?true:emailValid;
-        formErrorsValidation.email = emailValid ? '' : ' is invalid.';
+      case 'token':
+        formErrorsValidation.Token = tokenValid ? '' : ' Verification code is invalid. Please Try again';
         break;
       default:
         break;
@@ -96,12 +106,12 @@ class GeneralSurvey extends Component {
     // update the error message
     this.setState({
       formErrors: formErrorsValidation,
-      emailValid
+      tokenValid
     }, this.validateForm);
   }
 
   validateForm() {
-    this.setState({ formValid: this.state.emailValid }, this.render());
+    this.setState({ formValid: this.state.tokenValid });
   }
 
   handleRegister(e) {
@@ -118,7 +128,7 @@ class GeneralSurvey extends Component {
     // validate field everytime user enters something.
     this.setState({
       [target.name]: target.value,
-      emailValid: true
+      tokenValid: true
     }, () => {
       this.validateField(target.name, target.value);
     });
@@ -128,7 +138,6 @@ class GeneralSurvey extends Component {
   render() {
     let urllll = this.props.location.search.split('?token=')[1];
     console.log("urlllll",urllll);
-    console.log("invalidEmail ",this.state.emailValid);
       let surveyLoad = null;
       if(this.state.surveyLoad)
         surveyLoad = (
@@ -152,4 +161,4 @@ class GeneralSurvey extends Component {
   }
 }
 
-export default GeneralSurvey;
+export default CloseSurvey;

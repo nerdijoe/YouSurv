@@ -124,7 +124,9 @@ public class SurveyService {
                 emailService.sendEmail(generalSurveyLink);
             }
             surveyLinks.setLink(token);
+            surveyLinks.setStatus("active");
             surveyLinks.setSurveyId(survey.getId());
+            surveyLinks.setType(SurveyType.SV_GENERAL);
             surveyLinkRepository.save(surveyLinks);
 
         } else if(survey.getType() == SurveyType.SV_CLOSE){
@@ -143,6 +145,8 @@ public class SurveyService {
                 emailService.sendEmail(generalSurveyLink);
                 surveyLinks.setLink(token);
                 surveyLinks.setSurveyId(survey.getId());
+                surveyLinks.setStatus("active");
+                surveyLinks.setType(SurveyType.SV_CLOSE);
                 surveyLinkRepository.save(surveyLinks);
             }
         }
@@ -160,16 +164,28 @@ public class SurveyService {
         return answer;
     }
 
-    public Answer submitAnswer(long answerId, String userEmail) {
+    public Answer submitAnswer(long answerId, String userEmail, String token) {
         Answer answer = answerRepository.findById(answerId);
         answer.setSubmitted(true);
-        SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
-        generalSurveyLink.setFrom("postmaster@localhost");
-        generalSurveyLink.setTo(userEmail);
-        generalSurveyLink.setSubject("Survey Submission Details");
-        generalSurveyLink.setText("Survey Submitted Successfully:\n" +
-                "" );
-        emailService.sendEmail(generalSurveyLink);
+        if(!userEmail.isEmpty()) {
+            SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+            generalSurveyLink.setFrom("postmaster@localhost");
+            generalSurveyLink.setTo(userEmail);
+            generalSurveyLink.setSubject("Survey Submission Details");
+            generalSurveyLink.setText("Survey Submitted Successfully:\n" +
+                    "");
+            emailService.sendEmail(generalSurveyLink);
+        }
+        if(!token.isEmpty()){
+            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
+
+            if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
+                surveyLinks.setStatus("inactive");
+                surveyLinkRepository.save(surveyLinks);
+            }
+        }
+
+
         return answerRepository.save(answer);
     }
 
@@ -183,7 +199,10 @@ public class SurveyService {
         SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
         Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
 
-        if (!validSurvey(survey) || survey.getPublish() == null){
+
+        if (!validSurvey(survey) || survey.getPublish() == null || !surveyLinks.getStatus().equals("active")){
+            System.out.println("getstatus" + surveyLinks.getStatus() + "getpublish" + survey.getPublish());
+            System.out.println();
             return false;
         }
 
@@ -197,7 +216,7 @@ public class SurveyService {
         if (start != null && now.before(start)){
             return false;
         }
-        if (end != null && now.after(end)){
+        if (end != null && now.after(end)) {
             return false;
         }
         return true;

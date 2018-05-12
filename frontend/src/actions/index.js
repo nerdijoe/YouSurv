@@ -392,7 +392,7 @@ export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
     // router.push('/signin');
   })
   .catch(err => {
-    console.log("***  error axiosCreateSurvey");
+    console.log("***  error axiosSaveSurvey");
     console.log(err);
   })
 
@@ -457,7 +457,7 @@ export const axiosSurveyTakingSubmit = (data) => dispatch => {
   console.log(`---surveyId=${surveyId}, answerId=${answerId}`);
 
   let token = 'Bearer ' + localStorage.getItem('token');
-  axios.post(`http://localhost:8080/survey/${surveyId}/answer/${answerId}`, {}, {
+  axios.post(`http://localhost:8300/survey/${surveyId}/answer/${answerId}`, {}, {
     headers: {
       Authorization: token,
     }
