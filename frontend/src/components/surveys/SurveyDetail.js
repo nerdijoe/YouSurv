@@ -151,7 +151,7 @@ class SurveyDetail extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      activeItem: 'Short Answer',
+      activeItem: 'MCQ',
       questions: [],
       text: {},
       questionText: '',
@@ -167,6 +167,7 @@ class SurveyDetail extends Component {
       invitedEmailList: '',
       startDate: this.props.survey.startDate,
       endDate: this.props.survey.endDate,
+      questionDate: moment(),
     }
 
     
@@ -317,16 +318,6 @@ class SurveyDetail extends Component {
     this.setState({options});
   }
 
-  updateOptionText(e) {
-    var target = e.target
-    console.log(`id=[${target.name}] value=[${target.value}] `)
-    
-    var options = {...this.state.options};
-    options[target.name] = target.value;
-    console.log('options=', options);
-    this.setState({options});
-  }
-
   handleAddRating() {
     console.log("handleAddRating");
     console.log('this=', this)
@@ -350,6 +341,68 @@ class SurveyDetail extends Component {
     this.props.questionAdd(newQuestion);
 
   }
+
+  handleAddYesNo() {
+    console.log("handleAddYesNo");
+    console.log('this=', this)
+    var id = cuid();
+    var newQuestion = {
+      "id": id,
+      "type": questionType.Q_YESNO,
+      "text": this.state.questionText,
+      "image": "",
+      "options": [
+        {
+          "id":"",
+          "text":"",
+          "image":"",
+        }
+      ],
+      "required": false,
+      "deleted": false,
+    }
+    console.log('  newQuestion=', newQuestion);
+    this.props.questionAdd(newQuestion);
+
+  }
+
+  handleAddDate() {
+    console.log("handleAddDate");
+    console.log('this=', this)
+    var id = cuid();
+    var newQuestion = {
+      "id": id,
+      "type": questionType.Q_DATE,
+      "text": this.state.questionText,
+      "image": "",
+      "options": [
+        {
+          "id":"",
+          "text":"",
+          "image":"",
+        }
+      ],
+      "required": false,
+      "deleted": false,
+    }
+    console.log('  newQuestion=', newQuestion);
+    this.props.questionAdd(newQuestion);
+
+  }
+
+
+
+
+  updateOptionText(e) {
+    var target = e.target
+    console.log(`id=[${target.name}] value=[${target.value}] `)
+    
+    var options = {...this.state.options};
+    options[target.name] = target.value;
+    console.log('options=', options);
+    this.setState({options});
+  }
+
 
 
   updateState(e) {
@@ -485,21 +538,7 @@ class SurveyDetail extends Component {
     const _this = this;
     const buttonColor = 'red';
     const segmentContent = activeItem => {
-      if(activeItem === 'Short Answer') {
-        return (
-          <div>
-            <h3>Short Answer</h3>
-            <Form onSubmit={e => this.handleAddShortAnswer()} >
-              <Form.Field>
-                <label>Enter your text</label>
-                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
-              </Form.Field>
-              <Button basic color={buttonColor} type="submit">Add Short Answer</Button>
-            </Form>
-            {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button> */}
-          </div>
-        )
-      } else if ( activeItem === 'MCQ') {
+      if ( activeItem === 'MCQ') {
         return (
           
             <div>
@@ -545,9 +584,52 @@ class SurveyDetail extends Component {
 
               {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add MCQ</Button> */}
             </div>
-          
+        )
+      }
+      else if ( activeItem === 'YesNo' ) {
+        return (
+          <div>
+            <h3>Yes/No</h3>
+            <Form onSubmit={e => this.handleAddYesNo()} >
+              <Form.Field>
+                <label>Enter your text</label>
+                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
+              </Form.Field>
+            <Button basic color={buttonColor} type="submit">Add Yes/No</Button>
+            </Form>
+          </div>
+        )
+      }
+      else if(activeItem === 'Short Answer') {
+        return (
+          <div>
+            <h3>Short Answer</h3>
+            <Form onSubmit={e => this.handleAddShortAnswer()} >
+              <Form.Field>
+                <label>Enter your text</label>
+                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
+              </Form.Field>
+              <Button basic color={buttonColor} type="submit">Add Short Answer</Button>
+            </Form>
+            {/* <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button> */}
+          </div>
+        )
+      }  
+      else if ( activeItem === 'Date' ) {
+        return (
+          <div>
+            <h3>Date</h3>
+            <Form onSubmit={e => this.handleAddDate()} >
+              <Form.Field>
+                <label>Enter your text</label>
+                <input name="questionText" value={this.state.questionText} onChange={e => this.handleChangeShortAnswer(e)} />
+              </Form.Field>
+            <Button basic color={buttonColor} type="submit">Add Date</Button>
+            </Form>
+          </div>
         ) 
-      } else if ( activeItem === 'Rating' ) {
+      } 
+      else if ( activeItem === 'Rating' ) {
         return (
           <div>
             <h3>Rating</h3>
@@ -560,7 +642,8 @@ class SurveyDetail extends Component {
             </Form>
           </div>
         ) 
-      } else if ( activeItem === 'Edit' ) {
+      } 
+      else if ( activeItem === 'Edit' ) {
         return (
           <div>
             <h3>Edit</h3>
@@ -633,8 +716,10 @@ class SurveyDetail extends Component {
         <Divider />
 
         <Menu attached='top' tabular>
-          <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
           <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
+          <Menu.Item name='YesNo' active={activeItem === 'YesNo'} onClick={this.handleItemClick} />
+          <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
+          <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
           <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
           {/* <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} /> */}
 
@@ -677,26 +762,7 @@ class SurveyDetail extends Component {
             var order = index + 1;
             // left column width
             const lcWidth = 1;
-            if(question.type === questionType.Q_STRING) {
-              return (
-                <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
-
-                  <Grid.Column>
-                    
-                  
-                  <Form.Field>
-                  {/* <label>Enter your question</label>
-                  <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
-                  <label>{order}. {question.text}</label>
-                  </Form.Field>
-                  <Form.Field>
-                  <input id={question.id} name={question.id} placeholder="Enter your answer here" />
-                  </Form.Field>
-                  </Grid.Column>
-                </Grid>
-              )
-            } else if(question.type === questionType.MCQ_TEXT_RADIO) {
+            if(question.type === questionType.MCQ_TEXT_RADIO) {
               return (
                 <Grid key={question.id} columns='equal'>
                   <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
@@ -770,32 +836,8 @@ class SurveyDetail extends Component {
                   </Grid.Column>
                 </Grid>
               )
-            } else if(question.type === questionType.STAR_RATING) {
-              var ratingOptions = [ 0, 1, 2, 3, 4, 5];
-              return (
-                <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
-                  <Grid.Column>
-                    <Form.Field key={question.id}>
-                      <label>{order}. {question.text}</label>
-                    </Form.Field>
-                    <Form.Group>
-                    {ratingOptions.map( (option, index) => {
-                      return (
-                        <Form.Field key={index}>
-                          <Radio key={index}
-                            label={option}
-                            name='rating'
-                            value={option}
-                          />
-                        </Form.Field>
-                      )
-                    })}
-                    </Form.Group>
-                </Grid.Column>
-                </Grid>
-              )
-            } else if(question.type === questionType.MCQ_IMAGE_RADIO) {
+            }
+            else if(question.type === questionType.MCQ_IMAGE_RADIO) {
               return (
                 <Grid key={question.id} columns='equal'>
                   <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
@@ -864,6 +906,104 @@ class SurveyDetail extends Component {
                 </Grid>
               )
             }
+            else if(question.type === questionType.Q_YESNO) {
+              var ratingOptions = ['Yes', 'No'];
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  <Grid.Column>
+                    <Form.Field key={question.id}>
+                      <label>{order}. {question.text}</label>
+                    </Form.Field>
+                    <Form.Group>
+                    {ratingOptions.map( (option, index) => {
+                      return (
+                        <Form.Field key={index}>
+                          <Radio key={index}
+                            label={option}
+                            name='rating'
+                            value={option}
+                          />
+                        </Form.Field>
+                      )
+                    })}
+                    </Form.Group>
+                </Grid.Column>
+                </Grid>
+              )
+            } 
+            else if(question.type === questionType.Q_STRING) {
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+
+                  <Grid.Column>
+                    
+                  
+                  <Form.Field>
+                  {/* <label>Enter your question</label>
+                  <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
+                  <label>{order}. {question.text}</label>
+                  </Form.Field>
+                  <Form.Field>
+                  <input id={question.id} name={question.id} placeholder="Enter your answer here" />
+                  </Form.Field>
+                  </Grid.Column>
+                </Grid>
+              )
+            }
+            else if(question.type === questionType.Q_DATE) {
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+
+                  <Grid.Column>
+                    <Form.Field>
+                    {/* <label>Enter your question</label>
+                    <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
+                    <label>{order}. {question.text}</label>
+                    </Form.Field>
+                    <Form.Field>
+                      <DatePicker
+                        selected={this.state.questionDate}
+                        // onChange=''
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="LLL"
+                        timeCaption="time"
+                      />
+                    </Form.Field>
+                  </Grid.Column>
+                </Grid>
+              )
+            } 
+            else if(question.type === questionType.STAR_RATING) {
+              var ratingOptions = [ 0, 1, 2, 3, 4, 5];
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  <Grid.Column>
+                    <Form.Field key={question.id}>
+                      <label>{order}. {question.text}</label>
+                    </Form.Field>
+                    <Form.Group>
+                    {ratingOptions.map( (option, index) => {
+                      return (
+                        <Form.Field key={index}>
+                          <Radio key={index}
+                            label={option}
+                            name='rating'
+                            value={option}
+                          />
+                        </Form.Field>
+                      )
+                    })}
+                    </Form.Group>
+                </Grid.Column>
+                </Grid>
+              )
+            } 
             else 
               return 'help'
           })

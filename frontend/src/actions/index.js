@@ -11,7 +11,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
     console.log("test cross origin");
 
 
-    // axios.get('http://localhost:8300', {
+    // axios.get('http://localhost:8080', {
     //         // method: 'GET',
     //         // mode: 'no-cors',
     //         // headers: {
@@ -30,7 +30,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
 
   console.log(" before axiosSignUp", data);
 
-  axios.post('http://localhost:8300/signup', {
+  axios.post('http://localhost:8080/signup', {
     email: data.email,
     password: data.password,
     // firstname: data.firstname,
@@ -48,7 +48,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   })
 
 
-  // fetch("http://localhost:8300/signup", {
+  // fetch("http://localhost:8080/signup", {
   //   method: 'POST',
   //   headers: {
   //     'Accept': 'application/json',
@@ -68,7 +68,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   // });
 
   // let token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJicm8xQGhhaGEuY29tIiwiYXV0aCI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwiaWF0IjoxNTI1NDAzOTgxLCJleHAiOjE1MjU0MDc1ODF9.Jyv_E3pff59-3o2DKe3AkYV48wuQNodXS11UMMjvkbM';
-  // axios.get('http://localhost:8300/user/', {
+  // axios.get('http://localhost:8080/user/', {
   //   headers: {
   //     Authorization: token,
   //   }
@@ -93,7 +93,7 @@ export const userSignUp = (data) => {
 export const axiosSignIn = (data, router) => (dispatch) => {
   console.log('axiosSignIn');
 
-  axios.post('http://localhost:8300/signin', {
+  axios.post('http://localhost:8080/signin', {
     email: data.email,
     password: data.password,
   }).then( res => {
@@ -128,7 +128,7 @@ export const userSignIn = (data) => {
 // export const axiosVerify = (data, router) => (dispatch) => {
 //   console.log('axiosVerify');
 
-//   axios.post('http://localhost:8300/user/verify?emailVerificationToken='+data).then( res => {
+//   axios.post('http://localhost:8080/user/verify?emailVerificationToken='+data).then( res => {
     
 //     dispatch(userVerify(data));
 
@@ -169,7 +169,7 @@ export const axiosSurveyCreate = data => dispatch => {
   console.log('<  before axiosSurveyCreate data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
   console.log('token = ', token);
-  axios.post('http://localhost:8300/survey/', {
+  axios.post('http://localhost:8080/survey/', {
     title: data.title,
     type: data.type,
   }, {
@@ -222,7 +222,7 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
   console.log('<  before axiosSurveyGetAll data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
 
-  axios.get('http://localhost:8300/survey/', {
+  axios.get('http://localhost:8080/survey/', {
     headers: {
       Authorization: token,
     }
@@ -256,8 +256,8 @@ export const surveyGetAllDummy = () => {
 
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
-
-  axios.put(`http://localhost:8300/survey/${data.id}`, data ,{
+  console.log('token=', token)
+  axios.put(`http://localhost:8080/survey/${data.id}`, data ,{
     headers: {
       Authorization: token,
     }
@@ -379,7 +379,7 @@ export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
   // }
 
   let token = 'Bearer ' + localStorage.getItem('token');
-  axios.post(`http://localhost:8300/survey/${surveyId}/answer`, {
+  axios.post(`http://localhost:8080/survey/${surveyId}/answer`, {
     choices: data,
   }, {
     headers: {
@@ -418,7 +418,7 @@ export const axiosSurveyPublish = (data) => dispatch => {
   console.log('axiosSurveyPublish data=', data);
   var surveyId = data.id;
   let token = 'Bearer ' + localStorage.getItem('token');
-  axios.post(`http://localhost:8300/survey/${surveyId}/publish`, {}, {
+  axios.post(`http://localhost:8080/survey/${surveyId}/publish`, {}, {
     headers: {
       Authorization: token,
     }

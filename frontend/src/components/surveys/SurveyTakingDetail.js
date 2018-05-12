@@ -178,6 +178,22 @@ class SurveyTakingDetail extends Component {
     
   }
 
+  handleChangeDate(date, question) {
+    console.log('handleChangeDate date=', date);
+    console.log('question=', question)
+    var answers = {...this.state.answers};
+
+    if(question.type == questionType.Q_DATE) {
+      answers[question.id] = [date];
+    }
+      
+    console.log('--> answers=', answers);
+    this.setState({
+      answers: answers,
+    });
+
+  }
+
   // handleTest(e, data) {
   //   console.log( 'handleTest, data=', data );
   //   console.log('data.text=', data.text)
@@ -494,6 +510,59 @@ class SurveyTakingDetail extends Component {
                   </Grid>
                 )
               }
+              else if(question.type === questionType.Q_YESNO) {
+                var ratingOptions = [ "Yes", "No"];
+                return (
+                  <Grid key={question.id} columns='equal'>
+                    <Grid.Column>
+                      <Form.Field key={question.id}>
+                        <label>{order}. {question.text}</label>
+                      </Form.Field>
+                      <Form.Group>
+                      {ratingOptions.map( (option, index) => {
+                        return (
+                          <Form.Field key={index}>
+                            <Radio key={index}
+                              label={option}
+                              name={question.id}
+                              value={option}
+                              checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option : false}
+                          // checked={this.state.value === 'this'}
+                          onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
+
+                            />
+                          </Form.Field>
+                        )
+                      })}
+                      </Form.Group>
+                  </Grid.Column>
+                  </Grid>
+                )
+              }
+              else if(question.type === questionType.Q_DATE) {
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column>
+                    <Form.Field>
+                    {/* <label>Enter your question</label>
+                    <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
+                    <label>{order}. {question.text}</label>
+                    </Form.Field>
+                    <Form.Field>
+                      <DatePicker
+                        selected={(this.state.answers[question.id] != undefined) ? moment(this.state.answers[question.id][0]) : ''} 
+                        onChange={date => this.handleChangeDate(date, question)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="LLL"
+                        timeCaption="time"
+                      />
+                    </Form.Field>
+                  </Grid.Column>
+                </Grid>
+              )
+            }  
               else 
                 return 'invalid question type'
             })

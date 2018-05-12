@@ -7,7 +7,9 @@ public enum QuestionType {
     MCQ_TEXT_DROPDOWN,
     MCQ_IMAGE_RADIO,
     MCQ_IMAGE_CHECKBOX,
-    STAR_RATING
+    STAR_RATING,
+    Q_YESNO,
+    Q_DATE,
     ;
 
     public static QuestionType getType(String type) {
