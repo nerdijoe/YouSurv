@@ -45,13 +45,34 @@ import * as questionType from '../actions/surveyConstants';
 
 import avatarMatt from '../assets/images/avatar/small/matt.jpg';
 
+const ErrorMessage = ({formErrors}) => (
+  <Container>
+    <div></div>
+    {Object.keys(formErrors).map((fieldName, i) => {
+      if (formErrors[fieldName].length > 0) {
+        return (
+         
+          <Message negative>
+            <p key={i}>{fieldName} {formErrors[fieldName]}</p>
+          </Message>
+
+        );
+      }
+    })}
+  </Container>
+);
+
 class CommonSurvey extends Component {
   constructor(props) {
     super(props);
     this.state = {
       survey: this.props.surveyLoad.data,
       answers: {},
-      isSubmitted: false
+      isSubmitted: false,
+      formErrors: { email: '' },
+      formValid: false,
+      email: '',
+      emailValid: true
     }
     this.handleSubmitSaveProgress = this.handleSubmitSaveProgress.bind(this);
     this.getAlertMsg = this.getAlertMsg.bind(this);
@@ -73,6 +94,8 @@ class CommonSurvey extends Component {
     // convert answer object to answers{ qid: ['answer1', 'answer2']}
 
   }
+
+  
 
   componentDidMount() {
     console.log('SurveyTakingDetail componentDidMount',this.state.survey);
@@ -204,7 +227,7 @@ class CommonSurvey extends Component {
 
   handleSubmitSaveProgress() {
     // e.preventDefault();
-    console.log('handleSubmitSaveProgress', this.state);
+    // console.log('handleSubmitSaveProgress', this.state);
     // console.log('this=', this);
 
     // this.props.questionUpdateText(this.state.text);
@@ -221,7 +244,7 @@ class CommonSurvey extends Component {
       }
 
     */
-   if (this.state.hasChanges && !this.state.isSubmitted)
+   if (this.state.hasChanges && !this.state.isSubmitted && localStorage.getItem('user_email'))
     {
       var choices = [];
       Object.keys(this.state.answers).map(key => {
@@ -283,11 +306,10 @@ class CommonSurvey extends Component {
     const token = 'Bearer ' + localStorage.getItem('token');
 
     // this.props.axiosSurveyTakingSubmit(this.state.survey);
-    axios.post(`http://localhost:8300/survey/${surveyId}/answer/${answerId}`, {token: this.props.tokenurl}, {
-        headers: {
-          Authorization: token,
-        }
-      })
+    let route = 'answer';
+    if(!localStorage.getItem('user_email'))
+      route = 'savesubmitanswer';
+    axios.post(`http://localhost:8300/survey/${surveyId}/${route}/${answerId}`, {token: this.props.tokenurl, email:this.state.email})
       .then(res => {
         console.log('>  after axiosSurveySubmit res.data', res.data);
         // dispatch(surveyTakingSubmit(res.data));
@@ -302,6 +324,51 @@ class CommonSurvey extends Component {
       })
     }
 
+    // componentWillReceiveProps(nextProps){
+    //   if((typeof(this.props.email)!==undefined && nextProps.email!="")) {
+    //     console.log("inside if ", nextProps);
+    //     this.setState({
+    //       email : !nextProps.email ? false : true
+    //     })
+        
+    //     // console.log("inside if email", thiemail);
+    //   }
+    // }
+
+    handleChange(e) {
+      const target = e.target;
+  
+      console.log(`handleChange ${target.name}=[${target.value}]`);
+  
+      // validate field everytime user enters something.
+      this.setState({
+        [target.name]: target.value,
+        emailValid: true
+      }, () => {
+        this.validateField(target.name, target.value);
+      });
+    }
+
+    validateField(fieldName,value) {
+      const formErrorsValidation = this.state.formErrors;
+      
+      let emailValid = this.state.emailValid;
+      
+      switch (fieldName) {
+        case 'email':
+          emailValid = (/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i).test(value);
+          emailValid = value==''?true:emailValid;
+          formErrorsValidation.email = emailValid ? '' : ' is invalid.';
+          break;
+        default:
+          break;
+      }
+      // update the error message
+      this.setState({
+        formErrors: formErrorsValidation,
+        emailValid
+      }, this.validateForm);
+    }
 
   render() {
     // if existing answer by this user exist, just update his answers
@@ -342,6 +409,21 @@ class CommonSurvey extends Component {
               </Comment.Content>
             </Comment>
           </Comment.Group>
+          <Form>
+            {(this.state.User_Email) ? (
+                <div>
+                    <p>Email: {this.state.User_Email}</p>
+                </div>
+              ) : (
+                <div>
+                  <p>Please Enter your Email ID if you want confirmation of your response (Optional)</p>
+                  <Form.Field>
+                    <input name="email" type="text" id="emailInput" class="input" maxlength="50" title="Last Name" value={this.state.email} onChange={ (e) => { this.handleChange(e); }}/>
+                  </Form.Field>
+                  <ErrorMessage formErrors={this.state.formErrors} />
+                </div>
+            )}
+          </Form>
           <IdleTimer ref="saveTimer" timeout={3000} startOnLoad={false} idleAction={this.handleSubmitSaveProgress}>
             {this.state.alertVisible && <div>{this.getAlertMsg()}</div>}
             <h3>Please fill this survey questions</h3>
@@ -574,7 +656,7 @@ class CommonSurvey extends Component {
             { (this.state.survey.questions.length > 0   && !this.state.isSubmitted) ? (
               <Form.Group>
                 {/* <Form.Field><Button basic color='red' type='submit' >Save Progress</Button></Form.Field> */}
-                <Form.Field><Button color='youtube' onClick={e => this.handleSurveySubmit(e)} >Submit</Button></Form.Field>
+                <Form.Field><Button color='youtube' onClick={e => this.handleSurveySubmit(e)} disabled={!this.state.emailValid} >Submit</Button></Form.Field>
               </Form.Group>
 
             ) : (

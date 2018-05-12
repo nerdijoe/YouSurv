@@ -168,11 +168,35 @@ public class SurveyRestController {
 
     @RequestMapping(value = "/survey/{surveyId}/answer/{answerId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity submitSurveyAnswer(@RequestBody String token ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId, Authentication auth) {
-        String userEmail = auth.getName();
+        String userEmail = auth.getName() ;
         JSONObject obj = new JSONObject(token);
         token = obj.getString("token");
         Answer answer = surveyService.submitAnswer(answerId, userEmail, token);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/survey/{surveyId}/savesubmitanswer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity savesubmitSurveyAnswer(@RequestBody String body ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId) {
+//        String userEmail = auth.getName() ;
+        if (!surveyService.existsById(surveyId)) {
+            String message = "Survey with id: " + surveyId + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.findById(surveyId);
+        JSONObject obj = new JSONObject(body);
+        String token = obj.getString("token");
+        String userEmail = obj.getString("email");
+        AnswerSaveDTO answerDTO = (AnswerSaveDTO)obj.get("choices");
+
+        Answer answer = surveyService.answerSurvey(userEmail, survey, answerDTO);
+//        return new ResponseEntity(answer, HttpStatus.OK);
+
+        Answer submitanswer = surveyService.submitAnswer(answerId, userEmail, token);
+        return new ResponseEntity(AnswerMapper.toAnswerDTO(submitanswer), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/survey/token/{token}", method = RequestMethod.GET)
