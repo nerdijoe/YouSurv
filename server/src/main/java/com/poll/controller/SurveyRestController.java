@@ -189,5 +189,14 @@ public class SurveyRestController {
         return new ResponseEntity(surveyMapper.toSurveyDTO(survey), HttpStatus.OK);
     }
 
+    @RequestMapping(value="/survey/generate/openuniquelink", method = RequestMethod.POST)
+    public void GenerateOpenUniqueLink(@RequestBody String body){
+        JSONObject obj = new JSONObject(body);
+        String email = obj.getString("email");
+        long surveyId=obj.getString("surveyId");
+        surveyService.openUniqueLinkGenerator(email, surveyId);
+    }
+
+
 
 }
