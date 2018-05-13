@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/user/verify").permitAll()
                 .antMatchers("/survey/token/**").permitAll()
-                .antMatchers("/survey/*/savesubmitanswer").permitAll()
+                .antMatchers(HttpMethod.POST,"/savesubmitanswer/survey/**").permitAll()
 
 
 //                .antMatchers("/anonymous").anonymous()

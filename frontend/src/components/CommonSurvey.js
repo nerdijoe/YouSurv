@@ -227,7 +227,7 @@ class CommonSurvey extends Component {
 
   handleSubmitSaveProgress() {
     // e.preventDefault();
-    // console.log('handleSubmitSaveProgress', this.state);
+    console.log('handleSubmitSaveProgress');
     // console.log('this=', this);
 
     // this.props.questionUpdateText(this.state.text);
@@ -299,6 +299,15 @@ class CommonSurvey extends Component {
     const pos = this.state.survey.answers.findIndex(i => i.surveyeeEmail === userEmail)
     // if existing answer by this user exist, just update his answers
     var answerId = '';
+    var choices = [];
+      Object.keys(this.state.answers).map(key => {
+        var newChoice = {
+          questionId: key,
+          selection: this.state.answers[key],
+        }
+        choices.push(newChoice);
+      })
+
     if(pos != -1) {
       answerId = this.state.survey.answers[pos].id;
     }
@@ -306,10 +315,16 @@ class CommonSurvey extends Component {
     const token = 'Bearer ' + localStorage.getItem('token');
 
     // this.props.axiosSurveyTakingSubmit(this.state.survey);
-    let route = 'answer';
-    if(!localStorage.getItem('user_email'))
-      route = 'savesubmitanswer';
-    axios.post(`http://localhost:8300/survey/${surveyId}/${route}/${answerId}`, {token: this.props.tokenurl, email:this.state.email})
+    let route = `http://localhost:8300/survey/${surveyId}/answer/${answerId}`, header = {
+      headers: {
+        Authorization: token,
+      }
+    };
+    if(!localStorage.getItem('user_email')) {
+      route = `http://localhost:8300/savesubmitanswer/survey/${surveyId}`;
+      header = '';
+    }
+    axios.post( route, {token: this.props.tokenurl, email:this.state.email, choices: choices}, header)
       .then(res => {
         console.log('>  after axiosSurveySubmit res.data', res.data);
         // dispatch(surveyTakingSubmit(res.data));
