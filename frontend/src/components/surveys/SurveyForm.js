@@ -37,18 +37,18 @@ class SurveyForm extends Component {
       expire: '',
     }
   }
-  
+
   handleSubmit(e) {
     e.preventDefault();
     console.log('handleSubmit state=', this.state);
 
     this.props.axiosSurveyCreate(this.state);
-    
+
   }
 
   handleChange(e) {
     const target = e.target;
-    console.log(target);
+    // console.log(target);
     console.log(`handleChange ${target.name}=[${target.value}]`);
 
     let type = surveyTypes.find(t => t.text === target.value);
@@ -94,7 +94,7 @@ class SurveyForm extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    
+
   }
 }
 

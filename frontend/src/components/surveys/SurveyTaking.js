@@ -34,6 +34,11 @@ import cardHeader02 from '../../assets/images/card/card_header_02.png'
 
 class SurveyTaking extends Component {
 
+  componentDidMount() {
+    console.log('SurveyTaking componentDidMount');
+    this.props.axiosSurveyGetAll();
+  }
+
   handleShowDetail(survey) {
     this.props.surveyShowDetail(survey, this.props.history);
   }

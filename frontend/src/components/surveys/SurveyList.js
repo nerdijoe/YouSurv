@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { 
+import {
   Link,
   withRouter,
   BrowserRouter as Router,
@@ -25,6 +25,7 @@ import {
   Icon,
   List,
   Divider,
+  Label,
 } from 'semantic-ui-react';
 
 import Moment from 'moment';
@@ -65,10 +66,10 @@ class SurveyList extends Component {
               <a onClick={() => {this.handleShowDetail(survey)}}>
                 <Image src={cardHeader02} />
               </a>
-              
+
               <Card.Content>
-                <Card.Header>{survey.id}-{survey.title}</Card.Header>
-                <Card.Meta>{Moment(survey.created).format('L LT')}</Card.Meta>
+                <Card.Header>Id-{survey.id}</Card.Header>
+                <Card.Meta>Title: {survey.title}</Card.Meta>
                 <Card.Description>
                   <List>
                     <List.Item>
@@ -76,18 +77,18 @@ class SurveyList extends Component {
                       <List.Content>{survey.type}</List.Content>
                     </List.Item>
                     <List.Item>
-                      <List.Icon name='marker' />
+                      <List.Icon name='question' />
                       <List.Content>{survey.questions.length} questions</List.Content>
                     </List.Item>
                     <List.Item>
-                      <List.Icon name='user' />
-                      <List.Content>
-                        {survey.surveyorEmail}
-                      </List.Content>
+                      <List.Icon name='calendar' />
+                      <List.Content>Created on {Moment(survey.created).format('L LT')}</List.Content>
                     </List.Item>
-
                   </List>
                 </Card.Description>
+              </Card.Content>
+              <Card.Content>
+                <Label color="red" horizontal>{survey.publish != null ? 'Published' : ''}</Label>
               </Card.Content>
               <Card.Content extra>
                 <a>
@@ -98,8 +99,8 @@ class SurveyList extends Component {
             </Card>
           )
 
-        })} 
-        
+        })}
+
         </Card.Group>
 
       </Container>

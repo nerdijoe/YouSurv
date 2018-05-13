@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { 
+import {
   Link,
   withRouter,
   BrowserRouter as Router,
@@ -47,10 +47,15 @@ import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 import IdleTimer from 'react-idle-timer';
 
-
+import * as surveyType from '../../actions/surveyConstants';
 import * as questionType from '../../actions/surveyConstants';
 
 import avatarMatt from '../../assets/images/avatar/small/matt.jpg';
+
+var surveyTypeText = {}
+surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
+surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
+surveyTypeText[surveyType.SV_OPEN] = 'Open Survey';
 
 class SurveyTakingDetail extends Component {
   constructor(props) {
@@ -62,42 +67,95 @@ class SurveyTakingDetail extends Component {
     }
 
     this.getAlertMsg = this.getAlertMsg.bind(this);
+
   }
-  
+
   componentWillMount() {
     console.log('** SurveyTakingDetail componentWillMount');
-
-    // convert answer object to answers{ qid: ['answer1', 'answer2']}
-
-  }
-
-  componentDidMount() {
-    console.log('SurveyTakingDetail componentDidMount');
-
     // get the survey id from the url
     var surveyId = this.props.match.params.id;
     console.log(`  surveyId=${surveyId}`);
 
     this.props.surveyTakingGetById(surveyId);
 
+    // convert answer object to answers{ qid: ['answer1', 'answer2']}
+    // this.prepAnswers();
+  }
+
+  componentDidMount() {
+    console.log('SurveyTakingDetail componentDidMount');
+
+
+    // this.prepAnswers();
+    // setTimeout(this.prepAnswers(), 10000);
+
     // for general survey page, call axios to fetch the survey
 
+    // var answers = {}
+    // if(this.props.survey != undefined && this.props.survey.answers != undefined) {
+    //   this.props.survey.answers.map(answer => {
+    //     if(answer.surveyeeEmail === localStorage.getItem('user_email')) {
+    //       answer.choices.map( c => { answers[c.questionId] = c.selection})
+    //     }
+    //   })
+    // }
+    //
+    // console.log('     answers=', answers);
+    //
+    // this.setState({
+    //   answers,
+    //
+    // })
+
+
+  }
+
+  // componentWillReceiveProps() {
+  //   console.log('componentWillReceiveProps');
+  //   this.prepAnswers();
+  // }
+
+  componentDidUpdate(previousProps, previousState) {
+    console.log('componentDidUpdate');
+    // only update chart if the data has changed
+    if (previousProps.survey != this.props.survey) {
+      this.prepAnswers()
+    }
+  }
+
+  prepAnswers() {
     var answers = {}
     if(this.props.survey != undefined && this.props.survey.answers != undefined) {
       this.props.survey.answers.map(answer => {
         if(answer.surveyeeEmail === localStorage.getItem('user_email')) {
-          answer.choices.map( c => { answers[c.questionId] = c.selection})
+          answer.choices.map( c => {
+            console.log(`answers[${c.questionId}] = ${c.selection}`)
+            answers[c.questionId] = c.selection
+          })
         }
       })
     }
 
-    console.log('     answers=', answers);
+    console.log('prepAnswers     answers=', answers);
 
     this.setState({
       answers,
 
     })
+  }
 
+  prepAnswersFromProps(survey) {
+    var answers = {}
+    if(survey != undefined && survey.answers != undefined) {
+      survey.answers.map(answer => {
+        if(answer.surveyeeEmail === localStorage.getItem('user_email')) {
+          answer.choices.map( c => { answers[c.questionId] = c.selection})
+        }
+      })
+    }
+    console.log('>>> prepAnswersFromProps     answers=', answers);
+
+    return answers;
   }
 
   // message if user answers has been saved
@@ -152,7 +210,7 @@ class SurveyTakingDetail extends Component {
       answers: answers,
       alertVisible: true,
 
-    });    
+    });
     this.props.surveyTakingAnswerChangesTrue();
   }
 
@@ -170,7 +228,7 @@ class SurveyTakingDetail extends Component {
       } else {
         answers[question.id].push(value);
       }
-      
+
     } else {
       answers[question.id] = [value];
     }
@@ -180,7 +238,7 @@ class SurveyTakingDetail extends Component {
       answers: answers,
       alertVisible: true,
 
-    }); 
+    });
     this.props.surveyTakingAnswerChangesTrue();
 
   }
@@ -193,7 +251,7 @@ class SurveyTakingDetail extends Component {
     var target = e.target
     console.log('target=', target);
     // console.log(`e.target.id=[${target.id}] e.target.value=[${target.value}]   target.option=${target.option}`);
-    
+
     var answers = {...this.state.answers};
     answers[question.id] = [value];
 
@@ -202,7 +260,7 @@ class SurveyTakingDetail extends Component {
       answers: answers,
       alertVisible: true,
 
-    }); 
+    });
     this.props.surveyTakingAnswerChangesTrue();
 
   }
@@ -215,13 +273,13 @@ class SurveyTakingDetail extends Component {
     if(question.type == questionType.Q_DATE) {
       answers[question.id] = [date];
     }
-      
+
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
       alertVisible: true,
 
-    }); 
+    });
 
     this.props.surveyTakingAnswerChangesTrue();
 
@@ -250,7 +308,7 @@ class SurveyTakingDetail extends Component {
     // console.log('this=', this);
 
     // this.props.questionUpdateText(this.state.text);
-    
+
     //save current survey
     // this.props.surveySaveQuestion();
     // this.props.axiosSurveyUpdate(this.props.survey);
@@ -291,15 +349,19 @@ class SurveyTakingDetail extends Component {
 
     // if existing answer by this user exist, just update his answers
     var answer = {submitted: false};
-
+    var disabled = false;
     if(this.props.survey != undefined && this.props.survey.answers != undefined) {
       const pos = this.props.survey.answers.findIndex(i => i.surveyeeEmail === localStorage.getItem('user_email'))
       if(pos != -1) {
         answer = this.props.survey.answers[pos];
+        disabled = true;
       }
     }
 
-    console.log('        **** answer object=', answer);
+    console.log(' *before render, answer object=', answer);
+
+    // check if survey is closed or open, user can only submit his answer once.
+    // if(this.props.survey.type == surveyType.SV_CLOSE || this.props.survey.type == surveyType.SV_CLOSE )
 
     return (
       <Container>
@@ -316,22 +378,19 @@ class SurveyTakingDetail extends Component {
               <Comment.Content>
                 <Comment.Author>Survey by {this.props.survey.surveyorEmail}</Comment.Author>
                 <Comment.Metadata>
-                  <div>{this.props.survey.title}</div>
-                  <div>
-                    {/* <Icon name='star' />
-                    5 Faves */}
-                  </div>
+                  <div>{surveyTypeText[this.props.survey.type]}</div>
                 </Comment.Metadata>
-                {/* <Comment.Text>
-                  Hey guys, I hope this example comment is helping you read this documentation.
-                </Comment.Text> */}
+
+                <Comment.Text>
+                  Title: {this.props.survey.title}
+                </Comment.Text>
               </Comment.Content>
             </Comment>
           </Comment.Group>
             <IdleTimer ref="saveTimer" timeout={3000} startOnLoad={false} idleAction={e => this.handleSubmitSaveProgress(e)}>
             {this.state.alertVisible && <div>{this.getAlertMsg()}</div>}
             <h3>Please fill this survey questions</h3>
-            
+
             <Form onSubmit={e => this.handleSubmitSaveProgress(e)}>
             { this.props.survey.questions.length === 0 ? (
               <Message compact>
@@ -354,7 +413,8 @@ class SurveyTakingDetail extends Component {
                     <label>{order}. {question.text}</label>
                     </Form.Field>
                     <Form.Field>
-                    <input id={question.id} name={question.id} placeholder="Enter your answer here" value={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] : ''} onChange={ (e) => this.updateAnswers(e, question)} />
+                    <input id={question.id} name={question.id} placeholder="Enter your answer here" value={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] : ''} onChange={ (e) => this.updateAnswers(e, question)} disabled={disabled}
+/>
                     </Form.Field>
                     </Grid.Column>
                   </Grid>
@@ -373,6 +433,7 @@ class SurveyTakingDetail extends Component {
                           label={option.text}
                           name={question.id}
                           value={option.text}
+                          disabled={disabled}
                           checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
                           // checked={this.state.value === 'this'}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
@@ -381,10 +442,10 @@ class SurveyTakingDetail extends Component {
                       )
                     })}
                     </Grid.Column>
-                    
+
                   </Grid>
                 )
-              } 
+              }
               else if(question.type === questionType.MCQ_TEXT_CHECKBOX) {
                 return (
                   <Grid key={question.id} columns='equal'>
@@ -405,6 +466,7 @@ class SurveyTakingDetail extends Component {
                           name={question.id}
                           value={option.text}
                           checked={found}
+                          disabled={disabled}
                           onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}
                         />
                         </Form.Field>
@@ -441,6 +503,7 @@ class SurveyTakingDetail extends Component {
                           fluid search selection
                           options={dropdownOptions}
                           value={getValue}
+                          disabled={disabled}
                           onChange={(e, {name, value}) => this.handleChangeMCQDropdown(e, {name, value}, question)}
                           // onChange={this.handleTest}
                         />
@@ -466,6 +529,7 @@ class SurveyTakingDetail extends Component {
                               value={option}
                               checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option : false}
                           // checked={this.state.value === 'this'}
+                              disabled={disabled}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
 
                             />
@@ -495,6 +559,7 @@ class SurveyTakingDetail extends Component {
                             value={option.text}
                             checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
                           // checked={this.state.value === 'this'}
+                          disabled={disabled}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
                           />
                           </Grid.Column>
@@ -507,7 +572,7 @@ class SurveyTakingDetail extends Component {
                       )
                     })}
                     </Grid.Column>
-                    
+
                   </Grid>
                 )
               } else if(question.type === questionType.MCQ_IMAGE_CHECKBOX) {
@@ -532,6 +597,7 @@ class SurveyTakingDetail extends Component {
                             name={question.id}
                             value={option.text}
                             checked={found}
+                            disabled={disabled}
                             onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}
                           />
                           </Grid.Column>
@@ -564,6 +630,7 @@ class SurveyTakingDetail extends Component {
                               label={option}
                               name={question.id}
                               value={option}
+                              disabled={disabled}
                               checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option : false}
                           // checked={this.state.value === 'this'}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
@@ -588,24 +655,25 @@ class SurveyTakingDetail extends Component {
                     </Form.Field>
                     <Form.Field>
                       <DatePicker
-                        selected={(this.state.answers[question.id] != undefined) ? moment(this.state.answers[question.id][0]) : ''} 
+                        selected={(this.state.answers[question.id] != undefined) ? moment(this.state.answers[question.id][0]) : ''}
                         onChange={date => this.handleChangeDate(date, question)}
                         showTimeSelect
                         timeFormat="HH:mm"
                         timeIntervals={15}
                         dateFormat="LLL"
                         timeCaption="time"
+                        disabled={disabled}
                       />
                     </Form.Field>
                   </Grid.Column>
                 </Grid>
               )
-            }  
-              else 
+            }
+              else
                 return 'invalid question type'
             })
-            
-          
+
+
 
             }
 

@@ -129,7 +129,7 @@ export const userSignIn = (data) => {
 //   console.log('axiosVerify');
 
 //   axios.post('http://localhost:8080/user/verify?emailVerificationToken='+data).then( res => {
-    
+
 //     dispatch(userVerify(data));
 
 //     // router.push('/signin');
@@ -206,7 +206,7 @@ export const axiosSurveyCreate = data => dispatch => {
       end: null,
     }
   }
-  
+
   dispatch(surveyCreate(res.data));
   */
 }
@@ -230,6 +230,7 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
   .then(res => {
     console.log('> after axiosSurveyGetAll res.data', res.data);
       dispatch(surveyGetAll(res.data));
+      dispatch(surveyTakingCurrentClear());
     // router.push('/signin');
   })
   .catch(err => {
@@ -313,7 +314,7 @@ export const questionUpdateText = (data) => dispatch => {
   console.log('questionUpdateText data=', data);
 
   dispatch(questionUpdateTextReduce(data));
-  
+
 }
 
 export const questionUpdateTextReduce = (data) => {
@@ -371,7 +372,7 @@ export const surveyTakingGetByIdReduce = (data) => {
 export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
   console.log('surveyTakingSaveProgress data=', data);
   console.log('surveyId=', surveyId);
-  
+
   // axios POST
   // {
   //   surveyId: surveyId,
@@ -459,6 +460,8 @@ export const axiosSurveyTakingSubmit = (data) => dispatch => {
   console.log(`---surveyId=${surveyId}, answerId=${answerId}`);
 
   let token = 'Bearer ' + localStorage.getItem('token');
+  console.log('token=', token);
+
   axios.post(`http://localhost:8080/survey/${surveyId}/answer/${answerId}`, {}, {
     headers: {
       Authorization: token,
@@ -491,5 +494,11 @@ export const surveyTakingAnswerChangesTrue = () => {
 export const surveyTakingAnswerChangesFalse = () => {
   return {
     type: actionType.SURVEY_TAKING_ANSWER_CHANGES_FALSE,
+  }
+}
+
+export const surveyTakingCurrentClear = () => {
+  return {
+    type: actionType.SURVEY_TAKING_CURRENT_CLEAR,
   }
 }

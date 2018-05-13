@@ -164,6 +164,13 @@ const SurveyReducer = (state = initialState, action) => {
         surveyTakingCurrent: surveyTakingCurrent[0],
       }
     }
+    case actionType.SURVEY_TAKING_CURRENT_CLEAR: {
+
+      return {
+        ...state,
+        surveyTakingCurrent: {questions:[]},
+      }
+    }
     case actionType.SURVEY_TAKING_SAVE_PROGRESS_DUMMY: {
       console.log('SurveyReducer SURVEY_TAKING_SAVE_PROGRESS');
       console.log('action = ', action);
