@@ -446,9 +446,9 @@ class CommonSurvey extends Component {
             </Comment>
           </Comment.Group>
           <Form>
-            {(this.state.User_Email) ? (
+            {(localStorage.getItem('user_email')) ? (
                 <div>
-                    <p>Email: {this.state.User_Email}</p>
+                    {/* <p>Email: {this.state.User_Email}</p> */}
                 </div>
               ) : (
                 <div>
