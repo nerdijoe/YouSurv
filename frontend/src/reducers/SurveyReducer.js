@@ -11,6 +11,7 @@ const initialState = {
   surveyTakingCurrent: {
     questions:[],
   },
+  answerChanges: false,
 }
 
 const SurveyReducer = (state = initialState, action) => {
@@ -326,6 +327,19 @@ const SurveyReducer = (state = initialState, action) => {
       }
 
     }
+    case actionType.SURVEY_TAKING_ANSWER_CHANGES_TRUE: {
+      return {
+        ...state,
+        answerChanges: true,
+      }
+    }
+    case actionType.SURVEY_TAKING_ANSWER_CHANGES_FALSE: {
+      return {
+        ...state,
+        answerChanges: false,
+      }
+    }
+
     default: 
       return state;
   }

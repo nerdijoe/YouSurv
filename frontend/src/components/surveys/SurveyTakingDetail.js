@@ -11,6 +11,7 @@ import {
   surveyTakingGetById,
   surveyTakingSaveProgress,
   axiosSurveyTakingSubmit,
+  surveyTakingAnswerChangesTrue,
 } from '../../actions';
 
 import {
@@ -44,6 +45,8 @@ import DatePicker from 'react-datepicker';
 import uuid from 'uuid';
 import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
+import IdleTimer from 'react-idle-timer';
+
 
 import * as questionType from '../../actions/surveyConstants';
 
@@ -55,7 +58,10 @@ class SurveyTakingDetail extends Component {
     this.state = {
       survey: this.props.survey,
       answers: {},
+      hasChanges: this.props.hasChanges,
     }
+
+    this.getAlertMsg = this.getAlertMsg.bind(this);
   }
   
   componentWillMount() {
@@ -94,6 +100,17 @@ class SurveyTakingDetail extends Component {
 
   }
 
+  // message if user answers has been saved
+  getAlertMsg() {
+    if (this.props.hasChanges) {
+      return "Data has unsaved changes";
+    }
+    else {
+      return "Data saved successfully";
+    }
+  }
+
+
   updateAnswers(e, question) {
     console.log('updateAnswers question=', question);
     var target = e.target
@@ -111,11 +128,14 @@ class SurveyTakingDetail extends Component {
     // else {
     //   answers[target.id] = [target.value];
     // }
-      
+
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
+      alertVisible: true,
     });
+
+    this.props.surveyTakingAnswerChangesTrue();
   }
 
   handleChangeMCQRadio = (e, {value}, question) => {
@@ -125,12 +145,15 @@ class SurveyTakingDetail extends Component {
 
     var answers = {...this.state.answers};
     answers[question.id] = [value];
-    
+
 
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
+      alertVisible: true,
+
     });    
+    this.props.surveyTakingAnswerChangesTrue();
   }
 
   handleChangeMCQCheckbox = (e, {value}, question) => {
@@ -155,7 +178,11 @@ class SurveyTakingDetail extends Component {
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
+      alertVisible: true,
+
     }); 
+    this.props.surveyTakingAnswerChangesTrue();
+
   }
 
   handleChangeMCQDropdown = (e, {name, value}, question) => {
@@ -173,9 +200,11 @@ class SurveyTakingDetail extends Component {
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
-    });
+      alertVisible: true,
 
-    
+    }); 
+    this.props.surveyTakingAnswerChangesTrue();
+
   }
 
   handleChangeDate(date, question) {
@@ -190,7 +219,11 @@ class SurveyTakingDetail extends Component {
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
-    });
+      alertVisible: true,
+
+    }); 
+
+    this.props.surveyTakingAnswerChangesTrue();
 
   }
 
@@ -210,8 +243,9 @@ class SurveyTakingDetail extends Component {
   // }
 
 
+
   handleSubmitSaveProgress(e) {
-    e.preventDefault();
+    // e.preventDefault();
     console.log('handleSubmitSaveProgress', this.state);
     // console.log('this=', this);
 
@@ -229,18 +263,20 @@ class SurveyTakingDetail extends Component {
       }
 
     */
-    var choices = [];
-    Object.keys(this.state.answers).map(key => {
-      var newChoice = {
-        questionId: key,
-        selection: this.state.answers[key],
-      }
-      choices.push(newChoice);
-    })
+   if(this.props.hasChanges) {
+      var choices = [];
+      Object.keys(this.state.answers).map(key => {
+        var newChoice = {
+          questionId: key,
+          selection: this.state.answers[key],
+        }
+        choices.push(newChoice);
+      })
 
-    console.log('choices=', choices);
+      console.log('choices=', choices);
 
-    this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
+      this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
+    }
   }
 
   handleSurveySubmit(e) {
@@ -292,8 +328,10 @@ class SurveyTakingDetail extends Component {
               </Comment.Content>
             </Comment>
           </Comment.Group>
-
+            <IdleTimer ref="saveTimer" timeout={3000} startOnLoad={false} idleAction={e => this.handleSubmitSaveProgress(e)}>
+            {this.state.alertVisible && <div>{this.getAlertMsg()}</div>}
             <h3>Please fill this survey questions</h3>
+            
             <Form onSubmit={e => this.handleSubmitSaveProgress(e)}>
             { this.props.survey.questions.length === 0 ? (
               <Message compact>
@@ -575,7 +613,7 @@ class SurveyTakingDetail extends Component {
             <Divider />
             { (this.props.survey.questions.length > 0   && !answer.submitted) ? (
               <Form.Group>
-                <Form.Field><Button basic color='red' type='submit' >Save Progress</Button></Form.Field>
+                {/* <Form.Field><Button basic color='red' type='submit' >Save Progress</Button></Form.Field> */}
                 <Form.Field><Button color='youtube' onClick={e => this.handleSurveySubmit(e)} >Submit</Button></Form.Field>
               </Form.Group>
 
@@ -587,7 +625,7 @@ class SurveyTakingDetail extends Component {
 
             {/* <Button color='youtube' type='submit' >Save</Button> */}
             </Form>
-
+            </IdleTimer>
           </div>
 
         )}
@@ -600,6 +638,7 @@ class SurveyTakingDetail extends Component {
 const mapStateToProps = state => {
   return {
     survey: state.SurveyReducer.surveyTakingCurrent,
+    hasChanges: state.SurveyReducer.answerChanges,
   }
 }
 
@@ -608,6 +647,7 @@ const mapDispatchToProps = dispatch => {
     surveyTakingGetById: (data) => { dispatch(surveyTakingGetById(data)); },
     surveyTakingSaveProgress: (data, surveyId) => { dispatch(surveyTakingSaveProgress(data, surveyId)); },
     axiosSurveyTakingSubmit: (data) => { dispatch(axiosSurveyTakingSubmit(data)); },
+    surveyTakingAnswerChangesTrue: () => { dispatch(surveyTakingAnswerChangesTrue()); }
   }
 }
 

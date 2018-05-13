@@ -389,6 +389,8 @@ export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
   .then(res => {
     console.log('>  after surveyTakingSaveProgress res.data', res.data);
     dispatch(surveyTakingSaveProgressReduce(res.data));
+
+    dispatch(surveyTakingAnswerChangesFalse());
     // router.push('/signin');
   })
   .catch(err => {
@@ -457,7 +459,7 @@ export const axiosSurveyTakingSubmit = (data) => dispatch => {
   console.log(`---surveyId=${surveyId}, answerId=${answerId}`);
 
   let token = 'Bearer ' + localStorage.getItem('token');
-  axios.post(`http://localhost:8300/survey/${surveyId}/answer/${answerId}`, {}, {
+  axios.post(`http://localhost:8080/survey/${surveyId}/answer/${answerId}`, {}, {
     headers: {
       Authorization: token,
     }
@@ -477,5 +479,17 @@ export const surveyTakingSubmit = (data) => {
   return {
     type: actionType.SURVEY_TAKING_SUBMIT,
     data,
+  }
+}
+
+export const surveyTakingAnswerChangesTrue = () => {
+  return {
+    type: actionType.SURVEY_TAKING_ANSWER_CHANGES_TRUE,
+  }
+}
+
+export const surveyTakingAnswerChangesFalse = () => {
+  return {
+    type: actionType.SURVEY_TAKING_ANSWER_CHANGES_FALSE,
   }
 }

@@ -259,7 +259,7 @@ class CommonSurvey extends Component {
       console.log('choices=', choices);
 
       // this.props.surveyTakingSaveProgress(choices, this.state.survey.id);
-      axios.post(`http://localhost:8300/survey/${this.state.survey.id}/answer`, {
+      axios.post(`http://localhost:8080/survey/${this.state.survey.id}/answer`, {
           choices: choices,
         }, {
           headers: {
@@ -309,7 +309,7 @@ class CommonSurvey extends Component {
     let route = 'answer';
     if(!localStorage.getItem('user_email'))
       route = 'savesubmitanswer';
-    axios.post(`http://localhost:8300/survey/${surveyId}/${route}/${answerId}`, {token: this.props.tokenurl, email:this.state.email})
+    axios.post(`http://localhost:8080/survey/${surveyId}/${route}/${answerId}`, {token: this.props.tokenurl, email:this.state.email})
       .then(res => {
         console.log('>  after axiosSurveySubmit res.data', res.data);
         // dispatch(surveyTakingSubmit(res.data));
