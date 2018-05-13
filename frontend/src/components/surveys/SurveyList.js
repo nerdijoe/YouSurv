@@ -69,7 +69,10 @@ class SurveyList extends Component {
     <Card.Content>
       <Card.Header>Id-{survey.id}</Card.Header>
       <Card.Meta>Title: {survey.title}</Card.Meta>
-      <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Details</a></Card.Content>
+      {survey.publish == null ? '' : (
+        <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Details</a></Card.Content>
+      )}
+
 
       <Card.Description>
         <List>

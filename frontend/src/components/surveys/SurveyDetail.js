@@ -168,6 +168,7 @@ class SurveyDetail extends Component {
       startDate: this.props.survey.startDate,
       endDate: this.props.survey.endDate,
       questionDate: moment(),
+      newEmailList: '',
     }
 
     
@@ -459,6 +460,7 @@ class SurveyDetail extends Component {
 
   }
 
+  // Save questions
   handleSubmit(e) {
     e.preventDefault();
     console.log('handleSubmit', this.state);
@@ -478,8 +480,17 @@ class SurveyDetail extends Component {
   handleSubmitUpdateSurvey(e) {
     e.preventDefault();
     console.log('handleSubmitUpdateSurvey state=', this.state);
+    var combined = this.state.invitedEmailList
+    if(this.state.newEmailList.length > 0) {
+      combined += ', ' + this.state.newEmailList;
+    }
+    console.log('   combined=', combined);
 
-    var invitedEmailList = this.state.invitedEmailList.split(/[ ,]+/)
+    // var invitedEmailList = this.state.invitedEmailList.split(/[ ,]+/)
+
+    // update the invitedEmailList
+    var invitedEmailList = combined.split(/[ ,]+/)
+
     console.log('invitedEmailList=', invitedEmailList);
 
     var currentSurvey = this.props.survey;
@@ -669,10 +680,28 @@ class SurveyDetail extends Component {
             <label>Title</label>
             <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
           </Form.Field>
+            
+          {this.props.survey.publish != null ? (
+            <Form.Field>
+              <label>Invited</label>
+              <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} disabled='true' />
+            </Form.Field>
+          ) : ('')}
 
           <Form.Field>
-            <label>Invite emails (separate emails by comma)</label>
-            <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+            {this.props.survey.publish != null ? (
+              <div>
+                <label>Invite more people (separate emails by comma)</label>
+                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='newEmailList' value={this.state.newEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+              </div>
+            ): (
+              <div>
+                <label>Invite emails (separate emails by comma)</label>
+                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+              </div>
+            )}
+            
+
           </Form.Field>
 
           <Form.Group>
