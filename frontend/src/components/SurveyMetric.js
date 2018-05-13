@@ -352,13 +352,13 @@ export default class UserMetric extends Component {
         let showMetric="";
         let startTime=(this.state.survey.publish.start)?this.state.survey.publish.start:"Not specified";
         let endTime=(this.state.survey.publish.end)?this.state.survey.publish.end:"Not specified";
-        if(participants>=0){
+        if(participants>=2){
 
      showMetric=(<div>
         <div className="align">
                 <div><b className="font-color">Start Time:</b> <b>{startTime}</b></div>
                     <br></br>
-                <div><b className="font-color">End Time:</b><b>{endTime}</b></div>
+                <div><b className="font-color">End Time:</b><b>endTime}</b></div>
                     <br></br>
                 <div> <b className="font-color">Number of participants:</b> <b>{participants}</b></div>
                     <br></br>
