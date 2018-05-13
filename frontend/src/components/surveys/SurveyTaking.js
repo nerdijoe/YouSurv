@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { 
+import {
   Link,
   withRouter,
   BrowserRouter as Router,
@@ -49,7 +49,7 @@ class SurveyTaking extends Component {
           ) : ('')}
 
         <Card.Group>
-        { this.props.surveys.map(survey => {
+        { this.props.surveys.filter(survey => survey.publish != null).map(survey => {
           var link = `/home/takesurvey/${survey.id}`;
           return (
             <Card key={survey.id}>
@@ -91,8 +91,8 @@ class SurveyTaking extends Component {
             </Card>
           )
 
-        })} 
-        
+        })}
+
         </Card.Group>
 
       </Container>

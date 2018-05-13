@@ -19,8 +19,8 @@ const SurveyReducer = (state = initialState, action) => {
     case actionType.SURVEY_CREATE: {
       console.log('SurveyReducer SURVEY_CREATE');
       console.log('action=', action);
-      
-      const newSurvey = { 
+
+      const newSurvey = {
         ...action.data,
       }
 
@@ -28,7 +28,7 @@ const SurveyReducer = (state = initialState, action) => {
       return {
         ...state,
         surveys: [...state.surveys, newSurvey],
-        surveyTaking: [...state.surveyTaking, newSurvey],
+        // surveyTaking: [...state.surveyTaking, newSurvey],
       }
     }
     case actionType.SURVEY_GET_ALL: {
@@ -80,7 +80,7 @@ const SurveyReducer = (state = initialState, action) => {
         if (pos !== -1) {
           console.log(typeof UpdatedSurveyCurrent.questions[pos].text);
           console.log(`--> UpdatedSurveyCurrent.questions[${pos}].text=${UpdatedSurveyCurrent.questions[pos].text}`);
-  
+
           UpdatedSurveyCurrent.questions[pos].text = action.data[key];
         }
 
@@ -90,7 +90,7 @@ const SurveyReducer = (state = initialState, action) => {
         ...state,
         surveyCurrent: UpdatedSurveyCurrent,
       }
-      
+
     }
     case actionType.QUESTION_REMOVE: {
       console.log('SurveyReducer QUESTION_REMOVE action.data=', action.data);
@@ -113,11 +113,11 @@ const SurveyReducer = (state = initialState, action) => {
 
       // replace the whole survey with the updated survey
       updatedSurveys[pos] = action.data;
-  
+
       return {
         ...state,
         surveys: updatedSurveys,
-        surveyTaking: updatedSurveys,
+        // surveyTaking: updatedSurveys,
 
       }
     }
@@ -128,11 +128,11 @@ const SurveyReducer = (state = initialState, action) => {
       const pos = updatedSurveys.findIndex(i => i.id === state.surveyCurrent.id)
 
       updatedSurveys[pos].questions = state.surveyCurrent.questions;
-      
+
       return {
         ...state,
         surveys: updatedSurveys,
-        surveyTaking: updatedSurveys,
+        // surveyTaking: updatedSurveys,
 
       }
     }
@@ -144,7 +144,7 @@ const SurveyReducer = (state = initialState, action) => {
 
       // replace the whole survey with the updated survey
       updatedSurveys[pos] = action.data;
-  
+
       return {
         ...state,
         surveys: updatedSurveys,
@@ -278,7 +278,7 @@ const SurveyReducer = (state = initialState, action) => {
       const surveyTaking = [...state.surveyTaking];
       const posfoo = surveyTaking.findIndex(i => i.id === UpdatedSurveyTakingCurrent.id)
 
-      
+
       UpdatedSurveyTakingCurrent.answers = updateAnswers;
 
       // replace the whole survey with the updated survey
@@ -310,7 +310,7 @@ const SurveyReducer = (state = initialState, action) => {
       // if existing answer by this user exist, just update his answers
       if(pos != -1) {
         updateAnswers[pos] = action.data;
-      } 
+      }
 
       UpdatedSurveyTakingCurrent.answers = updateAnswers;
 
@@ -340,7 +340,7 @@ const SurveyReducer = (state = initialState, action) => {
       }
     }
 
-    default: 
+    default:
       return state;
   }
 }
