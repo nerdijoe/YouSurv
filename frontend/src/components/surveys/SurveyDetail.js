@@ -169,6 +169,7 @@ class SurveyDetail extends Component {
       endDate: this.props.survey.endDate,
       questionDate: moment(),
       newEmailList: '',
+      isPublishError: false,
     }
 
     
@@ -543,6 +544,20 @@ class SurveyDetail extends Component {
     this.props.axiosSurveyPublish(this.props.survey);
   }
 
+  handleUnpublish(e) {
+    console.log('handleUnpublish');
+    e.preventDefault();
+    
+    if(this.props.survey.answers.length > 0) {
+      this.setState({
+        isPublishError: true,
+      })
+    } else {
+      // call to axiosSurveyUnpublish(this.props.survey);
+    }
+  }
+
+
   render() {
     const { activeItem } = this.state;
     const options = this.state.options;
@@ -736,11 +751,20 @@ class SurveyDetail extends Component {
               <Button basic color="red" type="submit">Update Survey</Button>
             </Form.Field>
             <Form.Field>
-              <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+              {this.props.survey.publish != null ? (
+                <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+              ) : (
+                <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+              )}
             </Form.Field>
           </Form.Group>
         </Form>
         
+        { this.state.isPublishError ? (
+          <Message compact warning>
+            Cannot unpublish, one of the surveys has been submitted.
+          </Message>
+        ) : ('')}
         
         <Divider />
 
