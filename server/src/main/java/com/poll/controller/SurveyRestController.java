@@ -221,7 +221,7 @@ public class SurveyRestController {
     public void GenerateOpenUniqueLink(@RequestBody String body){
         JSONObject obj = new JSONObject(body);
         String email = obj.getString("email");
-        long surveyId=obj.getString("surveyId");
+        long surveyId=obj.getLong("surveyId");
         surveyService.openUniqueLinkGenerator(email, surveyId);
     }
 

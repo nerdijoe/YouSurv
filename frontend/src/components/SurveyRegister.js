@@ -96,7 +96,9 @@ class SurveyRegister extends Component {
     e.preventDefault();
     console.log('handleSignIn', this.state.token);
     // this.props.axiosVerify(this.state.token, this.props.history);
-    axios.put('http://localhost:8300/user/register'+this.state.token).then( res => {
+    axios.post('http://localhost:8300/survey/generate/openuniquelink',{
+      email: this.state.email, surveyId: this.props.location.search.split('?surveyId=')[1]
+    }).then( res => {
       console.log("responseeee");
       if(res.status===200)
         this.props.history.push('/signin');
@@ -162,7 +164,7 @@ class SurveyRegister extends Component {
                 <Form onSubmit={ (e) => { this.handleRegister(e) }} >
                   <Form.Field>
                     <label>Enter Email</label>
-                    <input type='password' placeholder='Email' name='token' value={this.state.token} onChange={ (e) => { this.handleChange(e); }}/>
+                    <input type='email' placeholder='Email' name='email' value={this.state.email} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
       
                   <Button color='youtube' type='submit' disabled={!this.state.formValid}>Submit</Button>
