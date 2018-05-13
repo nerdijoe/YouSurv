@@ -5,6 +5,7 @@ import com.poll.persistence.dto.*;
 import com.poll.persistence.mapper.AnswerMapper;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.model.Answer;
+import com.poll.persistence.model.AnswerChoice;
 import com.poll.persistence.model.AppUser;
 import com.poll.persistence.model.Survey;
 import com.poll.service.SurveyService;
@@ -20,10 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.json.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 
@@ -181,8 +179,8 @@ public class SurveyRestController {
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/survey/{surveyId}/savesubmitanswer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity savesubmitSurveyAnswer(@RequestBody String body ,@PathVariable("surveyId") long surveyId, @PathVariable("answerId") long answerId) {
+    @RequestMapping(value = "/savesubmitanswer/survey/{surveyId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity savesubmitSurveyAnswer(@RequestBody SaveSubmitAnswerDTO saveSubmitAnswerDTO ,@PathVariable("surveyId") long surveyId) {
 //        String userEmail = auth.getName() ;
         if (!surveyService.existsById(surveyId)) {
             String message = "Survey with id: " + surveyId + " doesn't exist";
@@ -193,15 +191,15 @@ public class SurveyRestController {
         }
 
         Survey survey = surveyService.findById(surveyId);
-        JSONObject obj = new JSONObject(body);
-        String token = obj.getString("token");
-        String userEmail = obj.getString("email");
-        AnswerSaveDTO answerDTO = (AnswerSaveDTO)obj.get("choices");
+
+        AnswerSaveDTO answerDTO = new AnswerSaveDTO(saveSubmitAnswerDTO.getChoices());
+        String userEmail = saveSubmitAnswerDTO.getEmail();
+        String token = saveSubmitAnswerDTO.getToken();
 
         Answer answer = surveyService.answerSurvey(userEmail, survey, answerDTO);
 //        return new ResponseEntity(answer, HttpStatus.OK);
 
-        Answer submitanswer = surveyService.submitAnswer(answerId, userEmail, token);
+        Answer submitanswer = surveyService.submitAnswer(answer.getId(), userEmail, token);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(submitanswer), HttpStatus.OK);
     }
 
