@@ -35,6 +35,13 @@ import SurveyForm from './SurveyForm';
 import cardHeader01 from '../../assets/images/card/card_header_01.png'
 import cardHeader02 from '../../assets/images/card/card_header_02.png'
 
+import * as surveyType from '../../actions/surveyConstants';
+
+var surveyTypeText = {}
+surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
+surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
+surveyTypeText[surveyType.SV_OPEN] = 'Open Survey';
+
 
 class SurveyList extends Component {
 
@@ -74,7 +81,7 @@ class SurveyList extends Component {
                   <List>
                     <List.Item>
                       <List.Icon name='users' />
-                      <List.Content>{survey.type}</List.Content>
+                      <List.Content>{surveyTypeText[survey.type]}</List.Content>
                     </List.Item>
                     <List.Item>
                       <List.Icon name='question' />
@@ -88,7 +95,11 @@ class SurveyList extends Component {
                 </Card.Description>
               </Card.Content>
               <Card.Content>
-                <Label color="red" horizontal>{survey.publish != null ? 'Published' : ''}</Label>
+                {survey.publish != null ?
+                  (<Label color="red" horizontal>Published</Label>) :
+                  (<Label color="grey" horizontal>DRAFT</Label>)
+              }
+
               </Card.Content>
               <Card.Content extra>
                 <a>
