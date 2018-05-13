@@ -315,13 +315,13 @@ class CommonSurvey extends Component {
     const token = 'Bearer ' + localStorage.getItem('token');
 
     // this.props.axiosSurveyTakingSubmit(this.state.survey);
-    let route = `http://localhost:8300/survey/${surveyId}/answer/${answerId}`, header = {
+    let route = `http://localhost:8080/survey/${surveyId}/answer/${answerId}`, header = {
       headers: {
         Authorization: token,
       }
     };
     if(!localStorage.getItem('user_email')) {
-      route = `http://localhost:8300/savesubmitanswer/survey/${surveyId}`;
+      route = `http://localhost:8080/savesubmitanswer/survey/${surveyId}`;
       header = '';
     }
     axios.post( route, {token: this.props.tokenurl, email:this.state.email, choices: choices}, header)
