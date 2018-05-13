@@ -42,6 +42,7 @@ import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
 import * as questionType from '../actions/surveyConstants';
+import  {domainURL} from '../actions/urlConstant';
 
 import avatarMatt from '../assets/images/avatar/small/matt.jpg';
 
@@ -259,7 +260,7 @@ class CommonSurvey extends Component {
       console.log('choices=', choices);
 
       // this.props.surveyTakingSaveProgress(choices, this.state.survey.id);
-      axios.post(`http://localhost:8080/survey/${this.state.survey.id}/answer`, {
+      axios.post(`${domainURL}/survey/${this.state.survey.id}/answer`, {
           choices: choices,
         }, {
           headers: {
@@ -315,13 +316,13 @@ class CommonSurvey extends Component {
     const token = 'Bearer ' + localStorage.getItem('token');
 
     // this.props.axiosSurveyTakingSubmit(this.state.survey);
-    let route = `http://localhost:8080/survey/${surveyId}/answer/${answerId}`, header = {
+    let route = `${domainURL}/survey/${surveyId}/answer/${answerId}`, header = {
       headers: {
         Authorization: token,
       }
     };
     if(!localStorage.getItem('user_email')) {
-      route = `http://localhost:8080/savesubmitanswer/survey/${surveyId}`;
+      route = `${domainURL}/savesubmitanswer/survey/${surveyId}`;
       header = '';
     }
     axios.post( route, {token: this.props.tokenurl, email:this.state.email, choices: choices}, header)

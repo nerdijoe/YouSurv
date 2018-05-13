@@ -8,6 +8,8 @@ import {
   axiosSignIn,
 } from '../actions';
 
+import * as domainURL from '../actions/urlConstant';
+
 import {
   Container,
   Form,
@@ -64,7 +66,7 @@ class CloseSurvey extends Component {
 
   componentWillMount() {
     // this.props.axiosVerify(this.state.token, this.props.history);
-    axios.get('http://localhost:8080/survey/token/'+this.props.location.search.split('?token=')[1]).then( res => {
+    axios.get(`${domainURL}/survey/token/`+this.props.location.search.split('?token=')[1]).then( res => {
       console.log("responseeee");
       if(res.status===200)
         this.setState({

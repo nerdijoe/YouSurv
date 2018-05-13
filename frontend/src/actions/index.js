@@ -2,6 +2,7 @@ import axios from 'axios';
 import cuid from 'cuid';
 
 import * as actionType from './constants';
+import {domainURL} from './urlConstant';
 
 // axios.defaults.crossDomain = true;
 const token = 'Bearer ' + localStorage.getItem('token');
@@ -30,7 +31,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
 
   console.log(" before axiosSignUp", data);
 
-  axios.post('http://localhost:8300/signup', {
+  axios.post(`${domainURL}/signup`, {
     email: data.email,
     password: data.password,
     // firstname: data.firstname,
@@ -93,7 +94,7 @@ export const userSignUp = (data) => {
 export const axiosSignIn = (data, router) => (dispatch) => {
   console.log('axiosSignIn');
 
-  axios.post('http://localhost:8300/signin', {
+  axios.post(`${domainURL}/signin`, {
     email: data.email,
     password: data.password,
   }).then( res => {
@@ -169,7 +170,7 @@ export const axiosSurveyCreate = data => dispatch => {
   console.log('<  before axiosSurveyCreate data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
   console.log('token = ', token);
-  axios.post('http://localhost:8300/survey/', {
+  axios.post(`${domainURL}/survey/`, {
     title: data.title,
     type: data.type,
   }, {
@@ -222,7 +223,7 @@ export const axiosSurveyGetAll = (data) => (dispatch) => {
   console.log('<  before axiosSurveyGetAll data=', data);
   let token = 'Bearer ' + localStorage.getItem('token');
 
-  axios.get('http://localhost:8300/survey/', {
+  axios.get(`${domainURL}/survey/`, {
     headers: {
       Authorization: token,
     }
@@ -258,7 +259,7 @@ export const surveyGetAllDummy = () => {
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
   console.log('token=', token)
-  axios.put(`http://localhost:8300/survey/${data.id}`, data ,{
+  axios.put(`${domainURL}/survey/${data.id}`, data ,{
     headers: {
       Authorization: token,
     }
@@ -380,7 +381,7 @@ export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
   // }
 
   let token = 'Bearer ' + localStorage.getItem('token');
-  axios.post(`http://localhost:8300/survey/${surveyId}/answer`, {
+  axios.post(`${domainURL}/survey/${surveyId}/answer`, {
     choices: data,
   }, {
     headers: {
@@ -421,7 +422,7 @@ export const axiosSurveyPublish = (data) => dispatch => {
   console.log('axiosSurveyPublish data=', data);
   var surveyId = data.id;
   let token = 'Bearer ' + localStorage.getItem('token');
-  axios.post(`http://localhost:8300/survey/${surveyId}/publish`, {}, {
+  axios.post(`${domainURL}/survey/${surveyId}/publish`, {}, {
     headers: {
       Authorization: token,
     }
@@ -462,7 +463,7 @@ export const axiosSurveyTakingSubmit = (data) => dispatch => {
   let token = 'Bearer ' + localStorage.getItem('token');
   console.log('token=', token);
 
-  axios.post(`http://localhost:8300/survey/${surveyId}/answer/${answerId}`, {}, {
+  axios.post(`${domainURL}/survey/${surveyId}/answer/${answerId}`, {}, {
     headers: {
       Authorization: token,
     }

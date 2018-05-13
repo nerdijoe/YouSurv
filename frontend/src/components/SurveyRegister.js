@@ -8,6 +8,8 @@ import {
   axiosSignIn,
 } from '../actions';
 
+import {domainURL} from '../actions/urlConstant';
+
 import {
   Container,
   Form,
@@ -96,7 +98,7 @@ class SurveyRegister extends Component {
     e.preventDefault();
     console.log('handleSignIn', this.state.token);
     // this.props.axiosVerify(this.state.token, this.props.history);
-    axios.post('http://localhost:8300/survey/generate/openuniquelink',{
+    axios.post(`${domainURL}/survey/generate/openuniquelink`,{
       email: this.state.email, surveyId: this.props.location.search.split('?surveyId=')[1]
     }).then( res => {
       console.log("responseeee");

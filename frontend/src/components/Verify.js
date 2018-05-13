@@ -8,6 +8,8 @@ import {
   axiosSignIn,
 } from '../actions';
 
+import * as domainURL from '../actions/urlConstant';
+
 import {
   Container,
   Form,
@@ -96,7 +98,7 @@ class Verify extends Component {
     e.preventDefault();
     console.log('handleSignIn', this.state.token);
     // this.props.axiosVerify(this.state.token, this.props.history);
-    axios.put('http://localhost:8080/user/verify?emailVerificationToken='+this.state.token).then( res => {
+    axios.put(`${domainURL}/user/verify?emailVerificationToken=`+this.state.token).then( res => {
       console.log("responseeee");
       if(res.status===200)
         this.props.history.push('/signin');
