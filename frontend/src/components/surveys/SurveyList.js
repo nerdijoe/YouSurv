@@ -54,6 +54,48 @@ class SurveyList extends Component {
     this.props.surveyShowDetail(survey, this.props.history);
   }
 
+  generateCard = (survey) => (
+    <Card key={survey.id}>
+    <a onClick={() => {this.handleShowDetail(survey)}}>
+      <Image src={cardHeader02} />
+    </a>
+
+    <Card.Content>
+      <Card.Header>Id-{survey.id}</Card.Header>
+      <Card.Meta>Title: {survey.title}</Card.Meta>
+      <Card.Description>
+        <List>
+          <List.Item>
+            <List.Icon name='users' />
+            <List.Content>{surveyTypeText[survey.type]}</List.Content>
+          </List.Item>
+          <List.Item>
+            <List.Icon name='question' />
+            <List.Content>{survey.questions.length} questions</List.Content>
+          </List.Item>
+          <List.Item>
+            <List.Icon name='calendar' />
+            <List.Content>Created on {Moment(survey.created).format('L LT')}</List.Content>
+          </List.Item>
+        </List>
+      </Card.Description>
+    </Card.Content>
+    <Card.Content>
+      {survey.publish != null ?
+        (<Label color="red" horizontal>Published</Label>) :
+        (<Label color="grey" horizontal>DRAFT</Label>)
+    }
+
+    </Card.Content>
+    <Card.Content extra>
+      <a>
+        <Icon name='mail' />
+        {survey.invitedEmailList.length} Invites sent
+      </a>
+    </Card.Content>
+  </Card>
+  )
+
   render() {
     return (
       <Container>
@@ -66,9 +108,11 @@ class SurveyList extends Component {
             </Message>
           ) : ('')}
         <Card.Group>
-        { this.props.surveys.map(survey => {
-
-          return (
+        { this.props.surveys.filter(survey => survey.publish == null).map(survey => {
+          return(this.generateCard(survey))
+          
+          
+          {/* return (
             <Card key={survey.id}>
               <a onClick={() => {this.handleShowDetail(survey)}}>
                 <Image src={cardHeader02} />
@@ -108,12 +152,17 @@ class SurveyList extends Component {
                 </a>
               </Card.Content>
             </Card>
-          )
+          ) */}
 
         })}
 
         </Card.Group>
-
+        <Divider />
+        <Card.Group>
+        { this.props.surveys.filter(survey => survey.publish != null).map(survey => {
+          return(this.generateCard(survey))
+        })}
+        </Card.Group>
       </Container>
 
     );
