@@ -12,7 +12,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
     console.log("test cross origin");
 
 
-    // axios.get('http://localhost:8300', {
+    // axios.get('http://localhost:8080', {
     //         // method: 'GET',
     //         // mode: 'no-cors',
     //         // headers: {
@@ -49,7 +49,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   })
 
 
-  // fetch("http://localhost:8300/signup", {
+  // fetch("http://localhost:8080/signup", {
   //   method: 'POST',
   //   headers: {
   //     'Accept': 'application/json',
@@ -69,7 +69,7 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   // });
 
   // let token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJicm8xQGhhaGEuY29tIiwiYXV0aCI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwiaWF0IjoxNTI1NDAzOTgxLCJleHAiOjE1MjU0MDc1ODF9.Jyv_E3pff59-3o2DKe3AkYV48wuQNodXS11UMMjvkbM';
-  // axios.get('http://localhost:8300/user/', {
+  // axios.get('http://localhost:8080/user/', {
   //   headers: {
   //     Authorization: token,
   //   }
@@ -129,7 +129,7 @@ export const userSignIn = (data) => {
 // export const axiosVerify = (data, router) => (dispatch) => {
 //   console.log('axiosVerify');
 
-//   axios.post('http://localhost:8300/user/verify?emailVerificationToken='+data).then( res => {
+//   axios.post('http://localhost:8080/user/verify?emailVerificationToken='+data).then( res => {
 
 //     dispatch(userVerify(data));
 

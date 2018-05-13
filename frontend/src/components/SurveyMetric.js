@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/style.css';
 import {Pie, Bar, Line} from 'react-chartjs-2';
 import * as questionType from '../actions/surveyConstants';
+import {domainURL} from '../actions/urlConstant';
 import Navbar from './Navbar';
 import axios from 'axios';
 
@@ -18,7 +19,7 @@ export default class UserMetric extends Component {
     componentWillMount() {
         let token = 'Bearer ' + localStorage.getItem('token');
 
-        axios.get(`http://localhost:8300//survey/${this.props.match.params.id}`,{
+        axios.get(`${domainURL}/survey/${this.props.match.params.id}`,{
             headers: {
               Authorization: token,
             }
