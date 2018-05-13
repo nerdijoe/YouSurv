@@ -18,7 +18,7 @@ export default class UserMetric extends Component {
     componentWillMount() {
         let token = 'Bearer ' + localStorage.getItem('token');
 
-        axios.get(`http://localhost:8300//survey/${this.props.match.params.id}`,{
+        axios.get(`http://localhost:8080//survey/${this.props.match.params.id}`,{
             headers: {
               Authorization: token,
             }
