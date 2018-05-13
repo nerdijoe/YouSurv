@@ -47,6 +47,12 @@ class SurveyList extends Component {
     this.props.surveyShowDetail(survey, this.props.history);
   }
 
+  redirect(to) {
+    this.props.history.push({
+       pathname: to
+    });
+  } 
+
   render() {
     return (
       <Container>
@@ -70,6 +76,7 @@ class SurveyList extends Component {
               <Card.Content>
                 <Card.Header>Id-{survey.id}</Card.Header>
                 <Card.Meta>Title: {survey.title}</Card.Meta>
+                <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Details</a></Card.Content>
                 <Card.Description>
                   <List>
                     <List.Item>

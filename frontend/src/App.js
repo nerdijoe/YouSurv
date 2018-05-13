@@ -74,7 +74,7 @@ class App extends Component {
             <Route path='/close/survey' component={CloseSurvey} />
             <Route path='/surveyRegister' component={SurveyRegister} />
             <Route path='/home' component={Home} />
-            <Route path='/surveyMetric' component={SurveyMetric}/>
+            <Route path='/surveyMetric/:id' component={SurveyMetric}/>
             {/* <Route path='/surveydetail' component={SurveyDetail} /> */}
 
           </MyContainer>

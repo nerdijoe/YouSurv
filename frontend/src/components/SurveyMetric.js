@@ -2,169 +2,60 @@ import React, { Component } from 'react';
 import '../css/style.css';
 import {Pie, Bar, Line} from 'react-chartjs-2';
 import * as questionType from '../actions/surveyConstants';
+import Navbar from './Navbar';
+import axios from 'axios';
+
 export default class UserMetric extends Component {
 
     constructor(props){
         super(props);
 
         this.state={
-           survey:{
-            "id": "66",
-            "surveyorEmail": "ameytotawar@gmail.com",
-            "invitedEmailList": [
-              "ameytotawar@gmail.com"
-            ],
-            "title": "anurag",
-            "type": "SV_GENERAL",
-            "questions": [
-              {
-                "id": "72",
-                "type": "Q_STRING",
-                "text": "What??",
-                "image": "",
-                "options": [
-                  {
-                    "id": "",
-                    "text": "",
-                    "image": ""
-                  }
-                ],
-                "required": false,
-                "created": "2018-05-12T19:59:17.000Z",
-                "updated": "2018-05-12T19:59:17.000Z",
-                "deleted": false
-              },
-              {
-                "id": "73",
-                "type": "MCQ_TEXT_RADIO",
-                "text": "What MCQ??",
-                "image": "",
-                "options": [
-                  {
-                    "id": "option_2",
-                    "text": "121",
-                    "image": ""
-                  },
-                  {
-                    "id": "option_1",
-                    "text": "123",
-                    "image": ""
-                  },
-                  {
-                    "id": "option_0",
-                    "text": "132",
-                    "image": ""
-                  }
-                ],
-                "required": false,
-                "created": "2018-05-12T19:59:17.000Z",
-                "updated": "2018-05-12T19:59:17.000Z",
-                "deleted": false
-              },
-              {
-                "id": "74",
-                "type": "STAR_RATING",
-                "text": "What Rating??",
-                "image": "",
-                "options": [
-                  {
-                    "id": "",
-                    "text": "",
-                    "image": ""
-                  }
-                ],
-                "required": false,
-                "created": "2018-05-12T19:59:17.000Z",
-                "updated": "2018-05-12T19:59:17.000Z",
-                "deleted": false
-              },
-              {
-                "id": "75",
-                "type": "MCQ_TEXT_CHECKBOX",
-                "text": "What Checkbox??",
-                "image": "",
-                "options": [
-                  {
-                    "id": "option_1",
-                    "text": "ssss",
-                    "image": ""
-                  },
-                  {
-                    "id": "option_0",
-                    "text": "aaaa",
-                    "image": ""
-                  },
-                  {
-                    "id": "option_2",
-                    "text": "dddd",
-                    "image": ""
-                  }
-                ],
-                "required": false,
-                "created": "2018-05-12T19:59:17.000Z",
-                "updated": "2018-05-12T19:59:17.000Z",
-                "deleted": false
-              }
-            ],
-            "answers": [
-              {
-                "id": "77",
-                "surveyeeEmail": "ameytotawar@gmail.com",
-                "choices": [
-                  {
-                    "questionId": "72",
-                    "selection": [
-                      "Anurag",
-                      "Shinde"
-                    ]
-                  },
-                  {
-                    "questionId": "73",
-                    "selection": [
-                      "121"
-                    ]
-                  },
-                  {
-                    "questionId": "74",
-                    "selection": [
-                      "2"
-                    ]
-                  },
-                  {
-                    "questionId": "75",
-                    "selection": [
-                      "aaaa",
-                      "dddd"
-                    ]
-                  }
-                ],
-                "submitted": true,
-                "deleted": false,
-                "created": "2018-05-12T20:00:54.000Z",
-                "updated": "2018-05-12T20:05:53.000Z"
-              }
-            ],
-            "publish": {
-              "start": null,
-              "end": null,
-              "link": "http:\/\/localhost\/survey\/66",
-              "qrCodeByteArray": "0192380123087187230918230581230958"
-            },
-            "deleted": false,
-            "created": "2018-05-12T20:06:25.718Z",
-            "updated": "2018-05-12T20:06:25.718Z"
-          }
+           survey:''
         }
+    }
+
+    componentWillMount() {
+        let token = 'Bearer ' + localStorage.getItem('token');
+
+        axios.get(`http://localhost:8300//survey/${this.props.match.params.id}`,{
+            headers: {
+              Authorization: token,
+            }
+          }).then( res => {
+            console.log("responseeee", res);
+            // if(res.status==200)
+                this.setState({
+                    survey: res.data
+                })
+            // else {
+                // console.log("error invalid 404");
+                // this.setState({
+                //   tokenValid: false,
+                // }, () => {
+                //   this.validateField('token');
+                // });
+            // }
+
+            })
+            .catch( res => {
+             console.log("error 404",res);
+            })
+            // this.props.history.push('/signin');
     }
 
     render(){
 
         let participants=0;
-        this.state.survey.answers.map(function(answer){
-            if(answer.submitted==true){
-                participants++;
-            }
-        });
+        console.log("surveyyyy",this.state.survey);
+        let showMetric="";
+        if(this.state.survey) {
+            this.state.survey.answers.map(function(answer){
+                if(answer.submitted==true){
+                    participants++;
+                }
+            });
+        
         let answerLength=this.state.survey.answers.length;
         let participationRate
         if(this.state.survey.invitedEmailList.length>0){
@@ -349,7 +240,7 @@ export default class UserMetric extends Component {
         });
         
     
-        let showMetric="";
+        
         let startTime=(this.state.survey.publish.start)?this.state.survey.publish.start:"Not specified";
         let endTime=(this.state.survey.publish.end)?this.state.survey.publish.end:"Not specified";
         if(participants>=2){
@@ -358,7 +249,7 @@ export default class UserMetric extends Component {
         <div className="align">
                 <div><b className="font-color">Start Time:</b> <b>{startTime}</b></div>
                     <br></br>
-                <div><b className="font-color">End Time:</b><b>endTime}</b></div>
+                <div><b className="font-color">End Time:</b><b>{endTime}</b></div>
                     <br></br>
                 <div> <b className="font-color">Number of participants:</b> <b>{participants}</b></div>
                     <br></br>
@@ -382,6 +273,7 @@ export default class UserMetric extends Component {
         }else{
             showMetric=( <div className="align-center font-color"><b>Metrics cannot be shown as number of participants are less than 2</b></div>);
         }
+    }
         
         /**console.log("optionCountMap", optionCountMap);
         console.log("optionNameMap",optionNameMap);
@@ -409,7 +301,7 @@ export default class UserMetric extends Component {
         return(
         
         <div>
-            
+           <Navbar /> 
           {showMetric}
             </div>);
     }
