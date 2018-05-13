@@ -30,6 +30,7 @@ import SurveyDetail from './components/surveys/SurveyDetail';
 import SurveyRegister from './components/SurveyRegister';
 import GeneralSurvey from './components/GeneralSurvey';
 import CloseSurvey from './components/CloseSurvey';
+import OpenUniqueSurvey from './components/OpenUniqueSurvey';
 import SurveyMetric from './components/SurveyMetric';
 
 import store from './store/manageStore'
@@ -72,7 +73,8 @@ class App extends Component {
             <Route path='/verify' component={Verify} />
             <Route path='/general/survey' component={GeneralSurvey} />
             <Route path='/close/survey' component={CloseSurvey} />
-            <Route path='/surveyRegister' component={SurveyRegister} />
+            <Route path='/openunique/register' component={SurveyRegister} />
+            <Route path='/openunique/survey' component={OpenUniqueSurvey} />
             <Route path='/home' component={Home} />
             <Route path='/surveyMetric' component={SurveyMetric}/>
             {/* <Route path='/surveydetail' component={SurveyDetail} /> */}

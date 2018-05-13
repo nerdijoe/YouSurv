@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/verify").permitAll()
                 .antMatchers("/survey/token/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/savesubmitanswer/survey/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/survey/generate/openuniquelink").permitAll()
 
 
 //                .antMatchers("/anonymous").anonymous()
