@@ -30,6 +30,7 @@ public class SurveyDTO {
 //    private List<AnswerDTO> answers;
     private Publish publish;
     private boolean deleted;
+    private boolean closed;
     private String created;
     private String updated;
 

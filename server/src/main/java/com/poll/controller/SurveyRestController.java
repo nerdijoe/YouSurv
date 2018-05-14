@@ -140,7 +140,56 @@ public class SurveyRestController {
         return new ResponseEntity(surveyDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/survey/{id}/answer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/survey/{id}/unpublish", method = RequestMethod.POST)
+    public ResponseEntity unpublishSurvey(@PathVariable("id") long id, Authentication auth) {
+        if (!surveyService.existsById(id)) {
+            String message = "Survey with id: " + id + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        String surveyorEmail = auth.getName();
+        Survey survey = surveyService.findById(id);
+
+        if (!surveyService.isSurveyCreatedBy(survey, surveyorEmail)) {
+            String message = "User with email: " + surveyorEmail + " have no authorization to unpublish survey with id: " + id;
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.FORBIDDEN);
+        }
+        SurveyDTO surveyDTO = surveyService.unpublishSurvey(survey);
+        return new ResponseEntity(surveyDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/survey/{id}/close", method = RequestMethod.POST)
+    public ResponseEntity closeSurvey(@PathVariable("id") long id, Authentication auth) {
+        if (!surveyService.existsById(id)) {
+            String message = "Survey with id: " + id + " doesn't exist";
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        String surveyorEmail = auth.getName();
+        Survey survey = surveyService.findById(id);
+
+        if (!surveyService.isSurveyCreatedBy(survey, surveyorEmail)) {
+            String message = "User with email: " + surveyorEmail + " have no authorization to close survey with id: " + id;
+            System.out.println(message);
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", message);
+            return new ResponseEntity(responseBody, HttpStatus.FORBIDDEN);
+        }
+        SurveyDTO surveyDTO = surveyService.closeSurvey(survey);
+        return new ResponseEntity(surveyDTO, HttpStatus.OK);
+    }
+
+
+        @RequestMapping(value = "/survey/{id}/answer", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity saveSurveyAnswer(@PathVariable("id") long id, @RequestBody AnswerSaveDTO answerDTO, Authentication auth) {
 
         if (!surveyService.existsById(id)) {

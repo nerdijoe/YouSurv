@@ -48,8 +48,9 @@ public class Survey extends AbstractTimestampModel {
     private List<Answer> answers;
 
     @Embedded
-
     private Publish publish;
+
+    private boolean closed;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
@@ -62,6 +63,7 @@ public class Survey extends AbstractTimestampModel {
         this.invitedEmailList = new ArrayList<>();
         this.questions = new ArrayList<>();
         this.answers = new ArrayList<>();
+        this.closed = false;
     }
 
     public Survey(String surveyorEmail, String title, String type) {
