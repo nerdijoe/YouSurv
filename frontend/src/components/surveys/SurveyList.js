@@ -67,9 +67,12 @@ class SurveyList extends Component {
     </a>
 
     <Card.Content>
-      <Card.Header>Id-{survey.id}</Card.Header>
-      <Card.Meta>Title: {survey.title}</Card.Meta>
-      <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Details</a></Card.Content>
+      <Card.Header>{survey.title}</Card.Header>
+      <Card.Meta>Id: {survey.id}</Card.Meta>
+      {survey.publish == null ? '' : (
+        <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Metric</a></Card.Content>
+      )}
+
 
       <Card.Description>
         <List>
@@ -92,7 +95,7 @@ class SurveyList extends Component {
       {survey.publish != null ?
         (<Label color="red" horizontal>Published</Label>) :
         (<Label color="grey" horizontal>DRAFT</Label>)
-    }
+      }
 
     </Card.Content>
     <Card.Content extra>
@@ -116,7 +119,7 @@ class SurveyList extends Component {
         <Header as='h2'>
           <Icon name='lightning' />
           <Header.Content>
-            Unpublished Surveys
+            Draft Surveys
           </Header.Content>
         </Header>
 
@@ -129,50 +132,6 @@ class SurveyList extends Component {
             <Card.Group>
             { unpublishedSurveys.map(survey => {
               return(this.generateCard(survey))
-              
-              
-              {/* return (
-                <Card key={survey.id}>
-                  <a onClick={() => {this.handleShowDetail(survey)}}>
-                    <Image src={cardHeader02} />
-                  </a>
-
-                  <Card.Content>
-                    <Card.Header>Id-{survey.id}</Card.Header>
-                    <Card.Meta>Title: {survey.title}</Card.Meta>
-                    <Card.Description>
-                      <List>
-                        <List.Item>
-                          <List.Icon name='users' />
-                          <List.Content>{surveyTypeText[survey.type]}</List.Content>
-                        </List.Item>
-                        <List.Item>
-                          <List.Icon name='question' />
-                          <List.Content>{survey.questions.length} questions</List.Content>
-                        </List.Item>
-                        <List.Item>
-                          <List.Icon name='calendar' />
-                          <List.Content>Created on {Moment(survey.created).format('L LT')}</List.Content>
-                        </List.Item>
-                      </List>
-                    </Card.Description>
-                  </Card.Content>
-                  <Card.Content>
-                    {survey.publish != null ?
-                      (<Label color="red" horizontal>Published</Label>) :
-                      (<Label color="grey" horizontal>DRAFT</Label>)
-                  }
-
-                  </Card.Content>
-                  <Card.Content extra>
-                    <a>
-                      <Icon name='mail' />
-                      {survey.invitedEmailList.length} Invites sent
-                    </a>
-                  </Card.Content>
-                </Card>
-              ) */}
-
             })}
 
             </Card.Group>

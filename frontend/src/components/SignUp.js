@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import {
   axiosSignUp,
+  unload
 } from '../actions';
 
 import {
@@ -116,6 +117,10 @@ class SignUp extends Component {
     this.setState({ formValid: this.state.emailValid && this.state.passwordValid && this.state.firstnameValid && this.state.lastnameValid });
   }
 
+  componentWillUnmount() {
+    this.props.onUnload();
+  }
+
   handleSignUp(e) {
     e.preventDefault();
     console.log('handleSignUp', this.state);
@@ -210,6 +215,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     axiosSignUp: (data, router) => { dispatch(axiosSignUp(data, router)); },
+    onUnload: () => {dispatch(unload());}
   };
 };
 

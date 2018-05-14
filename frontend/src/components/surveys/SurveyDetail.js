@@ -35,7 +35,9 @@ import {
   Radio,
   Dropdown,
   Rating,
-  
+  Label,
+  List,
+
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -48,7 +50,17 @@ import uuid from 'uuid';
 import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
+import QRCODE from 'qrcode.react';
+
 import * as questionType from '../../actions/surveyConstants';
+
+import * as surveyType from '../../actions/surveyConstants';
+
+var surveyTypeText = {}
+surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
+surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
+surveyTypeText[surveyType.SV_OPEN] = 'Open Survey';
+
 
 const mcqOptions = [
   { key: questionType.MCQ_TEXT_RADIO, value: questionType.MCQ_TEXT_RADIO, text: 'Text Radio', flag: 'ly' },
@@ -145,6 +157,7 @@ const addQuestion = (type) => {
   }
 }
 
+
 // ----------------------------------------------------------------------------
 
 class SurveyDetail extends Component {
@@ -168,6 +181,8 @@ class SurveyDetail extends Component {
       startDate: this.props.survey.startDate,
       endDate: this.props.survey.endDate,
       questionDate: moment(),
+      newEmailList: '',
+      isPublishError: false,
     }
 
     
@@ -459,6 +474,7 @@ class SurveyDetail extends Component {
 
   }
 
+  // Save questions
   handleSubmit(e) {
     e.preventDefault();
     console.log('handleSubmit', this.state);
@@ -478,8 +494,17 @@ class SurveyDetail extends Component {
   handleSubmitUpdateSurvey(e) {
     e.preventDefault();
     console.log('handleSubmitUpdateSurvey state=', this.state);
+    var combined = this.state.invitedEmailList
+    if(this.state.newEmailList.length > 0) {
+      combined += ', ' + this.state.newEmailList;
+    }
+    console.log('   combined=', combined);
 
-    var invitedEmailList = this.state.invitedEmailList.split(/[ ,]+/)
+    // var invitedEmailList = this.state.invitedEmailList.split(/[ ,]+/)
+
+    // update the invitedEmailList
+    var invitedEmailList = combined.split(/[ ,]+/)
+
     console.log('invitedEmailList=', invitedEmailList);
 
     var currentSurvey = this.props.survey;
@@ -531,6 +556,20 @@ class SurveyDetail extends Component {
     // call to 
     this.props.axiosSurveyPublish(this.props.survey);
   }
+
+  handleUnpublish(e) {
+    console.log('handleUnpublish');
+    e.preventDefault();
+    
+    if(this.props.survey.answers.length > 0) {
+      this.setState({
+        isPublishError: true,
+      })
+    } else {
+      // call to axiosSurveyUnpublish(this.props.survey);
+    }
+  }
+
 
   render() {
     const { activeItem } = this.state;
@@ -663,16 +702,89 @@ class SurveyDetail extends Component {
     return (
       <Container>
         <h2>Detail</h2>
-        
-        <Form onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
+        <Message negative attached>
+          <Message.Header>Information</Message.Header>
+
+          <List>
+            <List.Item>
+              <List.Icon name='id card outline' />
+              <List.Content>Survey Id: {this.props.survey.id}</List.Content>
+            </List.Item>
+            <List.Item>
+              <List.Icon name='users' />
+              <List.Content>{surveyTypeText[this.props.survey.type]}</List.Content>
+            </List.Item>
+            <List.Item>
+              {this.props.survey.publish != null ?
+                (<Label color="red" horizontal>Published</Label>) :
+                (<Label color="grey" horizontal>DRAFT</Label>)
+              }
+            </List.Item>
+
+          </List>        
+          {this.props.survey.publish != null ? (
+              <List>
+                <List.Item>
+                  <List.Icon name='calendar' />
+                  <List.Content>
+                    Start: {this.props.survey.publish.start != null ? moment(this.props.survey.publish.start).format('L LT') : 'not set'}
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Icon name='calendar' />
+                  <List.Content>End: {this.props.survey.publish.end != null ? (moment(this.props.survey.publish.end).format('L LT')) : 'not set'}</List.Content>
+                </List.Item>
+
+                {this.props.survey.type == surveyType.SV_GENERAL ? (
+                  <div>
+                    <List.Item>
+                      <List.Content>
+                        <QRCODE value={this.props.survey.publish.link} />
+                      </List.Content>
+                    </List.Item>
+                    <List.Item>
+                      <List.Content>
+                        Link: {this.props.survey.publish.link}
+                      </List.Content>
+                    </List.Item>
+
+                  </div>
+                ) : ('')}
+
+              </List>
+              
+            ) : ('')}
+
+        </Message>
+
+
+        <Form className='attached fluid segment' onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
           <Form.Field>
             <label>Title</label>
-            <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+            <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} disabled={this.props.survey.publish != null? true : false}/>
           </Form.Field>
+            
+          {this.props.survey.publish != null ? (
+            <Form.Field>
+              <label>Invited</label>
+              <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} disabled='true' />
+            </Form.Field>
+          ) : ('')}
 
           <Form.Field>
-            <label>Invite emails (separate emails by comma)</label>
-            <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+            {this.props.survey.publish != null ? (
+              <div>
+                <label>Invite more people (separate emails by comma)</label>
+                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='newEmailList' value={this.state.newEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+              </div>
+            ): (
+              <div>
+                <label>Invite emails (separate emails by comma)</label>
+                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+              </div>
+            )}
+            
+
           </Form.Field>
 
           <Form.Group>
@@ -707,50 +819,49 @@ class SurveyDetail extends Component {
               <Button basic color="red" type="submit">Update Survey</Button>
             </Form.Field>
             <Form.Field>
-              <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+              {this.props.survey.publish != null ? (
+                <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+              ) : (
+                <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+              )}
             </Form.Field>
           </Form.Group>
         </Form>
         
+        { this.state.isPublishError ? (
+          <Message compact warning>
+            Cannot unpublish, one of the surveys has been submitted.
+          </Message>
+        ) : ('')}
         
         <Divider />
 
-        <Menu attached='top' tabular>
-          <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
-          <Menu.Item name='YesNo' active={activeItem === 'YesNo'} onClick={this.handleItemClick} />
-          <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
-          <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
-          <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
-          {/* <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} /> */}
+        { this.props.survey.publish != null ? ('') : (
+          <div>
+            <Menu attached='top' tabular>
+              <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
+              <Menu.Item name='YesNo' active={activeItem === 'YesNo'} onClick={this.handleItemClick} />
+              <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
+              <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
+              <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
+            </Menu>
 
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              {/* <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' /> */}
-            </Menu.Item>
-          </Menu.Menu>
-        </Menu>
+            <Segment attached='bottom'>
+              {segmentContent(activeItem)}
+            </Segment>
+          </div>
+        ) }
 
-        <Segment attached='bottom'>
-          {this.props.survey.id}
-          {this.props.survey.authorEmail}
-          {this.props.survey.type}
-          {/* { (activeItem === 'Short Answer') ? (
-            <div>
-              <h3>Short Answer</h3>
-              <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button>
-            </div>
-            
-          ): ('')}
-          { (activeItem === 'MCQ') ? (
-            <div>
-              <h3>Multiple Choice Question</h3>
-              <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add MCQ</Button>
-            </div>
-          ): ('')} */}
-          {segmentContent(activeItem)}
-        </Segment>
 
-        <h3>Preview</h3>
+          <Header as='h3'>
+            <Icon name='file text outline' />
+            <Header.Content>
+              Preview
+            </Header.Content>
+          </Header>
+
+          <Message>
+      
           <Form onSubmit={e => this.handleSubmit(e)}>
           { this.props.survey.questions.length === 0 ? (
             <Message compact>
@@ -1013,20 +1124,17 @@ class SurveyDetail extends Component {
           }
 
 
-          <Divider />
-          { this.props.survey.questions.length > 0 ? (
-            <Button color='youtube' type='submit' >Save Questions</Button>
+          
+          { (this.props.survey.questions.length > 0  && this.props.survey.publish == null) ? (
+            <div>
+              <Divider />
+              <Button color='youtube' type='submit' >Save Questions</Button>
+            </div>
           ) : ('')}
 
-          {/* <Button color='youtube' type='submit' >Save</Button> */}
           </Form>
 
-          <Divider />
-          {/* <FormJson schema={schema}
-          onChange={log("changed")}
-          onSubmit={this.handleSubmit}
-          onError={log("errors")} 
-          uiSchema={uiSchema} /> */}
+          </Message> 
 
       </Container>
 
