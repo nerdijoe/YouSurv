@@ -5,7 +5,6 @@ import * as actionType from './constants';
 import {domainURL} from './urlConstant';
 
 // axios.defaults.crossDomain = true;
-const token = 'Bearer ' + localStorage.getItem('token');
 
 export const axiosSignUp = (data, router) => (dispatch) => {
 
@@ -175,7 +174,7 @@ export const userSignOut = () => {
 
 export const axiosSurveyCreate = data => dispatch => {
   console.log('<  before axiosSurveyCreate data=', data);
-  let token = 'Bearer ' + localStorage.getItem('token');
+  const token = 'Bearer ' + localStorage.getItem('token');
   console.log('token = ', token);
   axios.post(`${domainURL}/survey/`, {
     title: data.title,
@@ -228,7 +227,7 @@ export const surveyCreate = (data) => {
 
 export const axiosSurveyGetAll = (data) => (dispatch) => {
   console.log('<  before axiosSurveyGetAll data=', data);
-  let token = 'Bearer ' + localStorage.getItem('token');
+  const token = 'Bearer ' + localStorage.getItem('token');
 
   axios.get(`${domainURL}/survey/`, {
     headers: {
@@ -265,7 +264,9 @@ export const surveyGetAllDummy = () => {
 
 export const axiosSurveyUpdate = (data) => dispatch => {
   console.log('<  before axiosSurveyUpdate data=', data);
+  const token = 'Bearer ' + localStorage.getItem('token');
   console.log('token=', token)
+
   axios.put(`${domainURL}/survey/${data.id}`, data ,{
     headers: {
       Authorization: token,
@@ -387,8 +388,9 @@ export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
   //   choices: data,
   // }
 
-  let token = 'Bearer ' + localStorage.getItem('token');
+  const token = 'Bearer ' + localStorage.getItem('token');
   axios.post(`${domainURL}/survey/${surveyId}/answer`, {
+
     choices: data,
   }, {
     headers: {
@@ -428,7 +430,8 @@ export const surveyTakingSaveProgressReduce = (data) => {
 export const axiosSurveyPublish = (data) => dispatch => {
   console.log('axiosSurveyPublish data=', data);
   var surveyId = data.id;
-  let token = 'Bearer ' + localStorage.getItem('token');
+
+  const token = 'Bearer ' + localStorage.getItem('token');
   axios.post(`${domainURL}/survey/${surveyId}/publish`, {}, {
     headers: {
       Authorization: token,
@@ -467,7 +470,7 @@ export const axiosSurveyTakingSubmit = (data) => dispatch => {
 
   console.log(`---surveyId=${surveyId}, answerId=${answerId}`);
 
-  let token = 'Bearer ' + localStorage.getItem('token');
+  const token = 'Bearer ' + localStorage.getItem('token');
   console.log('token=', token);
 
   axios.post(`${domainURL}/survey/${surveyId}/answer/${answerId}`, {}, {
