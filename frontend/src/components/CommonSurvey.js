@@ -434,11 +434,12 @@ class CommonSurvey extends Component {
   render() {
     // if existing answer by this user exist, just update his answers
     var answer = {submitted: false};
-
+    var disabled = false;
     if(this.state.survey != undefined && this.state.survey.answers != undefined) {
       const pos = this.state.survey.answers.findIndex(i => i.surveyeeEmail === localStorage.getItem('user_email'))
       if(pos != -1) {
         answer = this.state.survey.answers[pos];
+        disabled = true;
       }
     }
 
@@ -702,6 +703,61 @@ class CommonSurvey extends Component {
                     })}
                     </Grid.Column>
                   </Grid>
+                )
+              }
+              else if(question.type === questionType.Q_YESNO) {
+                var ratingOptions = [ "Yes", "No"];
+                return (
+                  <Grid key={question.id} columns='equal'>
+                    <Grid.Column>
+                      <Form.Field key={question.id}>
+                        <label>{order}. {question.text}</label>
+                      </Form.Field>
+                      <Form.Group>
+                      {ratingOptions.map( (option, index) => {
+                        return (
+                          <Form.Field key={index}>
+                            <Radio key={index}
+                              label={option}
+                              name={question.id}
+                              value={option}
+                              disabled={disabled}
+                              checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option : false}
+                          // checked={this.state.value === 'this'}
+                          onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
+
+                            />
+                          </Form.Field>
+                        )
+                      })}
+                      </Form.Group>
+                  </Grid.Column>
+                  </Grid>
+                )
+              }
+              else if(question.type === questionType.Q_DATE) {
+              return (
+                <Grid key={question.id} columns='equal'>
+                  <Grid.Column>
+                    <Form.Field>
+                    {/* <label>Enter your question</label>
+                    <input id={question.id} name={question.name} value={(this.state.text[question.id] != undefined) ? this.state.text[question.id] : ''} onChange={e => this.updateState(e)} />  */}
+                    <label>{order}. {question.text}</label>
+                    </Form.Field>
+                    <Form.Field>
+                      <DatePicker
+                        selected={(this.state.answers[question.id] != undefined) ? moment(this.state.answers[question.id][0]) : ''}
+                        onChange={date => this.handleChangeDate(date, question)}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        dateFormat="LLL"
+                        timeCaption="time"
+                        disabled={disabled}
+                      />
+                    </Form.Field>
+                  </Grid.Column>
+                </Grid>
                 )
               }
               else 
