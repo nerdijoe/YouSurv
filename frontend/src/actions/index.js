@@ -462,6 +462,67 @@ export const surveyPublish = (data) => {
   }
 }
 
+export const axiosSurveyUnpublish = (data) => dispatch => {
+  console.log('axiosSurveyUnpublish data=', data);
+  var surveyId = data.id;
+
+  const token = 'Bearer ' + localStorage.getItem('token');
+  axios.post(`${domainURL}/survey/${surveyId}/unpublish`, {}, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after axiosSurveyUnpublish res.data', res.data);
+    dispatch(surveyUnpublish(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyUnpublish");
+    console.log(err);
+  })
+}
+
+export const surveyUnpublish = (data) => {
+  return {
+    type: actionType.SURVEY_UNPUBLISH,
+    data,
+  }
+}
+
+
+
+export const axiosSurveyClose = (data) => dispatch => {
+  console.log('axiosSurveyClose data=', data);
+  var surveyId = data.id;
+
+  const token = 'Bearer ' + localStorage.getItem('token');
+  axios.post(`${domainURL}/survey/${surveyId}/close`, {}, {
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    console.log('>  after axiosSurveyClose res.data', res.data);
+    dispatch(surveyClose(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyClose");
+    console.log(err);
+  })
+}
+
+export const surveyClose = (data) => {
+  return {
+    type: actionType.SURVEY_CLOSE,
+    data,
+  }
+}
+
+
+
+// Survey Taking ----------------------------------------------------------------
 
 export const axiosSurveyTakingSubmit = (data) => dispatch => {
   console.log('axiosSurveySubmit data=', data);

@@ -14,7 +14,8 @@ import {
   surveySaveQuestion,
   axiosSurveyUpdate,
   axiosSurveyPublish,
-
+  axiosSurveyUnpublish,
+  axiosSurveyClose,
 } from '../../actions';
 
 import {
@@ -578,7 +579,8 @@ class SurveyDetail extends Component {
         isPublishError: true,
       })
     } else {
-      // call to axiosSurveyUnpublish(this.props.survey);
+      // call to axiosSurveyUnpublish(this.props.survey);\
+      this.props.axiosSurveyUnpublish(this.props.survey);
     }
   }
 
@@ -586,7 +588,7 @@ class SurveyDetail extends Component {
     console.log('handleCloseSurvey');
     e.preventDefault();
     
-    // call to axiosCloseSurvey(this.props.survey);
+    this.props.axiosSurveyClose(this.props.survey);
   }
 
   openModelMessage(e) {
@@ -1264,6 +1266,9 @@ const mapDispatchToProps = dispatch => {
     axiosSurveyUpdate: (data) => { dispatch(axiosSurveyUpdate(data)); },
     surveySaveQuestion: () => { dispatch(surveySaveQuestion()); },
     axiosSurveyPublish: (data) => { dispatch(axiosSurveyPublish(data)); },
+    axiosSurveyUnpublish: (data) => { dispatch(axiosSurveyUnpublish(data)); },
+    axiosSurveyClose: (data) => { dispatch(axiosSurveyClose(data)); },
+
   }
 }
 
