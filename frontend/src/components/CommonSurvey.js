@@ -76,6 +76,7 @@ class CommonSurvey extends Component {
       emailValid: true
     }
     this.handleSubmitSaveProgress = this.handleSubmitSaveProgress.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.getAlertMsg = this.getAlertMsg.bind(this);
   }
 
@@ -101,7 +102,7 @@ class CommonSurvey extends Component {
   }
 
   validateForm() {
-    this.setState({ formValid: this.state.emailValid }, this.render());
+    this.setState({ formValid: this.state.emailValid });
   }
   
   componentWillMount() {
@@ -408,6 +409,8 @@ class CommonSurvey extends Component {
       }, () => {
         this.validateField(target.name, target.value);
       });
+
+      console.log(`handleChange ${target.name}=[${target.value}]`);
     }
 
     validateField(fieldName,value) {
@@ -432,9 +435,11 @@ class CommonSurvey extends Component {
     }
 
   render() {
+    console.log("survey load",this.state.survey);
     // if existing answer by this user exist, just update his answers
     var answer = {submitted: false};
     var disabled = false;
+    if(this.state.isSubmitted) disabled = true;
     if(this.state.survey != undefined && this.state.survey.answers != undefined) {
       const pos = this.state.survey.answers.findIndex(i => i.surveyeeEmail === localStorage.getItem('user_email'))
       if(pos != -1) {
@@ -480,7 +485,7 @@ class CommonSurvey extends Component {
                 <div>
                   <p>Please Enter your Email ID if you want confirmation of your response (Optional)</p>
                   <Form.Field>
-                    <input name="email" type="text" id="emailInput" class="input" maxlength="50" title="Last Name" value={this.state.email} onChange={ (e) => { this.handleChange(e); }}/>
+                    <input name="email" type="text" id="emailInput" class="input" maxlength="50" title="email" value={this.state.email} onChange={ (e) => { this.handleChange(e); }}/>
                   </Form.Field>
                   <ErrorMessage formErrors={this.state.formErrors} />
                 </div>
@@ -511,7 +516,7 @@ class CommonSurvey extends Component {
                     <label>{order}. {question.text}</label>
                     </Form.Field>
                     <Form.Field>
-                    <input id={question.id} name={question.id} placeholder="Enter your answer here" value={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] : ''} onChange={ (e) => this.updateAnswers(e, question)} />
+                    <input id={question.id} name={question.id} placeholder="Enter your answer here" value={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] : ''} onChange={ (e) => this.updateAnswers(e, question)} disabled={disabled} />
                     </Form.Field>
                     </Grid.Column>
                   </Grid>
@@ -530,6 +535,7 @@ class CommonSurvey extends Component {
                           label={option.text}
                           name={question.id}
                           value={option.text}
+                          disabled={disabled}
                           checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
                           // checked={this.state.value === 'this'}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
@@ -562,6 +568,7 @@ class CommonSurvey extends Component {
                           name={question.id}
                           value={option.text}
                           checked={found}
+                          disabled={disabled}
                           onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}
                         />
                         </Form.Field>
@@ -598,6 +605,7 @@ class CommonSurvey extends Component {
                           fluid search selection
                           options={dropdownOptions}
                           value={getValue}
+                          disabled={disabled}
                           onChange={(e, {name, value}) => this.handleChangeMCQDropdown(e, {name, value}, question)}
                           // onChange={this.handleTest}
                         />
@@ -621,6 +629,7 @@ class CommonSurvey extends Component {
                               label={option}
                               name={question.id}
                               value={option}
+                              disabled={disabled}
                               checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option : false}
                           // checked={this.state.value === 'this'}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
@@ -650,6 +659,7 @@ class CommonSurvey extends Component {
                             label=''
                             name={question.id}
                             value={option.text}
+                            disabled={disabled}
                             checked={(this.state.answers[question.id] != undefined) ? this.state.answers[question.id][0] === option.text : false}
                           // checked={this.state.value === 'this'}
                           onChange={(e, {value}) => this.handleChangeMCQRadio(e, {value}, question)}
@@ -689,6 +699,7 @@ class CommonSurvey extends Component {
                             name={question.id}
                             value={option.text}
                             checked={found}
+                            disabled={disabled}
                             onChange={(e, {value}) => this.handleChangeMCQCheckbox(e, {value}, question)}
                           />
                           </Grid.Column>
