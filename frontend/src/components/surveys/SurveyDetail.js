@@ -179,29 +179,19 @@ class SurveyDetail extends Component {
       rating: '',
       title: this.props.survey.title,
       invitedEmailList: '',
-      startDate: this.props.survey.startDate,
-      endDate: this.props.survey.endDate,
+      startDate: '',
+      endDate: '',
       questionDate: moment(),
       newEmailList: '',
-      isPublishError: false,
-      isModalOpen: false,
+      // isPublishError: false,
+      // isModalOpen: false,
     }
 
     
   }
   
-  // state = { 
-  //   activeItem: 'Short Answer',
-  //   questions: [],
-  //   text: {},
-  // }
-
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
-  // handleSubmit({formData}) {
-  //   console.log("Data submitted: ",  formData);
-  // }
 
   addQuestion(type) {
     var newQuestion = {
@@ -515,6 +505,18 @@ class SurveyDetail extends Component {
     currentSurvey.startDate = this.state.startDate;
     currentSurvey.endDate = this.state.endDate;
 
+    if(this.state.startDate != '') {
+      currentSurvey.startDate = moment(this.state.startDate).utc().toISOString();
+      // YYYY-MM-DD'T'HH:mm:ss.SSS'Z'
+      // YYYY-MM-DD'T'HH:mm:ss.
+    }
+
+    if(this.state.endDate != '') {
+      currentSurvey.endDate = moment(this.state.endDate).utc().toISOString();
+    }
+
+    this.props.surveySaveQuestion();
+
     this.props.axiosSurveyUpdate(currentSurvey);
     
   }
@@ -530,9 +532,17 @@ class SurveyDetail extends Component {
       invitedEmailList = this.props.survey.invitedEmailList.join(", ");
     console.log('invitedEmailList=', invitedEmailList);
 
+    var startDate = this.props.survey.startDate != undefined ? moment(this.props.survey.startDate) : ''
+    var endDate = this.props.survey.endDate != undefined ? moment(this.props.survey.endDate) : ''
+
+    console.log('componentWillMount startDate=', startDate);
+    console.log('componentWillMount endDate=', endDate);
+
     this.setState({
       text: text,
       invitedEmailList: invitedEmailList,
+      startDate,
+      endDate,
     })
   }
 
@@ -597,22 +607,22 @@ class SurveyDetail extends Component {
     })
   }
 
-  modalMessage = () => (
-    <Modal size='mini' open={this.state.isModalOpen} onClose={() => this.closeModalMessage()}>
-      <Modal.Header>
-        Delete Your Account
-      </Modal.Header>
-      <Modal.Content>
-        <p>Are you sure you want to delete your account</p>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button negative>
-          No
-        </Button>
-        <Button positive icon='checkmark' labelPosition='right' content='Yes' />
-      </Modal.Actions>
-    </Modal>
-  )
+  // modalMessage = () => (
+  //   <Modal size='mini' open={this.state.isModalOpen} onClose={() => this.closeModalMessage()}>
+  //     <Modal.Header>
+  //       Delete Your Account
+  //     </Modal.Header>
+  //     <Modal.Content>
+  //       <p>Are you sure you want to delete your account</p>
+  //     </Modal.Content>
+  //     <Modal.Actions>
+  //       <Button negative>
+  //         No
+  //       </Button>
+  //       <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+  //     </Modal.Actions>
+  //   </Modal>
+  // )
 
 
   render() {
@@ -925,7 +935,7 @@ class SurveyDetail extends Component {
 
           <Message>
       
-          <Form onSubmit={e => this.handleSubmit(e)}>
+          <Form onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
           { this.props.survey.questions.length === 0 ? (
             <Message compact>
               You have no questions for this survey, please add them.
