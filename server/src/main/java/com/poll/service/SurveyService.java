@@ -97,6 +97,7 @@ public class SurveyService {
                     link=url+route+token;
                     SurveyLinks surveyLinks=new SurveyLinks();
                     surveyLinks.setStatus("active");
+                    surveyLinks.setSurveyeeEmail(newEmail);
                     surveyLinks.setLink(token);
                     surveyLinks.setSurveyId(Long.parseLong(surveyDTO.getId()));
                     surveyLinks.setType(SurveyType.SV_CLOSE);
