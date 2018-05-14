@@ -1,9 +1,6 @@
 package com.poll.persistence.mapper;
 
-import com.poll.persistence.dto.AnswerDTO;
-import com.poll.persistence.dto.QuestionDTO;
-import com.poll.persistence.dto.SurveyCreateDTO;
-import com.poll.persistence.dto.SurveyDTO;
+import com.poll.persistence.dto.*;
 import com.poll.persistence.model.*;
 import com.poll.util.TimeUtil;
 import lombok.Getter;
@@ -114,6 +111,8 @@ public class SurveyMapper {
         survey.setDeleted(surveyDTO.isDeleted());
         survey.setCreated(TimeUtil.getDate(surveyDTO.getCreated()));
         survey.setUpdated(TimeUtil.getDate(surveyDTO.getUpdated()));
+        survey.setStartDate(TimeUtil.getDate(surveyDTO.getStartDate()));
+        survey.setEndDate(TimeUtil.getDate(surveyDTO.getEndDate()));
     }
 
 

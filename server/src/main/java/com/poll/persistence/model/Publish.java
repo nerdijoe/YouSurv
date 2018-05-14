@@ -16,15 +16,6 @@ import java.util.List;
 @ToString
 public class Publish{
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date start;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date end;
-
     private String link;
-
-    private String qrCodeByteArray;
-
 
 }
