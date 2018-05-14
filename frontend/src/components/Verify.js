@@ -8,7 +8,7 @@ import {
   axiosSignIn,
 } from '../actions';
 
-import * as domainURL from '../actions/urlConstant';
+import {domainURL} from '../actions/urlConstant';
 
 import {
   Container,
