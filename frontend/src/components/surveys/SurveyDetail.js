@@ -570,6 +570,15 @@ class SurveyDetail extends Component {
     }
   }
 
+  handleCloseSurvey(e) {
+    console.log('handleCloseSurvey');
+    e.preventDefault();
+    
+    // call to axiosCloseSurvey(this.props.survey);
+  }
+
+
+
 
   render() {
     const { activeItem } = this.state;
@@ -820,7 +829,10 @@ class SurveyDetail extends Component {
             </Form.Field>
             <Form.Field>
               {this.props.survey.publish != null ? (
-                <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+                <div>
+                  <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+                  <Button color="yellow" onClick={e => this.handleCloseSurvey(e) }>Close</Button>
+                </div>
               ) : (
                 <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
               )}
