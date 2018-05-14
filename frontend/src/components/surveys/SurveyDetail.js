@@ -876,7 +876,11 @@ class SurveyDetail extends Component {
             if(question.type === questionType.MCQ_TEXT_RADIO) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
+                  
                   <Grid.Column>
                   <Form.Field>
                     <label>{order}. {question.text}</label>
@@ -902,7 +906,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.MCQ_TEXT_CHECKBOX) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                 <Grid.Column>
                 <Form.Field key={question.id}>
                   <label>{order}. {question.text}</label>
@@ -938,7 +946,11 @@ class SurveyDetail extends Component {
               })
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field key={question.id}>
                       <label>{order}. {question.text}</label>
@@ -951,7 +963,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.MCQ_IMAGE_RADIO) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                   <Form.Field>
                     <label>{order}. {question.text}</label>
@@ -985,7 +1001,11 @@ class SurveyDetail extends Component {
             } else if(question.type === questionType.MCQ_IMAGE_CHECKBOX) {
               return (
                 <Grid key={question.id} columns='equal'>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                {this.props.survey.publish == null ? (
                   <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  ) : ('')
+                }
                 <Grid.Column>
                 <Form.Field key={question.id}>
                   <label>{order}. {question.text}</label>
@@ -1021,7 +1041,11 @@ class SurveyDetail extends Component {
               var ratingOptions = ['Yes', 'No'];
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field key={question.id}>
                       <label>{order}. {question.text}</label>
@@ -1046,8 +1070,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.Q_STRING) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
-
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     
                   
@@ -1066,8 +1093,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.Q_DATE) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
-
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field>
                     {/* <label>Enter your question</label>
@@ -1093,7 +1123,11 @@ class SurveyDetail extends Component {
               var ratingOptions = [ 0, 1, 2, 3, 4, 5];
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field key={question.id}>
                       <label>{order}. {question.text}</label>
