@@ -210,6 +210,26 @@ class CommonSurvey extends Component {
     
   }
 
+  handleChangeDate(date, question) {
+    console.log('handleChangeDate date=', date);
+    console.log('question=', question)
+    var answers = {...this.state.answers};
+
+    if(question.type == questionType.Q_DATE) {
+      answers[question.id] = [date];
+    }
+
+    console.log('--> answers=', answers);
+    this.setState({
+      answers: answers,
+      alertVisible: true,
+
+    });
+
+    this.props.surveyTakingAnswerChangesTrue();
+
+  }
+
   // handleTest(e, data) {
   //   console.log( 'handleTest, data=', data );
   //   console.log('data.text=', data.text)
@@ -426,9 +446,9 @@ class CommonSurvey extends Component {
             </Comment>
           </Comment.Group>
           <Form>
-            {(this.state.User_Email) ? (
+            {(localStorage.getItem('user_email')) ? (
                 <div>
-                    <p>Email: {this.state.User_Email}</p>
+                    {/* <p>Email: {this.state.User_Email}</p> */}
                 </div>
               ) : (
                 <div>

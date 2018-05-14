@@ -45,9 +45,9 @@ export const axiosSignUp = (data, router) => (dispatch) => {
   .catch(err => {
     console.log("xxxxx");
     console.log(err);
+    dispatch(userSignUpFail(err));
     // alert(err);
   })
-
 
   // fetch("http://localhost:8080/signup", {
   //   method: 'POST',
@@ -88,6 +88,13 @@ export const userSignUp = (data) => {
   return {
     type: actionType.USER_SIGN_UP,
     data,
+  };
+};
+
+export const userSignUpFail = (data) => {
+  return {
+    type: actionType.USER_SIGN_UP_FAIL,
+    data: data.response.data.message,
   };
 };
 

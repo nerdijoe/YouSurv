@@ -56,11 +56,12 @@ class SignUp extends Component {
       lastname: '',
       email: '',
       password: '',
-      formErrors: { firstname: '', lastname: '', email: '', password: '' },
+      formErrors: { firstname: '', lastname: '', email: '', password: '', error: '' },
       emailValid: false,
       passwordValid: false,
       firstnameValid: true,
       lastnameValid: true,
+      errorValid: true,
       formValid: false,
     }
   }
@@ -72,6 +73,7 @@ class SignUp extends Component {
     
     let emailValid = this.state.emailValid;
     let passwordValid = this.state.passwordValid;
+    let errorValid = this.state.errorValid;
     
     switch (fieldName) {
       case 'firstname':
@@ -90,6 +92,12 @@ class SignUp extends Component {
         passwordValid = value.length >= 4;
         formErrorsValidation.password = passwordValid ? '' : ' is too short. Minimum password length is 4 characters.';
         break;
+      case 'error':
+        // errorValid = this.props.error ? false : true;
+        if(this.props.error)
+          errorValid = false;
+        formErrorsValidation.error = errorValid ? '' : this.props.error;
+        break;
       default:
         break;
     }
@@ -100,6 +108,7 @@ class SignUp extends Component {
       lastnameValid,
       emailValid,
       passwordValid,
+      errorValid
     }, this.validateForm);
   }
 
@@ -130,6 +139,9 @@ class SignUp extends Component {
 
 
   render() {
+    let errorMSG = null;
+    if(this.props.error)
+      errorMSG = (<Message negative><p>{this.props.error}</p></Message>);
     return (
       <MyContainer>
         <Navbar />
@@ -172,6 +184,7 @@ class SignUp extends Component {
                 </Form>
 
                 <ErrorMessage formErrors={this.state.formErrors} />
+                {errorMSG}
               </Grid.Column>
               <Grid.Column width={4}>
               </Grid.Column>
@@ -190,7 +203,7 @@ class SignUp extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    
+    error: state.UserReducer.error
   }
 }
 
