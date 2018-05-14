@@ -247,11 +247,11 @@ class CommonSurvey extends Component {
     console.log('--> answers=', answers);
     this.setState({
       answers: answers,
-      alertVisible: true,
+      hasChanges: true
 
     });
 
-    this.props.surveyTakingAnswerChangesTrue();
+    // this.props.surveyTakingAnswerChangesTrue();
 
   }
 

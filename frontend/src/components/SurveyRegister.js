@@ -93,7 +93,7 @@ class SurveyRegister extends Component {
   }
 
   validateForm() {
-    this.setState({ formValid: this.state.emailValid }, this.render());
+    this.setState({ formValid: this.state.emailValid });
   }
 
   handleRegister(e) {
@@ -127,8 +127,7 @@ class SurveyRegister extends Component {
 
     // validate field everytime user enters something.
     this.setState({
-      [target.name]: target.value,
-      tokenValid: true
+      [target.name]: target.value
     }, () => {
       this.validateField(target.name, target.value);
     });
