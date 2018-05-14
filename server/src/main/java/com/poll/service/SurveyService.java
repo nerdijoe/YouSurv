@@ -232,6 +232,7 @@ public class SurveyService {
                 surveyLinks.setSurveyId(survey.getId());
                 surveyLinks.setStatus("active");
                 surveyLinks.setType(SurveyType.SV_CLOSE);
+                surveyLinks.setSurveyeeEmail(email);
                 surveyLinkRepository.save(surveyLinks);
             }
         }else if(survey.getType()== SurveyType.SV_OPEN){
@@ -254,7 +255,7 @@ public class SurveyService {
         return surveyMapper.toSurveyDTO(survey);
     }
 
-    public Answer answerSurvey(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
+    public Answer saveAnswer(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
         Answer answer = new Answer();
         answer.setSurveyeeEmail(surveyeeEmail);
         answer.setSurvey(survey);
@@ -277,14 +278,23 @@ public class SurveyService {
                     "");
             emailService.sendEmail(generalSurveyLink);
         }
-        if(!token.isEmpty()){
-            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
 
+        SurveyLinks surveyLinks = surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(answer.getSurvey().getId(), userEmail);
+        if (surveyLinks != null){
             if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
                 surveyLinks.setStatus("inactive");
                 surveyLinkRepository.save(surveyLinks);
             }
         }
+
+//        if(!token.isEmpty()){
+//            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
+//
+//            if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
+//                surveyLinks.setStatus("inactive");
+//                surveyLinkRepository.save(surveyLinks);
+//            }
+//        }
 
 
         return answerRepository.save(answer);
@@ -346,6 +356,7 @@ public class SurveyService {
         surveyLinks.setSurveyId(surveyId);
         surveyLinks.setStatus("active");
         surveyLinks.setType(SurveyType.SV_OPEN);
+        surveyLinks.setSurveyeeEmail(email);
         surveyLinkRepository.save(surveyLinks);
 
         SimpleMailMessage openUniqueSurveyLink = new SimpleMailMessage();
