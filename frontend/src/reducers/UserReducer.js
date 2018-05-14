@@ -1,4 +1,5 @@
 import * as actionType from '../actions/constants';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 const initialState = {
   user: {},
@@ -8,9 +9,21 @@ const initialState = {
 
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOCATION_CHANGE: {
+      return {
+        ...state,
+        error: null
+      }
+    }
     case actionType.USER_SIGN_UP: {
       return {
         ...state,
+      };
+    }
+    case actionType.USER_SIGN_UP_FAIL: {
+      return {
+        ...state,
+        error: action.data
       };
     }
     case actionType.USER_SIGN_IN: {
