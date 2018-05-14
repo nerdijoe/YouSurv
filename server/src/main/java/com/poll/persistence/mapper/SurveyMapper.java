@@ -61,6 +61,9 @@ public class SurveyMapper {
         dto.setAnswers(AnswerMapper.toAnswers(survey.getAnswers()));
         dto.setPublish(survey.getPublish());
         dto.setDeleted(survey.isDeleted());
+        dto.setClosed(survey.isClosed());
+        dto.setStartDate(TimeUtil.getDateString(survey.getStartDate()));
+        dto.setEndDate(TimeUtil.getDateString(survey.getEndDate()));
 
         if (dto.getCreated() == null){
             dto.setCreated(TimeUtil.getDateString(new Date()));
@@ -73,6 +76,8 @@ public class SurveyMapper {
         } else{
             dto.setUpdated(TimeUtil.getDateString(survey.getUpdated()));
         }
+
+
 
         return dto;
     }
@@ -109,6 +114,7 @@ public class SurveyMapper {
 
         survey.setPublish(surveyDTO.getPublish());
         survey.setDeleted(surveyDTO.isDeleted());
+        survey.setClosed(surveyDTO.isClosed());
         survey.setCreated(TimeUtil.getDate(surveyDTO.getCreated()));
         survey.setUpdated(TimeUtil.getDate(surveyDTO.getUpdated()));
         survey.setStartDate(TimeUtil.getDate(surveyDTO.getStartDate()));

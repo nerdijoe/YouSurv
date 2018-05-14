@@ -70,8 +70,8 @@ public class SurveyService {
                     route="/general/survey?token=";
 
                     if(surveyLinkRepository.existsBySurveyId(Long.parseLong(surveyDTO.getId()))){
-                        SurveyLinks surveyLinks=surveyLinkRepository.findBySurveyId(Long.parseLong(surveyDTO.getId()));
-                        token=surveyLinks.getLink();
+                        List<SurveyLinks> surveyLinksList=surveyLinkRepository.findBySurveyId(Long.parseLong(surveyDTO.getId()));
+                        token=surveyLinksList.get(0).getLink();
                         link=url+route+token;
                     }else{
                         token=UUID.randomUUID().toString();
@@ -180,6 +180,28 @@ public class SurveyService {
 
     public boolean isSurveyCreatedBy(Survey survey, String surveyorEmail) {
         return survey.getSurveyorEmail().equals(surveyorEmail);
+    }
+
+    public SurveyDTO closeSurvey(Survey survey){
+        survey.setClosed(true);
+        surveyLinkRepository.deleteAll(surveyLinkRepository.findBySurveyId(survey.getId()));
+        surveyRepository.save(survey);
+        return surveyMapper.toSurveyDTO(survey);
+    }
+
+    public SurveyDTO unpublishSurvey(Survey survey){
+        survey.setPublish(null);
+
+
+        List<SurveyLinks> surveyLinksList = surveyLinkRepository.findBySurveyId(survey.getId());
+        for (SurveyLinks surveyLinks: surveyLinksList){
+            surveyLinks.setStatus("inactive");
+            surveyLinkRepository.save(surveyLinks);
+        }
+
+        surveyRepository.save(survey);
+
+        return surveyMapper.toSurveyDTO(survey);
     }
 
     public SurveyDTO publishSurvey(Survey survey) {
@@ -325,6 +347,9 @@ public class SurveyService {
     }
 
     private boolean validSurvey(Survey survey) {
+        if (survey.isClosed()){
+            return false;
+        }
         Date now = new Date();
         Date start = survey.getStartDate();
         Date end = survey.getEndDate();
