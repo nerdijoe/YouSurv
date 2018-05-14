@@ -182,10 +182,10 @@ public class SurveyService {
     public SurveyDTO publishSurvey(Survey survey) {
         Publish publish = survey.getPublish();
         if (publish == null) publish = new Publish();
-        publish.setLink("http://localhost/survey/"+survey.getId());
+
         publish.setQrCodeByteArray("0192380123087187230918230581230958");
-        survey.setPublish(publish);
-        surveyRepository.save(survey);
+
+
 
         SurveyLinks surveyLinks = new SurveyLinks();
 
@@ -197,6 +197,7 @@ public class SurveyService {
             url=domain+port+route;
             String token=UUID.randomUUID().toString();
             String link=url+token;
+            publish.setLink(link);
             for (String email: survey.getInvitedEmailList()){
                 SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
                 generalSurveyLink.setFrom("postmaster@localhost");
@@ -206,6 +207,7 @@ public class SurveyService {
                         "" + link);
                 emailService.sendEmail(generalSurveyLink);
             }
+
             surveyLinks.setLink(token);
             surveyLinks.setStatus("active");
             surveyLinks.setSurveyId(survey.getId());
@@ -247,6 +249,8 @@ public class SurveyService {
             }
 
         }
+        survey.setPublish(publish);
+        surveyRepository.save(survey);
         return surveyMapper.toSurveyDTO(survey);
     }
 
