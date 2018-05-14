@@ -186,7 +186,7 @@ public class SurveyService {
         Publish publish = survey.getPublish();
         if (publish == null) publish = new Publish();
 
-        publish.setQrCodeByteArray("0192380123087187230918230581230958");
+//        publish.setQrCodeByteArray("0192380123087187230918230581230958");
 
 
 
@@ -326,8 +326,8 @@ public class SurveyService {
 
     private boolean validSurvey(Survey survey) {
         Date now = new Date();
-        Date start = survey.getPublish().getStart();
-        Date end = survey.getPublish().getEnd();
+        Date start = survey.getStartDate();
+        Date end = survey.getEndDate();
         if (start != null && now.before(start)){
             return false;
         }

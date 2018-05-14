@@ -6,6 +6,8 @@ import com.poll.persistence.model.Question;
 import com.poll.persistence.model.SurveyType;
 import lombok.*;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 
@@ -30,4 +32,7 @@ public class SurveyDTO {
     private boolean deleted;
     private String created;
     private String updated;
+
+    private String startDate;
+    private String endDate;
 }
