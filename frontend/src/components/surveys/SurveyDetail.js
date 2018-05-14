@@ -790,7 +790,10 @@ class SurveyDetail extends Component {
             <Header.Content>
               Preview
             </Header.Content>
-          </Header>        
+          </Header>
+
+          <Message>
+      
           <Form onSubmit={e => this.handleSubmit(e)}>
           { this.props.survey.questions.length === 0 ? (
             <Message compact>
@@ -1053,14 +1056,17 @@ class SurveyDetail extends Component {
           }
 
 
-          <Divider />
+          
           { (this.props.survey.questions.length > 0  && this.props.survey.publish == null) ? (
-            <Button color='youtube' type='submit' >Save Questions</Button>
+            <div>
+              <Divider />
+              <Button color='youtube' type='submit' >Save Questions</Button>
+            </div>
           ) : ('')}
 
           </Form>
 
-
+          </Message> 
 
       </Container>
 
