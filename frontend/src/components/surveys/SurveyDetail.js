@@ -37,6 +37,7 @@ import {
   Rating,
   Label,
   List,
+  Modal,
 
 } from 'semantic-ui-react';
 
@@ -183,6 +184,7 @@ class SurveyDetail extends Component {
       questionDate: moment(),
       newEmailList: '',
       isPublishError: false,
+      isModalOpen: false,
     }
 
     
@@ -570,6 +572,48 @@ class SurveyDetail extends Component {
     }
   }
 
+  handleCloseSurvey(e) {
+    console.log('handleCloseSurvey');
+    e.preventDefault();
+    
+    // call to axiosCloseSurvey(this.props.survey);
+  }
+
+  openModelMessage(e) {
+    console.log('openModelMessage');
+    e.preventDefault();
+
+    this.setState({
+      isModalOpen: true,
+    })
+  }
+
+  closeModalMessage(e) {
+    console.log('closeModalMessage');
+    e.preventDefault();
+
+    this.setState({
+      isModalOpen: false,
+    })
+  }
+
+  modalMessage = () => (
+    <Modal size='mini' open={this.state.isModalOpen} onClose={() => this.closeModalMessage()}>
+      <Modal.Header>
+        Delete Your Account
+      </Modal.Header>
+      <Modal.Content>
+        <p>Are you sure you want to delete your account</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button negative>
+          No
+        </Button>
+        <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+      </Modal.Actions>
+    </Modal>
+  )
+
 
   render() {
     const { activeItem } = this.state;
@@ -704,6 +748,22 @@ class SurveyDetail extends Component {
         <h2>Detail</h2>
         <Message negative attached>
           <Message.Header>Information</Message.Header>
+          {/* <Button onClick={(e) => this.openModelMessage(e)}>modal</Button>
+
+          <Modal size='mini' open={this.state.isModalOpen} onClose={(e) => this.closeModalMessage(e)}>
+            <Modal.Header>
+              Delete Your Account
+            </Modal.Header>
+            <Modal.Content>
+              <p>Are you sure you want to delete your account</p>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button negative>
+                No
+              </Button>
+              <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+            </Modal.Actions>
+          </Modal> */}
 
           <List>
             <List.Item>
@@ -820,7 +880,10 @@ class SurveyDetail extends Component {
             </Form.Field>
             <Form.Field>
               {this.props.survey.publish != null ? (
-                <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+                <div>
+                  <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+                  <Button color="yellow" onClick={e => this.handleCloseSurvey(e) }>Close</Button>
+                </div>
               ) : (
                 <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
               )}
@@ -876,7 +939,11 @@ class SurveyDetail extends Component {
             if(question.type === questionType.MCQ_TEXT_RADIO) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
+                  
                   <Grid.Column>
                   <Form.Field>
                     <label>{order}. {question.text}</label>
@@ -902,7 +969,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.MCQ_TEXT_CHECKBOX) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                 <Grid.Column>
                 <Form.Field key={question.id}>
                   <label>{order}. {question.text}</label>
@@ -938,7 +1009,11 @@ class SurveyDetail extends Component {
               })
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field key={question.id}>
                       <label>{order}. {question.text}</label>
@@ -951,7 +1026,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.MCQ_IMAGE_RADIO) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                   <Form.Field>
                     <label>{order}. {question.text}</label>
@@ -985,7 +1064,11 @@ class SurveyDetail extends Component {
             } else if(question.type === questionType.MCQ_IMAGE_CHECKBOX) {
               return (
                 <Grid key={question.id} columns='equal'>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                {this.props.survey.publish == null ? (
                   <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  ) : ('')
+                }
                 <Grid.Column>
                 <Form.Field key={question.id}>
                   <label>{order}. {question.text}</label>
@@ -1021,7 +1104,11 @@ class SurveyDetail extends Component {
               var ratingOptions = ['Yes', 'No'];
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field key={question.id}>
                       <label>{order}. {question.text}</label>
@@ -1046,8 +1133,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.Q_STRING) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
-
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     
                   
@@ -1066,8 +1156,11 @@ class SurveyDetail extends Component {
             else if(question.type === questionType.Q_DATE) {
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
-
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field>
                     {/* <label>Enter your question</label>
@@ -1093,7 +1186,11 @@ class SurveyDetail extends Component {
               var ratingOptions = [ 0, 1, 2, 3, 4, 5];
               return (
                 <Grid key={question.id} columns='equal'>
-                  <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                  {/* <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column> */}
+                  {this.props.survey.publish == null ? (
+                    <Grid.Column width={lcWidth}>{removeQuestionIcon(question)}</Grid.Column>
+                    ) : ('')
+                  }
                   <Grid.Column>
                     <Form.Field key={question.id}>
                       <label>{order}. {question.text}</label>

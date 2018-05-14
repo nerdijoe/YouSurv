@@ -117,6 +117,7 @@ const SurveyReducer = (state = initialState, action) => {
       return {
         ...state,
         surveys: updatedSurveys,
+        surveyCurrent: action.data,
         // surveyTaking: updatedSurveys,
 
       }
@@ -148,6 +149,7 @@ const SurveyReducer = (state = initialState, action) => {
       return {
         ...state,
         surveys: updatedSurveys,
+        surveyCurrent: action.data,
 
       }
     }
