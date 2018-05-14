@@ -119,7 +119,7 @@ class SurveyList extends Component {
         <Header as='h2'>
           <Icon name='lightning' />
           <Header.Content>
-            Unpublished Surveys
+            Draft Surveys
           </Header.Content>
         </Header>
 

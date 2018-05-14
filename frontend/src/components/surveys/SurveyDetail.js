@@ -35,7 +35,9 @@ import {
   Radio,
   Dropdown,
   Rating,
-  
+  Table,
+  List,
+
 } from 'semantic-ui-react';
 
 import FormJson from "react-jsonschema-form";
@@ -689,8 +691,23 @@ class SurveyDetail extends Component {
     return (
       <Container>
         <h2>Detail</h2>
-        
-        <Form onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
+        <Message negative attached>
+          <Message.Header>Information</Message.Header>
+          <List>
+            <List.Item>
+              <List.Icon name='users' />
+              <List.Content>Id: {this.props.survey.id}</List.Content>
+            </List.Item>
+            <List.Item>
+              <List.Icon name='marker' />
+              <List.Content>New York, NY</List.Content>
+            </List.Item>
+ 
+          </List>        
+        </Message>
+
+
+        <Form className='attached fluid segment' onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
           <Form.Field>
             <label>Title</label>
             <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} disabled={this.props.survey.publish != null? true : false}/>
