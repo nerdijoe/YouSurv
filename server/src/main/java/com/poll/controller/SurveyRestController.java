@@ -5,20 +5,15 @@ import com.poll.persistence.dto.*;
 import com.poll.persistence.mapper.AnswerMapper;
 import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.model.Answer;
-import com.poll.persistence.model.AnswerChoice;
-import com.poll.persistence.model.AppUser;
 import com.poll.persistence.model.Survey;
 import com.poll.service.SurveyService;
 import com.poll.service.UserService;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.json.*;
 
 import java.util.*;
@@ -159,7 +154,7 @@ public class SurveyRestController {
         String surveyeeEmail = auth.getName();
         Survey survey = surveyService.findById(id);
 
-        Answer answer = surveyService.answerSurvey(surveyeeEmail, survey, answerDTO);
+        Answer answer = surveyService.saveAnswer(surveyeeEmail, survey, answerDTO);
 
         return new ResponseEntity(answer, HttpStatus.OK);
     }
@@ -196,7 +191,7 @@ public class SurveyRestController {
         String userEmail = saveSubmitAnswerDTO.getEmail();
         String token = saveSubmitAnswerDTO.getToken();
 
-        Answer answer = surveyService.answerSurvey(userEmail, survey, answerDTO);
+        Answer answer = surveyService.saveAnswer(userEmail, survey, answerDTO);
 //        return new ResponseEntity(answer, HttpStatus.OK);
 
         Answer submitanswer = surveyService.submitAnswer(answer.getId(), userEmail, token);

@@ -97,6 +97,7 @@ public class SurveyService {
                     link=url+route+token;
                     SurveyLinks surveyLinks=new SurveyLinks();
                     surveyLinks.setStatus("active");
+                    surveyLinks.setSurveyeeEmail(newEmail);
                     surveyLinks.setLink(token);
                     surveyLinks.setSurveyId(Long.parseLong(surveyDTO.getId()));
                     surveyLinks.setType(SurveyType.SV_CLOSE);
@@ -182,10 +183,10 @@ public class SurveyService {
     public SurveyDTO publishSurvey(Survey survey) {
         Publish publish = survey.getPublish();
         if (publish == null) publish = new Publish();
-        publish.setLink("http://localhost/survey/"+survey.getId());
+
         publish.setQrCodeByteArray("0192380123087187230918230581230958");
-        survey.setPublish(publish);
-        surveyRepository.save(survey);
+
+
 
         SurveyLinks surveyLinks = new SurveyLinks();
 
@@ -197,6 +198,7 @@ public class SurveyService {
             url=domain+port+route;
             String token=UUID.randomUUID().toString();
             String link=url+token;
+            publish.setLink(link);
             for (String email: survey.getInvitedEmailList()){
                 SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
                 generalSurveyLink.setFrom("postmaster@localhost");
@@ -206,6 +208,7 @@ public class SurveyService {
                         "" + link);
                 emailService.sendEmail(generalSurveyLink);
             }
+
             surveyLinks.setLink(token);
             surveyLinks.setStatus("active");
             surveyLinks.setSurveyId(survey.getId());
@@ -230,6 +233,7 @@ public class SurveyService {
                 surveyLinks.setSurveyId(survey.getId());
                 surveyLinks.setStatus("active");
                 surveyLinks.setType(SurveyType.SV_CLOSE);
+                surveyLinks.setSurveyeeEmail(email);
                 surveyLinkRepository.save(surveyLinks);
             }
         }else if(survey.getType()== SurveyType.SV_OPEN){
@@ -247,10 +251,12 @@ public class SurveyService {
             }
 
         }
+        survey.setPublish(publish);
+        surveyRepository.save(survey);
         return surveyMapper.toSurveyDTO(survey);
     }
 
-    public Answer answerSurvey(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
+    public Answer saveAnswer(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
         Answer answer = new Answer();
         answer.setSurveyeeEmail(surveyeeEmail);
         answer.setSurvey(survey);
@@ -273,14 +279,23 @@ public class SurveyService {
                     "");
             emailService.sendEmail(generalSurveyLink);
         }
-        if(!token.isEmpty()){
-            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
 
+        SurveyLinks surveyLinks = surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(answer.getSurvey().getId(), userEmail);
+        if (surveyLinks != null){
             if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
                 surveyLinks.setStatus("inactive");
                 surveyLinkRepository.save(surveyLinks);
             }
         }
+
+//        if(!token.isEmpty()){
+//            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
+//
+//            if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
+//                surveyLinks.setStatus("inactive");
+//                surveyLinkRepository.save(surveyLinks);
+//            }
+//        }
 
 
         return answerRepository.save(answer);
@@ -342,6 +357,7 @@ public class SurveyService {
         surveyLinks.setSurveyId(surveyId);
         surveyLinks.setStatus("active");
         surveyLinks.setType(SurveyType.SV_OPEN);
+        surveyLinks.setSurveyeeEmail(email);
         surveyLinkRepository.save(surveyLinks);
 
         SimpleMailMessage openUniqueSurveyLink = new SimpleMailMessage();

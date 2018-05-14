@@ -35,7 +35,7 @@ import {
   Radio,
   Dropdown,
   Rating,
-  Table,
+  Label,
   List,
 
 } from 'semantic-ui-react';
@@ -50,7 +50,17 @@ import uuid from 'uuid';
 import cuid from 'cuid';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 
+import QRCODE from 'qrcode.react';
+
 import * as questionType from '../../actions/surveyConstants';
+
+import * as surveyType from '../../actions/surveyConstants';
+
+var surveyTypeText = {}
+surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
+surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
+surveyTypeText[surveyType.SV_OPEN] = 'Open Survey';
+
 
 const mcqOptions = [
   { key: questionType.MCQ_TEXT_RADIO, value: questionType.MCQ_TEXT_RADIO, text: 'Text Radio', flag: 'ly' },
@@ -146,6 +156,7 @@ const addQuestion = (type) => {
     "required": false,
   }
 }
+
 
 // ----------------------------------------------------------------------------
 
@@ -693,17 +704,57 @@ class SurveyDetail extends Component {
         <h2>Detail</h2>
         <Message negative attached>
           <Message.Header>Information</Message.Header>
+
           <List>
             <List.Item>
-              <List.Icon name='users' />
-              <List.Content>Id: {this.props.survey.id}</List.Content>
+              <List.Icon name='id card outline' />
+              <List.Content>Survey Id: {this.props.survey.id}</List.Content>
             </List.Item>
             <List.Item>
-              <List.Icon name='marker' />
-              <List.Content>New York, NY</List.Content>
+              <List.Icon name='users' />
+              <List.Content>{surveyTypeText[this.props.survey.type]}</List.Content>
             </List.Item>
- 
+            <List.Item>
+              {this.props.survey.publish != null ?
+                (<Label color="red" horizontal>Published</Label>) :
+                (<Label color="grey" horizontal>DRAFT</Label>)
+              }
+            </List.Item>
+
           </List>        
+          {this.props.survey.publish != null ? (
+              <List>
+                <List.Item>
+                  <List.Icon name='calendar' />
+                  <List.Content>
+                    Start: {this.props.survey.publish.start != null ? moment(this.props.survey.publish.start).format('L LT') : 'not set'}
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Icon name='calendar' />
+                  <List.Content>End: {this.props.survey.publish.end != null ? (moment(this.props.survey.publish.end).format('L LT')) : 'not set'}</List.Content>
+                </List.Item>
+
+                {this.props.survey.type == surveyType.SV_GENERAL ? (
+                  <div>
+                    <List.Item>
+                      <List.Content>
+                        <QRCODE value={this.props.survey.publish.link} />
+                      </List.Content>
+                    </List.Item>
+                    <List.Item>
+                      <List.Content>
+                        Link: {this.props.survey.publish.link}
+                      </List.Content>
+                    </List.Item>
+
+                  </div>
+                ) : ('')}
+
+              </List>
+              
+            ) : ('')}
+
         </Message>
 
 

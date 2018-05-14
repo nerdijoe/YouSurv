@@ -67,8 +67,8 @@ class SurveyList extends Component {
     </a>
 
     <Card.Content>
-      <Card.Header>Id-{survey.id}</Card.Header>
-      <Card.Meta>Title: {survey.title}</Card.Meta>
+      <Card.Header>{survey.title}</Card.Header>
+      <Card.Meta>Id: {survey.id}</Card.Meta>
       {survey.publish == null ? '' : (
         <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Metric</a></Card.Content>
       )}
@@ -95,7 +95,7 @@ class SurveyList extends Component {
       {survey.publish != null ?
         (<Label color="red" horizontal>Published</Label>) :
         (<Label color="grey" horizontal>DRAFT</Label>)
-    }
+      }
 
     </Card.Content>
     <Card.Content extra>
