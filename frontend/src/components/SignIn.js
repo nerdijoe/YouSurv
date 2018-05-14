@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import {
   axiosSignIn,
+  unload
 } from '../actions';
 
 import {
@@ -137,6 +138,10 @@ class SignIn extends Component {
     });
   }
 
+  componentWillUnmount() {
+    this.props.onUnload();
+  }
+
 
   render() {
     let errorMSG = null;
@@ -211,6 +216,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     axiosSignIn: (data, router) => { dispatch(axiosSignIn(data, router)); },
+    onUnload: () => {dispatch(unload());}
   };
 };
 

@@ -9,7 +9,8 @@ const initialState = {
 
 const UserReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOCATION_CHANGE: {
+    case 'UNLOAD': {
+      console.log("location change");
       return {
         ...state,
         error: null

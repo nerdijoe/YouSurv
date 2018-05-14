@@ -6,6 +6,13 @@ import {domainURL} from './urlConstant';
 
 // axios.defaults.crossDomain = true;
 
+export const unload = () => {
+  return {
+    type: actionType.UNLOAD,
+    data: '',
+  };
+};
+
 export const axiosSignUp = (data, router) => (dispatch) => {
 
     console.log("test cross origin");
