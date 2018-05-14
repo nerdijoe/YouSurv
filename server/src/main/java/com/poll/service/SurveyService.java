@@ -251,7 +251,7 @@ public class SurveyService {
         return surveyMapper.toSurveyDTO(survey);
     }
 
-    public Answer answerSurvey(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
+    public Answer saveAnswer(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
         Answer answer = new Answer();
         answer.setSurveyeeEmail(surveyeeEmail);
         answer.setSurvey(survey);
