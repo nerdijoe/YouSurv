@@ -37,6 +37,7 @@ import {
   Rating,
   Label,
   List,
+  Modal,
 
 } from 'semantic-ui-react';
 
@@ -183,6 +184,7 @@ class SurveyDetail extends Component {
       questionDate: moment(),
       newEmailList: '',
       isPublishError: false,
+      isModalOpen: false,
     }
 
     
@@ -577,7 +579,40 @@ class SurveyDetail extends Component {
     // call to axiosCloseSurvey(this.props.survey);
   }
 
+  openModelMessage(e) {
+    console.log('openModelMessage');
+    e.preventDefault();
 
+    this.setState({
+      isModalOpen: true,
+    })
+  }
+
+  closeModalMessage(e) {
+    console.log('closeModalMessage');
+    e.preventDefault();
+
+    this.setState({
+      isModalOpen: false,
+    })
+  }
+
+  modalMessage = () => (
+    <Modal size='mini' open={this.state.isModalOpen} onClose={() => this.closeModalMessage()}>
+      <Modal.Header>
+        Delete Your Account
+      </Modal.Header>
+      <Modal.Content>
+        <p>Are you sure you want to delete your account</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button negative>
+          No
+        </Button>
+        <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+      </Modal.Actions>
+    </Modal>
+  )
 
 
   render() {
@@ -713,6 +748,22 @@ class SurveyDetail extends Component {
         <h2>Detail</h2>
         <Message negative attached>
           <Message.Header>Information</Message.Header>
+          {/* <Button onClick={(e) => this.openModelMessage(e)}>modal</Button>
+
+          <Modal size='mini' open={this.state.isModalOpen} onClose={(e) => this.closeModalMessage(e)}>
+            <Modal.Header>
+              Delete Your Account
+            </Modal.Header>
+            <Modal.Content>
+              <p>Are you sure you want to delete your account</p>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button negative>
+                No
+              </Button>
+              <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+            </Modal.Actions>
+          </Modal> */}
 
           <List>
             <List.Item>
