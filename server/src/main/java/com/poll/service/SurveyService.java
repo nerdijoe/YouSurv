@@ -1,5 +1,6 @@
 package com.poll.service;
 
+import com.poll.exception.CustomException;
 import com.poll.persistence.dto.AnswerSaveDTO;
 import com.poll.persistence.emailer.EmailService;
 import com.poll.persistence.mapper.SurveyMapper;
@@ -11,6 +12,7 @@ import com.poll.persistence.model.*;
 //import com.poll.persistence.repository.mongo.SurveyRepository;
 import com.poll.persistence.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
@@ -267,9 +269,10 @@ public class SurveyService {
         return answer;
     }
 
-    public Answer submitAnswer(long answerId, String userEmail, String token) {
+    public Answer submitAnswer(long answerId, String userEmail, String token, boolean isSignedIn) {
         Answer answer = answerRepository.findById(answerId);
         answer.setSubmitted(true);
+
         if(!userEmail.isEmpty()) {
             SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
             generalSurveyLink.setFrom("postmaster@localhost");
@@ -280,23 +283,23 @@ public class SurveyService {
             emailService.sendEmail(generalSurveyLink);
         }
 
-        SurveyLinks surveyLinks = surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(answer.getSurvey().getId(), userEmail);
-        if (surveyLinks != null){
-            if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
-                surveyLinks.setStatus("inactive");
-                surveyLinkRepository.save(surveyLinks);
+        if (isSignedIn){
+            SurveyLinks surveyLinks = surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(answer.getSurvey().getId(), userEmail);
+            if (surveyLinks != null){
+                if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
+                    surveyLinks.setStatus("inactive");
+                    surveyLinkRepository.save(surveyLinks);
+                }
+            }
+        } else{
+            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
+            if (surveyLinks != null){
+                if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
+                    surveyLinks.setStatus("inactive");
+                    surveyLinkRepository.save(surveyLinks);
+                }
             }
         }
-
-//        if(!token.isEmpty()){
-//            SurveyLinks surveyLinks = surveyLinkRepository.findByLink(token);
-//
-//            if((surveyLinks.getType().equals(SurveyType.SV_CLOSE))||  (surveyLinks.getType().equals(SurveyType.SV_OPEN))){
-//                surveyLinks.setStatus("inactive");
-//                surveyLinkRepository.save(surveyLinks);
-//            }
-//        }
-
 
         return answerRepository.save(answer);
     }
@@ -342,23 +345,31 @@ public class SurveyService {
 
 
     public void openUniqueLinkGenerator(String email, long surveyId){
+        SurveyLinks surveyLinks;
+        if (surveyLinkRepository.existsBySurveyIdAndSurveyeeEmail(surveyId, email)){
+            surveyLinks = surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(surveyId, email);
+            if (!surveyLinks.getStatus().equals("active")){
+                throw new CustomException("You have already submitted the survey.", HttpStatus.BAD_REQUEST);
+            }
+        }  else {
+            surveyLinks = new SurveyLinks();
+            String token=UUID.randomUUID().toString();
+            surveyLinks.setLink(token);
+            surveyLinks.setSurveyId(surveyId);
+            surveyLinks.setStatus("active");
+            surveyLinks.setType(SurveyType.SV_OPEN);
+            surveyLinks.setSurveyeeEmail(email);
+            surveyLinkRepository.save(surveyLinks);
+        }
+
         String url="";
         String domain="http://localhost:";
         String port="3000";
 
         String route="/openunique/survey?token=";
         url=domain+port+route;
-        String token=UUID.randomUUID().toString();
-        String link=url+token;
 
-
-        SurveyLinks surveyLinks = new SurveyLinks();
-        surveyLinks.setLink(token);
-        surveyLinks.setSurveyId(surveyId);
-        surveyLinks.setStatus("active");
-        surveyLinks.setType(SurveyType.SV_OPEN);
-        surveyLinks.setSurveyeeEmail(email);
-        surveyLinkRepository.save(surveyLinks);
+        String link=url+surveyLinks.getLink();
 
         SimpleMailMessage openUniqueSurveyLink = new SimpleMailMessage();
         openUniqueSurveyLink.setFrom("postmaster@localhost");
