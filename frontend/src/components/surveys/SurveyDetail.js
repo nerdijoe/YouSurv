@@ -787,8 +787,10 @@ class SurveyDetail extends Component {
               <List.Content>{surveyTypeText[this.props.survey.type]}</List.Content>
             </List.Item>
             <List.Item>
-              {this.props.survey.publish != null ?
+              {this.props.survey.publish != null && !this.props.survey.closed ?
                 (<Label color="red" horizontal>Published</Label>) :
+                this.props.survey.publish != null && this.props.survey.closed ?
+                (<Label color="black" horizontal>Closed</Label>) :
                 (<Label color="grey" horizontal>DRAFT</Label>)
               }
             </List.Item>
@@ -843,64 +845,71 @@ class SurveyDetail extends Component {
             </Form.Field>
           ) : ('')}
 
-          <Form.Field>
-            {this.props.survey.publish != null ? (
-              <div>
-                <label>Invite more people (separate emails by comma)</label>
-                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='newEmailList' value={this.state.newEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
-              </div>
-            ): (
-              <div>
-                <label>Invite emails (separate emails by comma)</label>
-                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
-              </div>
-            )}
-            
-
-          </Form.Field>
-
-          <Form.Group>
-            <Form.Field>
-              <label>Start Date</label>
-              <DatePicker
-                selected={this.state.startDate}
-                onChange={date => this.handleChangeStartDate(date)}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                dateFormat="LLL"
-                timeCaption="time"
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>End Date</label>
-              <DatePicker
-                selected={this.state.endDate}
-                onChange={date => this.handleChangeEndDate(date)}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                dateFormat="LLL"
-                timeCaption="time"
-              />
-            </Form.Field>
-          </Form.Group> 
-
-          <Form.Group>
-            <Form.Field>
-              <Button basic color="red" type="submit">Update Survey</Button>
-            </Form.Field>
+          {!this.props.survey.closed ? (
             <Form.Field>
               {this.props.survey.publish != null ? (
                 <div>
-                  <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
-                  <Button color="yellow" onClick={e => this.handleCloseSurvey(e) }>Close</Button>
+                  <label>Invite more people (separate emails by comma)</label>
+                  <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='newEmailList' value={this.state.newEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
                 </div>
-              ) : (
-                <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+              ): (
+                <div>
+                  <label>Invite emails (separate emails by comma)</label>
+                  <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+                </div>
               )}
             </Form.Field>
-          </Form.Group>
+          ) : ('')}
+
+
+          {!this.props.survey.closed ? (
+            <Form.Group>
+              <Form.Field>
+                <label>Start Date</label>
+                <DatePicker
+                  selected={this.state.startDate}
+                  onChange={date => this.handleChangeStartDate(date)}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15}
+                  dateFormat="LLL"
+                  timeCaption="time"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>End Date</label>
+                <DatePicker
+                  selected={this.state.endDate}
+                  onChange={date => this.handleChangeEndDate(date)}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15}
+                  dateFormat="LLL"
+                  timeCaption="time"
+                />
+              </Form.Field>
+            </Form.Group> 
+          ) : ('')}
+
+
+          { !this.props.survey.closed ? (
+            <Form.Group>
+              <Form.Field>
+                <Button basic color="red" type="submit">Update Survey</Button>
+              </Form.Field>
+              <Form.Field>
+                {this.props.survey.publish != null ? (
+                  <div>
+                    <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+                    <Button color="black" onClick={e => this.handleCloseSurvey(e) }>Close</Button>
+                  </div>
+                ) : (
+                  <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+                )}
+              </Form.Field>
+            </Form.Group>
+          ) : ('')}
+
         </Form>
         
         { this.state.isPublishError ? (

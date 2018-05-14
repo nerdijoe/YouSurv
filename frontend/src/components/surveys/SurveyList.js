@@ -95,7 +95,7 @@ class SurveyList extends Component {
       {survey.publish != null && !survey.closed ?
         (<Label color="red" horizontal>Published</Label>) :
         survey.publish != null && survey.closed ?
-        (<Label color="yellow" horizontal>Closed</Label>) :
+        (<Label color="black" horizontal>Closed</Label>) :
         (<Label color="grey" horizontal>DRAFT</Label>)
       }
 
