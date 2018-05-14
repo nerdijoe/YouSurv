@@ -105,16 +105,7 @@ class SurveyRegister extends Component {
       email, surveyId: this.props.location.search.split('?surveyId=')[1]
     }).then( res => {
       console.log("responseeee");
-      if(res.status===200)
-        this.props.history.push('/signin');
-      else {
-        console.log("error 404");
-        this.setState({
-          tokenValid: false,
-        }, () => {
-          this.validateField('token');
-        });
-      }
+      
 
     })
     .catch( res => {
