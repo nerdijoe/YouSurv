@@ -78,6 +78,31 @@ class CommonSurvey extends Component {
     this.handleSubmitSaveProgress = this.handleSubmitSaveProgress.bind(this);
     this.getAlertMsg = this.getAlertMsg.bind(this);
   }
+
+  validateField(fieldName,value) {
+    const formErrorsValidation = this.state.formErrors;
+    
+    let emailValid = this.state.emailValid;
+    
+    switch (fieldName) {
+      case 'email':
+        emailValid = (/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i).test(value);
+        emailValid = value==''?true:emailValid;
+        formErrorsValidation.email = emailValid ? '' : ' is invalid.';
+        break;
+      default:
+        break;
+    }
+    // update the error message
+    this.setState({
+      formErrors: formErrorsValidation,
+      emailValid
+    }, this.validateForm);
+  }
+
+  validateForm() {
+    this.setState({ formValid: this.state.emailValid }, this.render());
+  }
   
   componentWillMount() {
     console.log('** SurveyTakingDetail componentWillMount');

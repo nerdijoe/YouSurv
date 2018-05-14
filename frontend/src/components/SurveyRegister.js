@@ -66,19 +66,21 @@ class SurveyRegister extends Component {
       firstnameValid: true,
       lastnameValid: true,
       formValid: false,
-      token: '',
-      tokenValid: true
+      email: '',
+      emailValid: true
     }
   }
   
-  validateField(fieldName) {
+  validateField(fieldName,value) {
     const formErrorsValidation = this.state.formErrors;
     
-    let tokenValid = this.state.tokenValid;
+    let emailValid = this.state.emailValid;
     
     switch (fieldName) {
-      case 'token':
-        formErrorsValidation.Token = tokenValid ? '' : ' Verification code is invalid. Please Try again';
+      case 'email':
+        emailValid = (/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i).test(value);
+        emailValid = value==''?true:emailValid;
+        formErrorsValidation.email = emailValid ? '' : ' is invalid.';
         break;
       default:
         break;
@@ -86,20 +88,21 @@ class SurveyRegister extends Component {
     // update the error message
     this.setState({
       formErrors: formErrorsValidation,
-      tokenValid
+      emailValid
     }, this.validateForm);
   }
 
   validateForm() {
-    this.setState({ formValid: this.state.tokenValid });
+    this.setState({ formValid: this.state.emailValid }, this.render());
   }
 
   handleRegister(e) {
-    e.preventDefault();
+    if(e) e.preventDefault();
     console.log('handleSignIn', this.state.token);
     // this.props.axiosVerify(this.state.token, this.props.history);
+    let email = (localStorage.getItem('user_email'))?localStorage.getItem('user_email'):this.state.email;
     axios.post(`${domainURL}/survey/generate/openuniquelink`,{
-      email: this.state.email, surveyId: this.props.location.search.split('?surveyId=')[1]
+      email, surveyId: this.props.location.search.split('?surveyId=')[1]
     }).then( res => {
       console.log("responseeee");
       if(res.status===200)
@@ -116,11 +119,12 @@ class SurveyRegister extends Component {
     })
     .catch( res => {
       console.log("error 404");
-        this.setState({
-          tokenValid: false,
-        }, () => {
-          this.validateField('token', this.state.token);
-        });
+        // this.setState({
+        //   errorValid: false,
+        //   error: res.message,
+        // }, () => {
+        //   this.validateField('token', this.state.token);
+        // });
     })
     // // this.props.history.push('/signin');
   }
@@ -141,6 +145,8 @@ class SurveyRegister extends Component {
 
 
   render() {
+    if( localStorage.getItem('user_email'))
+      this.handleRegister();
     return (
       <MyContainer>
         <Navbar />
@@ -151,7 +157,6 @@ class SurveyRegister extends Component {
               <Grid.Column width={4} />
               <Grid.Column width={8}>
                 <Header size='huge'>Register for the Survey</Header>
-                <h2>Enter your Email ID or Sign In</h2>
               </Grid.Column>
               <Grid.Column width={4} />
             </Grid.Row>
@@ -162,7 +167,11 @@ class SurveyRegister extends Component {
               <Grid.Column width={4}>
               </Grid.Column>
               <Grid.Column width={8}>
-              
+                {( localStorage.getItem('user_email'))?(<div><h5>An email has been sent to your registered email id.</h5>
+                  <h5>Please fill up the survey from the link sent to you</h5> </div>
+                  ):(
+                  <div>
+                  <h2>Enter your Email ID or Sign In</h2>
                 <Form onSubmit={ (e) => { this.handleRegister(e) }} >
                   <Form.Field>
                     <label>Enter Email</label>
@@ -171,6 +180,7 @@ class SurveyRegister extends Component {
       
                   <Button color='youtube' type='submit' disabled={!this.state.formValid}>Submit</Button>
                 </Form>
+                </div>)}
 
                 <ErrorMessage formErrors={this.state.formErrors} />
               </Grid.Column>
