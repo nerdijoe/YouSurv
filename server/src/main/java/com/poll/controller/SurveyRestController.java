@@ -170,7 +170,7 @@ public class SurveyRestController {
             token = "";
         }
 
-        Answer answer = surveyService.submitAnswer(answerId, userEmail, token);
+        Answer answer = surveyService.submitAnswer(answerId, userEmail, token, true);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(answer), HttpStatus.OK);
     }
 
@@ -194,7 +194,7 @@ public class SurveyRestController {
         Answer answer = surveyService.saveAnswer(userEmail, survey, answerDTO);
 //        return new ResponseEntity(answer, HttpStatus.OK);
 
-        Answer submitanswer = surveyService.submitAnswer(answer.getId(), userEmail, token);
+        Answer submitanswer = surveyService.submitAnswer(answer.getId(), userEmail, token, false);
         return new ResponseEntity(AnswerMapper.toAnswerDTO(submitanswer), HttpStatus.OK);
     }
 

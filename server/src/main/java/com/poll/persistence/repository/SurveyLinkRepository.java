@@ -14,4 +14,6 @@ public interface SurveyLinkRepository extends CrudRepository<SurveyLinks, Long> 
     boolean existsBySurveyId(long surveyId);
 
     SurveyLinks findBySurveyId(long surveyId);
+
+    boolean existsBySurveyIdAndSurveyeeEmail(long surveyId, String email);
 }
