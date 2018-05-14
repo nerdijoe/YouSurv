@@ -693,7 +693,7 @@ class SurveyDetail extends Component {
         <Form onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
           <Form.Field>
             <label>Title</label>
-            <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+            <input placeholder='' name='title' value={this.state.title} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} disabled={this.props.survey.publish != null? true : false}/>
           </Form.Field>
             
           {this.props.survey.publish != null ? (
@@ -768,42 +768,29 @@ class SurveyDetail extends Component {
         
         <Divider />
 
-        <Menu attached='top' tabular>
-          <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
-          <Menu.Item name='YesNo' active={activeItem === 'YesNo'} onClick={this.handleItemClick} />
-          <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
-          <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
-          <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
-          {/* <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} /> */}
+        { this.props.survey.publish != null ? ('') : (
+          <div>
+            <Menu attached='top' tabular>
+              <Menu.Item name='MCQ' active={activeItem === 'MCQ'} onClick={this.handleItemClick} />
+              <Menu.Item name='YesNo' active={activeItem === 'YesNo'} onClick={this.handleItemClick} />
+              <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
+              <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
+              <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
+            </Menu>
 
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              {/* <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' /> */}
-            </Menu.Item>
-          </Menu.Menu>
-        </Menu>
+            <Segment attached='bottom'>
+              {segmentContent(activeItem)}
+            </Segment>
+          </div>
+        ) }
 
-        <Segment attached='bottom'>
-          {this.props.survey.id}
-          {this.props.survey.authorEmail}
-          {this.props.survey.type}
-          {/* { (activeItem === 'Short Answer') ? (
-            <div>
-              <h3>Short Answer</h3>
-              <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add</Button>
-            </div>
-            
-          ): ('')}
-          { (activeItem === 'MCQ') ? (
-            <div>
-              <h3>Multiple Choice Question</h3>
-              <Button basic color="green" onClick={e => {this.handleAddShortAnswer()}}>Add MCQ</Button>
-            </div>
-          ): ('')} */}
-          {segmentContent(activeItem)}
-        </Segment>
 
-        <h3>Preview</h3>
+          <Header as='h3'>
+            <Icon name='file text outline' />
+            <Header.Content>
+              Preview
+            </Header.Content>
+          </Header>        
           <Form onSubmit={e => this.handleSubmit(e)}>
           { this.props.survey.questions.length === 0 ? (
             <Message compact>
@@ -1067,19 +1054,13 @@ class SurveyDetail extends Component {
 
 
           <Divider />
-          { this.props.survey.questions.length > 0 ? (
+          { (this.props.survey.questions.length > 0  && this.props.survey.publish == null) ? (
             <Button color='youtube' type='submit' >Save Questions</Button>
           ) : ('')}
 
-          {/* <Button color='youtube' type='submit' >Save</Button> */}
           </Form>
 
-          <Divider />
-          {/* <FormJson schema={schema}
-          onChange={log("changed")}
-          onSubmit={this.handleSubmit}
-          onError={log("errors")} 
-          uiSchema={uiSchema} /> */}
+
 
       </Container>
 
