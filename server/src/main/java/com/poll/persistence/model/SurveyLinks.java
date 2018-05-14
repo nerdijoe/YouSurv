@@ -21,5 +21,6 @@ public class SurveyLinks {
     @Enumerated(EnumType.STRING)
     private SurveyType type;
     private long surveyId;
+    private String surveyeeEmail;
 
 }
