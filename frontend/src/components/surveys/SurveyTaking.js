@@ -35,6 +35,7 @@ import cardHeader01 from '../../assets/images/card/card_header_01.png'
 import cardHeader02 from '../../assets/images/card/card_header_02.png'
 
 import * as surveyType from '../../actions/surveyConstants';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 var surveyTypeText = {}
 surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
 surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
@@ -61,8 +62,10 @@ class SurveyTaking extends Component {
                 <Image src={cardHeader02} />
               </Link>
               <Card.Content>
-                <Card.Header>Id-{survey.id}</Card.Header>
-                <Card.Meta>Title: {survey.title}</Card.Meta>
+
+                <Card.Header>{survey.title}</Card.Header>
+                <Card.Meta>Id: {survey.id}</Card.Meta>
+
                 <Card.Description>
                   <List>
                     <List.Item>
@@ -73,12 +76,12 @@ class SurveyTaking extends Component {
                       <List.Icon name='marker' />
                       <List.Content>{survey.questions.length} questions</List.Content>
                     </List.Item>
-                    <List.Item>
+                    {/* <List.Item>
                       <List.Icon name='user' />
                       <List.Content>
-                        
+                        {survey.surveyorEmail}
                       </List.Content>
-                    </List.Item>
+                    </List.Item> */}
 
                   </List>
                 </Card.Description>
@@ -88,10 +91,12 @@ class SurveyTaking extends Component {
                   <List.Item>
                     {isSubmitted?
                       (<Label color="red" horizontal>Submitted</Label>) :
-                      (<Label color="grey" horizontal>Open</Label>)
+                      !isSubmitted && answer.updated != undefined ?
+                      (<Label color="grey" horizontal>In-progress</Label>) :
+                      (<Label color="yellow" horizontal>New</Label>)
                     }
                   </List.Item>
-                  {Moment(answer.updated).format('L LT')}
+                  {answer.updated != undefined ? Moment(answer.updated).format('L LT') : ''}
                   <List.Item>
                     
                   </List.Item>
@@ -112,9 +117,9 @@ class SurveyTaking extends Component {
       <Container>
         {/* <h2>Survey Taking</h2> */}
         <Header as='h2'>
-          <Icon name='lightning' />
+          <Icon name='asterisk' />
           <Header.Content>
-            Pending Surveys
+            New Surveys
           </Header.Content>
         </Header>
 
@@ -138,7 +143,11 @@ class SurveyTaking extends Component {
             }
           }
 
-          if(!isSubmitted) {
+          {/* if(survey.type == survyType.SV_GENERAL && !isSubmitted && answer.updated == undefined) {
+
+          } */}
+
+          if(!isSubmitted && answer.updated == undefined ) {
             return (
               this.generateCard(survey, link, isSubmitted, answer)
             )        
@@ -205,9 +214,44 @@ class SurveyTaking extends Component {
         
         <Divider />
         <Header as='h2'>
-          <Icon name='checkmark' />
+          <Icon name='write' />
           <Header.Content>
-            Submitted Surveys
+            In-progress Surveys
+          </Header.Content>
+        </Header>
+
+        <Card.Group>
+        { this.props.surveys.filter(survey => survey.publish != null).map(survey => {
+          var link = `/home/takesurvey/${survey.id}`;
+
+          var isSubmitted = false;
+          var answer = {}
+          if(survey != undefined && survey.answers != undefined) {
+            const pos = survey.answers.findIndex(i => i.surveyeeEmail === localStorage.getItem('user_email'))
+            if(pos != -1) {
+              answer = survey.answers[pos];
+              isSubmitted = survey.answers[pos].submitted;
+            }
+          }
+
+          if(!isSubmitted && answer.updated != undefined) {
+            return (
+              this.generateCard(survey, link, isSubmitted, answer)
+            )          
+          }
+
+
+        })}        
+        </Card.Group>
+
+
+
+
+        <Divider />
+        <Header as='h2'>
+          <Icon name='winner' />
+          <Header.Content>
+            Completed Surveys
           </Header.Content>
         </Header>
 
