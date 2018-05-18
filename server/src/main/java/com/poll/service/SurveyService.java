@@ -217,66 +217,96 @@ public class SurveyService {
 
 
 
-        SurveyLinks surveyLinks = new SurveyLinks();
+        SurveyLinks surveyLinks;
 
         String url="";
         String domain="http://localhost:";
         String port="3000";
         if(survey.getType() == SurveyType.SV_GENERAL) {
+
+
             String route="/general/survey?token=";
             url=domain+port+route;
-            String token=UUID.randomUUID().toString();
-            String link=url+token;
-            publish.setLink(link);
-            for (String email: survey.getInvitedEmailList()){
-                SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
-                generalSurveyLink.setFrom("postmaster@localhost");
-                generalSurveyLink.setTo(email);
-                generalSurveyLink.setSubject("Invitation to participate in General Survey");
-                generalSurveyLink.setText("Use below link to participate:\n" +
-                        "" + link);
-                emailService.sendEmail(generalSurveyLink);
+            if(surveyLinkRepository.existsBySurveyId(survey.getId())){
+                surveyLinks=surveyLinkRepository.findBySurveyId(survey.getId()).get(0);
+                surveyLinks.setStatus("active");
+                surveyLinkRepository.save(surveyLinks);
+            }else{
+                surveyLinks=new SurveyLinks();
+                String token=UUID.randomUUID().toString();
+                String link=url+token;
+                publish.setLink(link);
+                for (String email: survey.getInvitedEmailList()){
+                    SimpleMailMessage generalSurveyLink = new SimpleMailMessage();
+                    generalSurveyLink.setFrom("postmaster@localhost");
+                    generalSurveyLink.setTo(email);
+                    generalSurveyLink.setSubject("Invitation to participate in General Survey");
+                    generalSurveyLink.setText("Use below link to participate:\n" +
+                            "" + link);
+                    emailService.sendEmail(generalSurveyLink);
+                }
+
+                surveyLinks.setLink(token);
+                surveyLinks.setStatus("active");
+                surveyLinks.setSurveyId(survey.getId());
+                surveyLinks.setType(SurveyType.SV_GENERAL);
+                surveyLinkRepository.save(surveyLinks);
+
             }
 
-            surveyLinks.setLink(token);
-            surveyLinks.setStatus("active");
-            surveyLinks.setSurveyId(survey.getId());
-            surveyLinks.setType(SurveyType.SV_GENERAL);
-            surveyLinkRepository.save(surveyLinks);
+
+
+
 
         } else if(survey.getType() == SurveyType.SV_CLOSE){
             String route="/close/survey?token=";
             url=domain+port+route;
             for (String email: survey.getInvitedEmailList()){
-                String token=UUID.randomUUID().toString();
-                String link=url+token;
 
-                SimpleMailMessage closedSurveyLink = new SimpleMailMessage();
-                closedSurveyLink.setFrom("postmaster@localhost");
-                closedSurveyLink.setTo(email);
-                closedSurveyLink.setSubject("Invitation to participate in Closed Survey");
-                closedSurveyLink.setText("Use below link to participate:\n" +
-                        "" + link);
-                emailService.sendEmail(closedSurveyLink);
-                surveyLinks.setLink(token);
-                surveyLinks.setSurveyId(survey.getId());
-                surveyLinks.setStatus("active");
-                surveyLinks.setType(SurveyType.SV_CLOSE);
-                surveyLinks.setSurveyeeEmail(email);
-                surveyLinkRepository.save(surveyLinks);
+
+                if(surveyLinkRepository.existsBySurveyIdAndSurveyeeEmail(survey.getId(),email)){
+                    surveyLinks=surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(survey.getId(),email);
+                    surveyLinks.setStatus("active");
+                    surveyLinkRepository.save(surveyLinks);
+                }else {
+                    surveyLinks=new SurveyLinks();
+                    String token = UUID.randomUUID().toString();
+                    String link = url + token;
+
+                    SimpleMailMessage closedSurveyLink = new SimpleMailMessage();
+                    closedSurveyLink.setFrom("postmaster@localhost");
+                    closedSurveyLink.setTo(email);
+                    closedSurveyLink.setSubject("Invitation to participate in Closed Survey");
+                    closedSurveyLink.setText("Use below link to participate:\n" +
+                            "" + link);
+                    emailService.sendEmail(closedSurveyLink);
+                    surveyLinks.setLink(token);
+                    surveyLinks.setSurveyId(survey.getId());
+                    surveyLinks.setStatus("active");
+                    surveyLinks.setType(SurveyType.SV_CLOSE);
+                    surveyLinks.setSurveyeeEmail(email);
+                    surveyLinkRepository.save(surveyLinks);
+                }
             }
         }else if(survey.getType()== SurveyType.SV_OPEN){
             String route="/openunique/register?surveyId=";
             url=domain+port+route;
             String link=url+survey.getId();
             for (String email: survey.getInvitedEmailList()){
-                SimpleMailMessage openUniqueSurveyLink = new SimpleMailMessage();
-                openUniqueSurveyLink.setFrom("postmaster@localhost");
-                openUniqueSurveyLink.setTo(email);
-                openUniqueSurveyLink.setSubject("Invitation to register for Open Unique Survey");
-                openUniqueSurveyLink.setText("Use below link to participate:\n" +
-                        "" + link);
-                emailService.sendEmail(openUniqueSurveyLink);
+
+                if(surveyLinkRepository.existsBySurveyIdAndSurveyeeEmail(survey.getId(),email)){
+                    surveyLinks=surveyLinkRepository.findBySurveyIdAndSurveyeeEmail(survey.getId(),email);
+                    surveyLinks.setStatus("active");
+                    surveyLinkRepository.save(surveyLinks);
+                }else {
+                    SimpleMailMessage openUniqueSurveyLink = new SimpleMailMessage();
+                    openUniqueSurveyLink.setFrom("postmaster@localhost");
+                    openUniqueSurveyLink.setTo(email);
+                    openUniqueSurveyLink.setSubject("Invitation to register for Open Unique Survey");
+                    openUniqueSurveyLink.setText("Use below link to participate:\n" +
+                            "" + link);
+                    emailService.sendEmail(openUniqueSurveyLink);
+                }
             }
 
         }
