@@ -50,9 +50,13 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(Long.parseLong(surveyDTO.getId()));
 
 
+
         if(null!=surveyDTO.getPublish()){
                 HashSet<String> alreadyInvitedEmailSet=new HashSet<String>();
 
+                if(!survey.getInvitedEmailList().isEmpty() && survey.getInvitedEmailList().get(0).equals("")){
+                    survey.getInvitedEmailList().remove(0);
+                }
                 for(String email: survey.getInvitedEmailList()){
                     alreadyInvitedEmailSet.add(email);
                 }
@@ -66,6 +70,10 @@ public class SurveyService {
                 String link="";
                 String token="";
                 url=domain+port;
+                if(!surveyDTO.getInvitedEmailList().isEmpty() && surveyDTO.getInvitedEmailList().get(0).equals("")){
+                    surveyDTO.getInvitedEmailList().remove(0);
+                }
+
 
 
                 for(String newEmail:surveyDTO.getInvitedEmailList()) {
@@ -232,6 +240,10 @@ public class SurveyService {
         String url="";
         String domain="http://localhost:";
         String port="3000";
+
+        if(!survey.getInvitedEmailList().isEmpty() && survey.getInvitedEmailList().get(0).equals("")) {
+            survey.getInvitedEmailList().remove(0);
+        }
         if(survey.getType() == SurveyType.SV_GENERAL) {
 
 
@@ -302,6 +314,8 @@ public class SurveyService {
             String route="/openunique/register?surveyId=";
             url=domain+port+route;
             String link=url+survey.getId();
+
+
             for (String email: survey.getInvitedEmailList()){
 
                 if(surveyLinkRepository.existsBySurveyIdAndSurveyeeEmail(survey.getId(),email)){
@@ -452,6 +466,21 @@ public class SurveyService {
 
     }
 
+    public void openUniqueSurveyeeEmailAppender(String email, long surveyId){
+        Survey survey=surveyRepository.findById(surveyId);
+        HashSet<String> alreadyInvitedEmailSet=new HashSet<String>();
+        for(String emailToPush:survey.getInvitedEmailList()){
+            alreadyInvitedEmailSet.add(emailToPush);
+        }
+
+        List<String> oldListOfInvitedEmails=survey.getInvitedEmailList();
+        if(email!="" && !alreadyInvitedEmailSet.contains(email)){
+            oldListOfInvitedEmails.add(email);
+        }
+        survey.setInvitedEmailList(oldListOfInvitedEmails);
+        surveyRepository.save(survey);
+    }
+
 //    public Survey createSurvey(AppUser surveyor, String type) {
 //        if (surveyor == null || type == null){
 //            return null;
@@ -504,4 +533,6 @@ public class SurveyService {
 //        surveyRepository.save(survey);
 //        return survey;
 //    }
+
+
 }

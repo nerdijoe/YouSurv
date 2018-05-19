@@ -3,6 +3,7 @@ import {
   Link,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Redirect from 'react-router-dom/Redirect';
 
 import {
   axiosSignIn,
@@ -133,6 +134,18 @@ class SurveyRegister extends Component {
     });
   }
 
+  componentWillUnmount() {
+    if(localStorage.getItem('user_email')) {
+      axios.put(`${domainURL}/survey/reroute/openuniquelink`,{
+        email:localStorage.getItem('user_email'), surveyId: this.props.location.search.split('?surveyId=')[1]
+      }).then( res => {
+        console.log("responseeee");
+      }).catch(
+
+      )
+    }
+  }
+
 
   render() {
     if( localStorage.getItem('user_email'))
@@ -157,8 +170,8 @@ class SurveyRegister extends Component {
               <Grid.Column width={4}>
               </Grid.Column>
               <Grid.Column width={8}>
-                {( localStorage.getItem('user_email'))?(<div><h5>An email has been sent to your registered email id.</h5>
-                  <h5>Please fill up the survey from the link sent to you</h5> </div>
+                {( localStorage.getItem('user_email'))?(<div><h5>You are registered successfully.</h5> 
+                    <Redirect to="/home/surveyee" /></div>
                   ):(
                   <div>
                   <h2>Enter your Email ID or Sign In</h2>

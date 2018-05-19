@@ -41,10 +41,13 @@ public class TimeUtil {
     public static String getDateString(Date date){
         Format formatter = new SimpleDateFormat(DATE_FORMAT);
         String dateString = null;
-        try{
-            dateString = formatter.format(date);
-        } catch (IllegalArgumentException e){
-            e.printStackTrace();
+
+        if(date!=null) {
+            try {
+                dateString = formatter.format(date);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
         return dateString;
     }

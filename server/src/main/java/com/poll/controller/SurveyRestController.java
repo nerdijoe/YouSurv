@@ -276,6 +276,14 @@ public class SurveyRestController {
         surveyService.openUniqueLinkGenerator(email, surveyId);
     }
 
+    @RequestMapping(value="/survey/reroute/openuniquelink", method = RequestMethod.PUT)
+    public void appendInvitedSurveyees(@RequestBody String body){
+        JSONObject obj = new JSONObject(body);
+        String email = obj.getString("email");
+        long surveyId=obj.getLong("surveyId");
+        surveyService.openUniqueSurveyeeEmailAppender(email, surveyId);
+    }
+
 
 
 }
