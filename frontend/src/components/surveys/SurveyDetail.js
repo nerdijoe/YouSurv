@@ -58,6 +58,8 @@ import * as questionType from '../../actions/surveyConstants';
 
 import * as surveyType from '../../actions/surveyConstants';
 
+import prettyFormat from 'pretty-format';
+
 var surveyTypeText = {}
 surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
 surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
@@ -184,6 +186,7 @@ class SurveyDetail extends Component {
       endDate: '',
       questionDate: moment(),
       newEmailList: '',
+      jsonFilename: `survey-${this.props.survey.id}.json`,
       // isPublishError: false,
       // isModalOpen: false,
     }
@@ -753,11 +756,30 @@ class SurveyDetail extends Component {
       <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='grey' size="large" name='remove'/></a>
     )
 
+    var obj = this.props.survey;
+    // var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+    var data = "text/json;charset=utf-8," + encodeURIComponent(prettyFormat(obj));
     
 
     return (
       <Container>
         <h2>Detail</h2>
+        {/* <a href={`data: ${data}`} download="data.json">download JSON</a> */}
+
+        <Form>
+          <Form.Group inline>
+            {/* <Form.Field> */}
+            <Form.Field><label>Filename</label></Form.Field>
+            <Form.Field><input placeholder='' name='jsonFilename' value={this.state.jsonFilename} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} /></Form.Field>
+            {/* </Form.Field> */}
+            {/* <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button> */}
+            {/* <Button as='a' color="youtube" href={`data: ${data}`} download={this.handleSubmitUpdateSurvey.jsonFilename}>Download</Button> */}
+
+            <Form.Field><a href={`data: ${data}`} download={this.state.jsonFilename}><Icon name='download' />Download json file</a></Form.Field>
+          </Form.Group>
+        </Form>
+
+
         <Message negative attached>
           <Message.Header>Information</Message.Header>
           {/* <Button onClick={(e) => this.openModelMessage(e)}>modal</Button>
