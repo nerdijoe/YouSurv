@@ -62,6 +62,8 @@ public class SurveyRestController {
         return new ResponseEntity(survey, HttpStatus.CREATED);
     }
 
+
+
     @RequestMapping(value = "/survey/", method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity findAllSurveyBySurveyor(Authentication auth) {
@@ -98,6 +100,11 @@ public class SurveyRestController {
 
     }
 
+    @RequestMapping(value="/survey/openUnique", method=RequestMethod.GET,  produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity getAllOpenUniqueSurveys(){
+        List<SurveyDTO> allOpenUniqueSurveys=surveyService.findAllOpenUniqueSurveys();
+        return new ResponseEntity(allOpenUniqueSurveys, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/survey/{id}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity getSurveyById(@PathVariable("id") long id) {

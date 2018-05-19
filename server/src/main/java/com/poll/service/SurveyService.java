@@ -170,6 +170,16 @@ public class SurveyService {
         return dtoList;
     }
 
+    public List<SurveyDTO> findAllOpenUniqueSurveys(){
+        List<SurveyDTO> dtoList = new ArrayList<>();
+        List<Survey> surveys = surveyRepository.findAllByType(SurveyType.SV_OPEN);
+        for (Survey survey: surveys){
+            dtoList.add(surveyMapper.toSurveyDTO(survey));
+        }
+
+        return dtoList;
+    }
+
     public List<SurveyDTO> findBySurveyeeEmail(String userEmail) {
         List<Survey> invitedSurveys = new ArrayList<>();
         List<Survey> allSurveys = surveyRepository.findAll();
@@ -402,6 +412,7 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyLinks.getSurveyId());
         return survey;
     }
+
 
 
     public void openUniqueLinkGenerator(String email, long surveyId){
