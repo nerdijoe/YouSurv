@@ -242,8 +242,8 @@ export default class UserMetric extends Component {
         
     
         
-        let startTime=(this.state.survey.publish.start)?this.state.survey.publish.start:"Not specified";
-        let endTime=(this.state.survey.publish.end)?this.state.survey.publish.end:"Not specified";
+        let startTime=(this.state.survey.startDate)?this.state.survey.startDate:"Not specified";
+        let endTime=(this.state.survey.endDate)?this.state.survey.endDate:"Not specified";
         if(participants>=2){
 
      showMetric=(<div>

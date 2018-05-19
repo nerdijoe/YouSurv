@@ -147,7 +147,7 @@ class SignIn extends Component {
     let errorMSG = null;
     if(this.props.error)
       errorMSG = (<Message><Message negative><p>{this.props.error}</p></Message>
-                  <Link to="/verify" >Verify your account here</Link></Message>);
+      {this.props.error.includes("verif")?(<Link to="/verify" >Verify your account here</Link>):(<div></div>)}</Message>);
     return (
       <MyContainer>
         <Navbar />
