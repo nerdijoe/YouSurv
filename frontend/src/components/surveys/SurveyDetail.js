@@ -756,9 +756,9 @@ class SurveyDetail extends Component {
       <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='grey' size="large" name='remove'/></a>
     )
 
-    var obj = this.props.survey;
-    // var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
-    var data = "text/json;charset=utf-8," + encodeURIComponent(prettyFormat(obj));
+    var obj = this.props.survey.questions;
+    var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+    // var data = "text/json;charset=utf-8," + encodeURIComponent(prettyFormat(obj));
     
 
     return (
@@ -775,7 +775,7 @@ class SurveyDetail extends Component {
             {/* <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button> */}
             {/* <Button as='a' color="youtube" href={`data: ${data}`} download={this.handleSubmitUpdateSurvey.jsonFilename}>Download</Button> */}
 
-            <Form.Field><a href={`data: ${data}`} download={this.state.jsonFilename}><Icon name='download' />Download json file</a></Form.Field>
+            <Form.Field><a href={`data: ${data}`} download={this.state.jsonFilename}><Icon name='download' />Export JSON file</a></Form.Field>
           </Form.Group>
         </Form>
 
