@@ -13,6 +13,13 @@ export const unload = () => {
   };
 };
 
+export const savePath = (pathdata) => {
+  return {
+    type: actionType.SAVEPATH,
+    data: pathdata,
+  };
+};
+
 export const axiosSignUp = (data, router) => (dispatch) => {
 
     console.log("test cross origin");

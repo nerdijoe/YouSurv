@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 
 import {
   axiosSignUp,
-  unload
+  unload,
+  savePath
 } from '../actions';
 
 import {
@@ -121,6 +122,11 @@ class SignUp extends Component {
     this.props.onUnload();
   }
 
+  componentDidMount() {
+    if(this.props.location.state)
+      this.props.savePath(this.props.location.state.prevPath);
+  }
+
   handleSignUp(e) {
     e.preventDefault();
     console.log('handleSignUp', this.state);
@@ -215,7 +221,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     axiosSignUp: (data, router) => { dispatch(axiosSignUp(data, router)); },
-    onUnload: () => {dispatch(unload());}
+    onUnload: () => {dispatch(unload());},
+    savePath: (prevPath) => {dispatch(savePath(prevPath));}
   };
 };
 

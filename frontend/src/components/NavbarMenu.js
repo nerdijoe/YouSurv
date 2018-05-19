@@ -47,10 +47,10 @@ class NavbarMenu extends Component {
 
           ): (
             <Menu.Menu position='right'>
-            <Link to='/signup'>
+            <Link to={{pathname:'/signup', state:{ prevPath: window.location.pathname + window.location.search }}}>
               <Menu.Item name='signUp' active={activeItem === 'signUp'} onClick={this.handleItemClick} />
             </Link>
-            <Link to='/signin'>
+            <Link to={{pathname:'/signin', state:{ prevPath: window.location.pathname + window.location.search }}}>
               <Menu.Item name='signIn' active={activeItem === 'signIn'} onClick={this.handleItemClick} />
             </Link>
           </Menu.Menu>

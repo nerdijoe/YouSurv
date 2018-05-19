@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { userSignOutRequest } from '../actions';
+import { userSignOutRequest, savePath } from '../actions';
 
 import {
   Container, 
@@ -22,6 +22,7 @@ import SurveyList from './surveys/SurveyList';
 import SurveyDetail from './surveys/SurveyDetail';
 import SurveyTaking from './surveys/SurveyTaking';
 import SurveyTakingDetail from './surveys/SurveyTakingDetail';
+import Redirect from 'react-router/Redirect';
 
 
 const MyContainer = styled.div`
@@ -47,6 +48,11 @@ class Home extends Component {
   }
 
   render() {
+    let redirect = null;
+    if(this.props.savepath) {
+      if(this.props.savepath.includes("token") || this.props.savepath.includes("register")) redirect = (<Redirect to={this.props.savepath}/>);
+      this.props.savePath(null);
+    }
     return (
       <MyContainer>
         <NavbarHome />
@@ -58,7 +64,7 @@ class Home extends Component {
 
           <Divider />
           {/* <SurveyList /> */}
-
+          {redirect}
           <Route exact path='/home' component={SurveyList} />
           <Route path='/home/surveydetail' component={SurveyDetail} />
           <Route path='/home/surveyee' component={SurveyTaking} />
@@ -79,12 +85,14 @@ class Home extends Component {
 const mapStateToProps = (state) => {
   return {
     is_authenticated: state.UserReducer.is_authenticated,
+    savepath: state.UserReducer.savepath
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     userSignOutRequest: () => { dispatch(userSignOutRequest()); },
+    savePath: (prevPath) => {dispatch(savePath(prevPath));}
   }
 }
 

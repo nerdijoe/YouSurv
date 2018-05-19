@@ -5,6 +5,7 @@ export const USER_SIGN_IN_FAIL = 'USER_SIGN_IN_FAIL';
 export const USER_SIGN_OUT = 'USER_SIGN_OUT';
 
 export const UNLOAD = 'UNLOAD';
+export const SAVEPATH = 'SAVEPATH';
 
 export const SURVEY_CREATE = 'SURVEY_CREATE';
 export const SURVEY_GET_ALL = 'SURVEY_GET_ALL';
