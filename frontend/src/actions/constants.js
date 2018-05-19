@@ -37,3 +37,10 @@ export const SURVEY_TAKING_ANSWER_CHANGES_TRUE = 'SURVEY_TAKING_ANSWER_CHANGES_T
 export const SURVEY_TAKING_ANSWER_CHANGES_FALSE = 'SURVEY_TAKING_ANSWER_CHANGES_FALSE';
 
 export const SURVEY_TAKING_CURRENT_CLEAR = 'SURVEY_TAKING_CURRENT_CLEAR';
+
+
+// ==============================================================================
+// Showing Open Unique
+// ==============================================================================
+
+export const SURVEY_GET_ALL_OPENUNIQUE = 'SURVEY_GET_ALL_OPENUNIQUE';

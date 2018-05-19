@@ -5,6 +5,9 @@ import {
 } from 'react-router-dom';
 
 import Navbar from './Navbar';
+import LandingBanner from './LandingBanner';
+import SurveyListOpenUnique from './surveys/SurveyListOpenUnique';
+
 import '../style/youtube.css';
 
 const MyContainer = styled.div`
@@ -22,7 +25,6 @@ const Wrapper = styled.div`
   ${'' /* padding: 10px; */}
   margin-top: 10px;
   margin-left: 35px;
-
 `;
 
 class Landing extends Component {
@@ -38,7 +40,9 @@ class Landing extends Component {
         <Navbar />
 
         <Wrapper>
-          <h1>This is landing page!</h1>
+          {/* <h1>This is landing page!</h1> */}
+          <LandingBanner />
+          <SurveyListOpenUnique />
         </Wrapper>
         
 

@@ -581,3 +581,29 @@ export const surveyTakingCurrentClear = () => {
     type: actionType.SURVEY_TAKING_CURRENT_CLEAR,
   }
 }
+
+
+
+export const axiosSurveyGetAllOpenUnique = () => (dispatch) => {
+  console.log('<  before axiosSurveyGetAllOpenUnique');
+  const token = 'Bearer ' + localStorage.getItem('token');
+
+  axios.get(`${domainURL}/survey/openUnique`)
+  .then(res => {
+    console.log('> after axiosSurveyGetAllOpenUnique res.data', res.data);
+      dispatch(surveyGetAll(res.data));
+    // router.push('/signin');
+  })
+  .catch(err => {
+    console.log("***  error axiosSurveyGetAllOpenUnique");
+    console.log(err);
+  })
+
+}
+
+export const surveyGetAllOpenUnique = (data) => {
+  return {
+    type: actionType.SURVEY_GET_ALL_OPENUNIQUE,
+    data,
+  }
+}

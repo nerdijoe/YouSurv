@@ -12,6 +12,7 @@ const initialState = {
     questions:[],
   },
   answerChanges: false,
+  surveysOpenUnique: [],
 }
 
 const SurveyReducer = (state = initialState, action) => {
@@ -380,7 +381,15 @@ const SurveyReducer = (state = initialState, action) => {
         answerChanges: false,
       }
     }
+    case actionType.SURVEY_GET_ALL_OPENUNIQUE: {
+      console.log('SurveyReducer SURVEY_GET_ALL_OPENUNIQUE');
+      console.log('action.data = ', action.data);
 
+      return {
+        ...state,
+        surveysOpenUnique: [...action.data],
+      }
+    }
     default:
       return state;
   }
