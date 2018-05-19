@@ -142,8 +142,9 @@ class SurveyListOpenUnique extends Component {
           color="red"
           header='Open Survey Instruction'
           list={[
-            'You can participate in this open survey.',
-            'Enter your email',
+            'You can participate in this open survey by registering with your email.',
+            'You will receive a unique link in your inbox.',
+            'Click the link to participate in the survey.',
           ]}
         />
 
