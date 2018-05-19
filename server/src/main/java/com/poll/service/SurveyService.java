@@ -283,6 +283,7 @@ public class SurveyService {
         } else if(survey.getType() == SurveyType.SV_CLOSE){
             String route="/close/survey?token=";
             url=domain+port+route;
+            publish.setLink("");
             for (String email: survey.getInvitedEmailList()){
 
 
@@ -314,7 +315,7 @@ public class SurveyService {
             String route="/openunique/register?surveyId=";
             url=domain+port+route;
             String link=url+survey.getId();
-
+            publish.setLink(link);
 
             for (String email: survey.getInvitedEmailList()){
 
