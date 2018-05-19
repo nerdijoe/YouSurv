@@ -591,7 +591,7 @@ export const axiosSurveyGetAllOpenUnique = () => (dispatch) => {
   axios.get(`${domainURL}/survey/openUnique`)
   .then(res => {
     console.log('> after axiosSurveyGetAllOpenUnique res.data', res.data);
-      dispatch(surveyGetAll(res.data));
+      dispatch(surveyGetAllOpenUnique(res.data));
     // router.push('/signin');
   })
   .catch(err => {

@@ -35,6 +35,7 @@ import SurveyForm from './SurveyForm';
 
 import cardHeader01 from '../../assets/images/card/card_header_01.png'
 import cardHeader02 from '../../assets/images/card/card_header_02.png'
+import cardHeader03 from '../../assets/images/card/card_header_03.png'
 
 import * as surveyType from '../../actions/surveyConstants';
 
@@ -55,6 +56,16 @@ class SurveyListOpenUnique extends Component {
     this.props.surveyShowDetail(survey, this.props.history);
   }
 
+  handleClickSurvey(link) {
+    console.log('handleClickSurvey');
+    link = link.replace('http://localhost:3000/', '');
+    console.log('   link=', link);
+    // this.props.history.push({
+    //   pathname: link,
+    // });
+    this.redirect(link);
+  }
+
   redirect(to) {
     this.props.history.push({
        pathname: to
@@ -63,24 +74,16 @@ class SurveyListOpenUnique extends Component {
 
   generateCard = (survey) => (
     <Card key={survey.id}>
-    <a onClick={() => {this.handleShowDetail(survey)}}>
-      <Image src={cardHeader02} />
+    <a href={survey.publish.link}>
+      <Image src={cardHeader03} />
     </a>
 
     <Card.Content>
       <Card.Header>{survey.title}</Card.Header>
-      <Card.Meta>Id: {survey.id}</Card.Meta>
-      {survey.publish == null ? '' : (
-        <Card.Content onClick={(e)=>{this.redirect(`/surveyMetric/${survey.id}`)}} ><a>View Metric</a></Card.Content>
-      )}
-
+      <Card.Meta>SurveyId: {survey.id}</Card.Meta>
 
       <Card.Description>
         <List>
-          <List.Item>
-            <List.Icon name='users' />
-            <List.Content>{surveyTypeText[survey.type]}</List.Content>
-          </List.Item>
           <List.Item>
             <List.Icon name='question' />
             <List.Content>{survey.questions.length} questions</List.Content>
@@ -92,21 +95,13 @@ class SurveyListOpenUnique extends Component {
         </List>
       </Card.Description>
     </Card.Content>
-    <Card.Content>
-      {survey.publish != null && !survey.closed ?
-        (<Label color="red" horizontal>Published</Label>) :
-        survey.publish != null && survey.closed ?
-        (<Label color="black" horizontal>Closed</Label>) :
-        (<Label color="grey" horizontal>DRAFT</Label>)
-      }
 
-    </Card.Content>
-    <Card.Content extra>
+    {/* <Card.Content extra>
       <a>
         <Icon name='mail' />
         {survey.invitedEmailList.length} Invites sent
       </a>
-    </Card.Content>
+    </Card.Content> */}
   </Card>
   )
 
@@ -117,7 +112,7 @@ class SurveyListOpenUnique extends Component {
     // var closedSurveys = this.props.surveys.filter(survey => survey.publish != null && survey.closed)
     return (
       <Container>
-        <h2>Open Surveys</h2>
+        {/* <h2>Open Surveys</h2> */}
         {/* <SurveyForm /> */}
         {/* <Header as='h2'>
           <Icon name='lightning' />
@@ -143,16 +138,25 @@ class SurveyListOpenUnique extends Component {
           )} */}
         
         <Divider />
+        <Message
+          color="red"
+          header='Open Survey Instruction'
+          list={[
+            'You can participate in this open survey.',
+            'Enter your email',
+          ]}
+        />
+
         <Header as='h2'>
           <Icon name='rocket' />
           <Header.Content>
-            Published Surveys
+            Open Surveys
           </Header.Content>
         </Header>
 
         { publishedSurveys.length === 0 ? (
             <Message compact>
-              No published surveys.
+              No open surveys.
             </Message>
           ) : (
             <Card.Group>
