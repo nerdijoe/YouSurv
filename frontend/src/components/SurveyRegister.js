@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Redirect from 'react-router-dom/Redirect';
 
 import {
-  axiosSignIn,
+  unload,
 } from '../actions';
 
 import {domainURL} from '../actions/urlConstant';
@@ -57,18 +57,13 @@ class SurveyRegister extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: '',
-      lastname: '',
       email: '',
-      password: '',
-      formErrors: { Token: '' },
-      emailValid: false,
+      formErrors: { email: '', error: '' },
       passwordValid: false,
-      firstnameValid: true,
-      lastnameValid: true,
       formValid: false,
       email: '',
-      emailValid: true
+      emailValid: true,
+      errorValid: true
     }
   }
   
@@ -76,6 +71,7 @@ class SurveyRegister extends Component {
     const formErrorsValidation = this.state.formErrors;
     
     let emailValid = this.state.emailValid;
+    let errorValid = this.state.errorValid;
     
     switch (fieldName) {
       case 'email':
@@ -83,13 +79,20 @@ class SurveyRegister extends Component {
         emailValid = value==''?true:emailValid;
         formErrorsValidation.email = emailValid ? '' : ' is invalid.';
         break;
+      case 'error':
+        // errorValid = this.props.error ? false : true;
+        if(this.props.error)
+          errorValid = false;
+        formErrorsValidation.error = errorValid ? '' : this.props.error;
+        break;
       default:
         break;
     }
     // update the error message
     this.setState({
       formErrors: formErrorsValidation,
-      emailValid
+      emailValid,
+      errorValid
     }, this.validateForm);
   }
 
@@ -102,21 +105,23 @@ class SurveyRegister extends Component {
     console.log('handleSignIn', this.state.token);
     // this.props.axiosVerify(this.state.token, this.props.history);
     let email = (localStorage.getItem('user_email'))?localStorage.getItem('user_email'):this.state.email;
-    axios.post(`${domainURL}/survey/generate/openuniquelink`,{
+   axios.post(`${domainURL}/survey/generate/openuniquelink`,{
       email, surveyId: this.props.location.search.split('?surveyId=')[1]
     }).then( res => {
       console.log("responseeee");
-      
-
     })
     .catch( res => {
-      console.log("error 404");
+      console.log("here",res.message);
+      console.log("error 404....");
         // this.setState({
         //   errorValid: false,
         //   error: res.message,
         // }, () => {
         //   this.validateField('token', this.state.token);
         // });
+        this.setState({
+          msgerror: res.response.data.message
+        })
     })
     // // this.props.history.push('/signin');
   }
@@ -128,7 +133,8 @@ class SurveyRegister extends Component {
 
     // validate field everytime user enters something.
     this.setState({
-      [target.name]: target.value
+      [target.name]: target.value,
+      msgerror:null
     }, () => {
       this.validateField(target.name, target.value);
     });
@@ -144,12 +150,15 @@ class SurveyRegister extends Component {
 
       )
     }
+    this.props.onUnload();
   }
 
 
   render() {
-    if( localStorage.getItem('user_email'))
-      this.handleRegister();
+    let errorMSG = null;
+    if(this.state.msgerror)
+      errorMSG = (<Message negative><p>{this.state.msgerror}</p></Message>)
+    console.log("res message ", this.state.error);
     return (
       <MyContainer>
         <Navbar />
@@ -186,6 +195,7 @@ class SurveyRegister extends Component {
                 </div>)}
 
                 <ErrorMessage formErrors={this.state.formErrors} />
+                {errorMSG}
               </Grid.Column>
               <Grid.Column width={4}>
               </Grid.Column>
@@ -204,13 +214,13 @@ class SurveyRegister extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    
+    error: state.UserReducer.error
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    axiosVerify: (data, router) => { dispatch(axiosSignIn(data, router)); },
+    onUnload: () => {dispatch(unload());}
   };
 };
 
