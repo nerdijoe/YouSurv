@@ -6,6 +6,7 @@ import {
 
 import Navbar from './Navbar';
 import LandingBanner from './LandingBanner';
+import Footer from './Footer';
 import SurveyListOpenUnique from './surveys/SurveyListOpenUnique';
 
 import '../style/youtube.css';
@@ -43,8 +44,10 @@ class Landing extends Component {
           {/* <h1>This is landing page!</h1> */}
           <LandingBanner />
           <SurveyListOpenUnique />
+          
         </Wrapper>
         
+        <Footer />
 
         {/* <Link to='/signup'>Sign up</Link>
         <Link to='/signin'>Sign in</Link> */}
