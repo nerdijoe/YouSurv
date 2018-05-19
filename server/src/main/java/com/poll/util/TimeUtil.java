@@ -40,7 +40,12 @@ public class TimeUtil {
 
     public static String getDateString(Date date){
         Format formatter = new SimpleDateFormat(DATE_FORMAT);
-        String dateString = formatter.format(date);
+        String dateString = null;
+        try{
+            dateString = formatter.format(date);
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
         return dateString;
     }
 

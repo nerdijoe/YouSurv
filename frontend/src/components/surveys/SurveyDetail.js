@@ -14,7 +14,8 @@ import {
   surveySaveQuestion,
   axiosSurveyUpdate,
   axiosSurveyPublish,
-
+  axiosSurveyUnpublish,
+  axiosSurveyClose,
 } from '../../actions';
 
 import {
@@ -179,29 +180,19 @@ class SurveyDetail extends Component {
       rating: '',
       title: this.props.survey.title,
       invitedEmailList: '',
-      startDate: this.props.survey.startDate,
-      endDate: this.props.survey.endDate,
+      startDate: '',
+      endDate: '',
       questionDate: moment(),
       newEmailList: '',
-      isPublishError: false,
-      isModalOpen: false,
+      // isPublishError: false,
+      // isModalOpen: false,
     }
 
     
   }
   
-  // state = { 
-  //   activeItem: 'Short Answer',
-  //   questions: [],
-  //   text: {},
-  // }
-
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
-  // handleSubmit({formData}) {
-  //   console.log("Data submitted: ",  formData);
-  // }
 
   addQuestion(type) {
     var newQuestion = {
@@ -515,6 +506,18 @@ class SurveyDetail extends Component {
     currentSurvey.startDate = this.state.startDate;
     currentSurvey.endDate = this.state.endDate;
 
+    if(this.state.startDate != '') {
+      currentSurvey.startDate = moment(this.state.startDate).utc().toISOString();
+      // YYYY-MM-DD'T'HH:mm:ss.SSS'Z'
+      // YYYY-MM-DD'T'HH:mm:ss.
+    }
+
+    if(this.state.endDate != '') {
+      currentSurvey.endDate = moment(this.state.endDate).utc().toISOString();
+    }
+
+    this.props.surveySaveQuestion();
+
     this.props.axiosSurveyUpdate(currentSurvey);
     
   }
@@ -530,9 +533,17 @@ class SurveyDetail extends Component {
       invitedEmailList = this.props.survey.invitedEmailList.join(", ");
     console.log('invitedEmailList=', invitedEmailList);
 
+    var startDate = this.props.survey.startDate != undefined ? moment(this.props.survey.startDate) : ''
+    var endDate = this.props.survey.endDate != undefined ? moment(this.props.survey.endDate) : ''
+
+    console.log('componentWillMount startDate=', startDate);
+    console.log('componentWillMount endDate=', endDate);
+
     this.setState({
       text: text,
       invitedEmailList: invitedEmailList,
+      startDate,
+      endDate,
     })
   }
 
@@ -568,7 +579,8 @@ class SurveyDetail extends Component {
         isPublishError: true,
       })
     } else {
-      // call to axiosSurveyUnpublish(this.props.survey);
+      // call to axiosSurveyUnpublish(this.props.survey);\
+      this.props.axiosSurveyUnpublish(this.props.survey);
     }
   }
 
@@ -576,7 +588,7 @@ class SurveyDetail extends Component {
     console.log('handleCloseSurvey');
     e.preventDefault();
     
-    // call to axiosCloseSurvey(this.props.survey);
+    this.props.axiosSurveyClose(this.props.survey);
   }
 
   openModelMessage(e) {
@@ -597,22 +609,22 @@ class SurveyDetail extends Component {
     })
   }
 
-  modalMessage = () => (
-    <Modal size='mini' open={this.state.isModalOpen} onClose={() => this.closeModalMessage()}>
-      <Modal.Header>
-        Delete Your Account
-      </Modal.Header>
-      <Modal.Content>
-        <p>Are you sure you want to delete your account</p>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button negative>
-          No
-        </Button>
-        <Button positive icon='checkmark' labelPosition='right' content='Yes' />
-      </Modal.Actions>
-    </Modal>
-  )
+  // modalMessage = () => (
+  //   <Modal size='mini' open={this.state.isModalOpen} onClose={() => this.closeModalMessage()}>
+  //     <Modal.Header>
+  //       Delete Your Account
+  //     </Modal.Header>
+  //     <Modal.Content>
+  //       <p>Are you sure you want to delete your account</p>
+  //     </Modal.Content>
+  //     <Modal.Actions>
+  //       <Button negative>
+  //         No
+  //       </Button>
+  //       <Button positive icon='checkmark' labelPosition='right' content='Yes' />
+  //     </Modal.Actions>
+  //   </Modal>
+  // )
 
 
   render() {
@@ -775,8 +787,10 @@ class SurveyDetail extends Component {
               <List.Content>{surveyTypeText[this.props.survey.type]}</List.Content>
             </List.Item>
             <List.Item>
-              {this.props.survey.publish != null ?
+              {this.props.survey.publish != null && !this.props.survey.closed ?
                 (<Label color="red" horizontal>Published</Label>) :
+                this.props.survey.publish != null && this.props.survey.closed ?
+                (<Label color="black" horizontal>Closed</Label>) :
                 (<Label color="grey" horizontal>DRAFT</Label>)
               }
             </List.Item>
@@ -831,64 +845,71 @@ class SurveyDetail extends Component {
             </Form.Field>
           ) : ('')}
 
-          <Form.Field>
-            {this.props.survey.publish != null ? (
-              <div>
-                <label>Invite more people (separate emails by comma)</label>
-                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='newEmailList' value={this.state.newEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
-              </div>
-            ): (
-              <div>
-                <label>Invite emails (separate emails by comma)</label>
-                <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
-              </div>
-            )}
-            
-
-          </Form.Field>
-
-          <Form.Group>
-            <Form.Field>
-              <label>Start Date</label>
-              <DatePicker
-                selected={this.state.startDate}
-                onChange={date => this.handleChangeStartDate(date)}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                dateFormat="LLL"
-                timeCaption="time"
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>End Date</label>
-              <DatePicker
-                selected={this.state.endDate}
-                onChange={date => this.handleChangeEndDate(date)}
-                showTimeSelect
-                timeFormat="HH:mm"
-                timeIntervals={15}
-                dateFormat="LLL"
-                timeCaption="time"
-              />
-            </Form.Field>
-          </Form.Group> 
-
-          <Form.Group>
-            <Form.Field>
-              <Button basic color="red" type="submit">Update Survey</Button>
-            </Form.Field>
+          {!this.props.survey.closed ? (
             <Form.Field>
               {this.props.survey.publish != null ? (
                 <div>
-                  <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
-                  <Button color="yellow" onClick={e => this.handleCloseSurvey(e) }>Close</Button>
+                  <label>Invite more people (separate emails by comma)</label>
+                  <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='newEmailList' value={this.state.newEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
                 </div>
-              ) : (
-                <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+              ): (
+                <div>
+                  <label>Invite emails (separate emails by comma)</label>
+                  <input placeholder='curry@warriors.com, lebron@cavs.com, ...' name='invitedEmailList' value={this.state.invitedEmailList} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} />
+                </div>
               )}
             </Form.Field>
-          </Form.Group>
+          ) : ('')}
+
+
+          {!this.props.survey.closed ? (
+            <Form.Group>
+              <Form.Field>
+                <label>Start Date</label>
+                <DatePicker
+                  selected={this.state.startDate}
+                  onChange={date => this.handleChangeStartDate(date)}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15}
+                  dateFormat="LLL"
+                  timeCaption="time"
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>End Date</label>
+                <DatePicker
+                  selected={this.state.endDate}
+                  onChange={date => this.handleChangeEndDate(date)}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  timeIntervals={15}
+                  dateFormat="LLL"
+                  timeCaption="time"
+                />
+              </Form.Field>
+            </Form.Group> 
+          ) : ('')}
+
+
+          { !this.props.survey.closed ? (
+            <Form.Group>
+              <Form.Field>
+                <Button basic color="red" type="submit">Update Survey</Button>
+              </Form.Field>
+              <Form.Field>
+                {this.props.survey.publish != null ? (
+                  <div>
+                    <Button color="grey" onClick={e => this.handleUnpublish(e) }>Unpublish</Button>
+                    <Button color="black" onClick={e => this.handleCloseSurvey(e) }>Close</Button>
+                  </div>
+                ) : (
+                  <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button>
+                )}
+              </Form.Field>
+            </Form.Group>
+          ) : ('')}
+
         </Form>
         
         { this.state.isPublishError ? (
@@ -925,7 +946,7 @@ class SurveyDetail extends Component {
 
           <Message>
       
-          <Form onSubmit={e => this.handleSubmit(e)}>
+          <Form onSubmit={e => this.handleSubmitUpdateSurvey(e)}>
           { this.props.survey.questions.length === 0 ? (
             <Message compact>
               You have no questions for this survey, please add them.
@@ -1254,6 +1275,9 @@ const mapDispatchToProps = dispatch => {
     axiosSurveyUpdate: (data) => { dispatch(axiosSurveyUpdate(data)); },
     surveySaveQuestion: () => { dispatch(surveySaveQuestion()); },
     axiosSurveyPublish: (data) => { dispatch(axiosSurveyPublish(data)); },
+    axiosSurveyUnpublish: (data) => { dispatch(axiosSurveyUnpublish(data)); },
+    axiosSurveyClose: (data) => { dispatch(axiosSurveyClose(data)); },
+
   }
 }
 

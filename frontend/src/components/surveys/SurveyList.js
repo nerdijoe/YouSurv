@@ -92,8 +92,10 @@ class SurveyList extends Component {
       </Card.Description>
     </Card.Content>
     <Card.Content>
-      {survey.publish != null ?
+      {survey.publish != null && !survey.closed ?
         (<Label color="red" horizontal>Published</Label>) :
+        survey.publish != null && survey.closed ?
+        (<Label color="black" horizontal>Closed</Label>) :
         (<Label color="grey" horizontal>DRAFT</Label>)
       }
 
@@ -109,8 +111,8 @@ class SurveyList extends Component {
 
   render() {
     var unpublishedSurveys = this.props.surveys.filter(survey => survey.publish == null);
-    var publishedSurveys = this.props.surveys.filter(survey => survey.publish != null);
-    
+    var publishedSurveys = this.props.surveys.filter(survey => survey.publish != null && !survey.closed);
+    var closedSurveys = this.props.surveys.filter(survey => survey.publish != null && survey.closed)
     return (
       <Container>
         <h2>Survey List</h2>
@@ -158,6 +160,27 @@ class SurveyList extends Component {
             })}
             </Card.Group>
           )}
+
+        <Divider />
+        <Header as='h2'>
+          <Icon name='lock' />
+          <Header.Content>
+            Closed Surveys
+          </Header.Content>
+        </Header>
+
+        { closedSurveys.length === 0 ? (
+            <Message compact>
+              No closed surveys.
+            </Message>
+          ) : (
+            <Card.Group>
+            { closedSurveys.map(survey => {
+              return(this.generateCard(survey))
+            })}
+            </Card.Group>
+          )}
+
 
       </Container>
 

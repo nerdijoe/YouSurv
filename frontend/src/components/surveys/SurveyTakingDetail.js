@@ -354,7 +354,7 @@ class SurveyTakingDetail extends Component {
       const pos = this.props.survey.answers.findIndex(i => i.surveyeeEmail === localStorage.getItem('user_email'))
       if(pos != -1) {
         answer = this.props.survey.answers[pos];
-        disabled = true;
+        disabled = this.props.survey.answers[pos].submitted;
       }
     }
 

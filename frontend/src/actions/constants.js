@@ -19,6 +19,8 @@ export const QUESTION_UPDATE_TEXT = 'QUESTION_UPDATE_TEXT';
 export const QUESTION_REMOVE = 'QUESTION_REMOVE';
 
 export const SURVEY_PUBLISH = 'SURVEY_PUBLISH';
+export const SURVEY_UNPUBLISH = 'SURVEY_UNPUBLISH';
+export const SURVEY_CLOSE = 'SURVEY_CLOSE';
 
 
 // ==============================================================================

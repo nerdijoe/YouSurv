@@ -153,6 +153,38 @@ const SurveyReducer = (state = initialState, action) => {
 
       }
     }
+    case actionType.SURVEY_UNPUBLISH: {
+      console.log('SurveyReducer SURVEY_UNPUBLISH action.data=', action.data);
+
+      const updatedSurveys = [...state.surveys];
+      const pos = updatedSurveys.findIndex(i => i.id === action.data.id)
+
+      // replace the whole survey with the updated survey
+      updatedSurveys[pos] = action.data;
+
+      return {
+        ...state,
+        surveys: updatedSurveys,
+        surveyCurrent: action.data,
+
+      }
+    }
+    case actionType.SURVEY_CLOSE: {
+      console.log('SurveyReducer SURVEY_CLOSE action.data=', action.data);
+
+      const updatedSurveys = [...state.surveys];
+      const pos = updatedSurveys.findIndex(i => i.id === action.data.id)
+
+      // replace the whole survey with the updated survey
+      updatedSurveys[pos] = action.data;
+
+      return {
+        ...state,
+        surveys: updatedSurveys,
+        surveyCurrent: action.data,
+
+      }
+    }
     case actionType.SURVEY_TAKING_GET_BY_ID: {
       console.log('SurveyReducer SURVEY_TAKING_GET_BY_ID');
       console.log('action = ', action);
