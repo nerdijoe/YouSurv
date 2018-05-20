@@ -11,6 +11,7 @@ import com.poll.persistence.model.*;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
 //import com.poll.persistence.repository.mongo.SurveyRepository;
 import com.poll.persistence.repository.*;
+import com.poll.util.ConfigUtil;
 import com.poll.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,8 +66,8 @@ public class SurveyService {
 
 
                 String url="";
-                String domain="http://localhost:";
-                String port="3000";
+                String domain=ConfigUtil.DOMAIN;
+                String port=ConfigUtil.PORT;
                 String route="";
                 String link="";
                 String token="";
@@ -247,8 +248,8 @@ public class SurveyService {
         SurveyLinks surveyLinks;
 
         String url="";
-        String domain="http://localhost:";
-        String port="3000";
+        String domain=ConfigUtil.DOMAIN;
+        String port=ConfigUtil.PORT;
 
         if(!survey.getInvitedEmailList().isEmpty() && survey.getInvitedEmailList().get(0).equals("")) {
             survey.getInvitedEmailList().remove(0);
@@ -466,8 +467,8 @@ public class SurveyService {
         }
 
         String url="";
-        String domain="http://localhost:";
-        String port="3000";
+        String domain= ConfigUtil.DOMAIN;
+        String port=ConfigUtil.PORT;
 
         String route="/openunique/survey?token=";
         url=domain+port+route;

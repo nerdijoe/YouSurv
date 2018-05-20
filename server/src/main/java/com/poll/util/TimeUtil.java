@@ -28,10 +28,12 @@ public class TimeUtil {
     public static Date getDate(String dateString, String formatString){
         Date date = null;
         SimpleDateFormat sdf = new SimpleDateFormat(formatString);
-        try {
-            date = sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if(dateString!=null) {
+            try {
+                date = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return date;
     }
