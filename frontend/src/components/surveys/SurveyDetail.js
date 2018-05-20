@@ -828,7 +828,8 @@ class SurveyDetail extends Component {
                 <input type="file" name="file" onChange={e => this.handleFileUpload(e)} />
               </Form.Field>
             </Form>
-            <Button basic color={buttonColor} onClick={e => {this.handleAddShortAnswer()}}>Edit</Button>
+            {/* <Button basic color={buttonColor} onClick={e => {this.handleAddShortAnswer()}}>Edit</Button> */}
+            <i>* Changes will be reflected automatically right after file is uploaded.</i>
           </div>
         ) 
       }
