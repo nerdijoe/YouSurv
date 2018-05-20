@@ -35,10 +35,13 @@ public class SurveyRestController {
     @Autowired
     SurveyMapper surveyMapper;
 
+
+
     @RequestMapping(value = "/survey/", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity createSurvey(@RequestBody SurveyCreateDTO surveyDTO, Authentication auth) {
-        String surveyorEmail = auth.getName();
+        String surveyorEmail = userService.getAuthName(auth);
+
         System.out.println("==> POST /survey/, surveyor Email = " + surveyorEmail);
 
         if (!userService.existsByEmail(surveyorEmail)) {

@@ -5,20 +5,28 @@ import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
 import com.poll.persistence.model.AppUser;
 import com.poll.service.SurveyService;
+import com.poll.service.UserService;
 import com.poll.util.RestResponseConverter;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcConfigurer;
 
 import static org.junit.Assert.*;
 
@@ -31,13 +39,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = SurveyRestController.class, secure = false)
+//@WebMvcTest(value = SurveyRestController.class, secure = false)
+@SpringBootTest
 public class SurveyRestControllerTest {
 
     private MockMvc mockMvc;
 
     @MockBean
     private SurveyService surveyService;
+
+    @MockBean
+    private UserService userService;
 
     @InjectMocks
     private SurveyRestController surveyRestController;
@@ -52,37 +64,33 @@ public class SurveyRestControllerTest {
                 .build();
 
         user = new AppUserDTO("test@test.com", "test");
+
     }
 
     @Test
     public void createSurvey() throws Exception {
         SurveyCreateDTO surveyCreateDTO = new SurveyCreateDTO("MySurvey", "general");
         SurveyDTO surveyDTO = new SurveyDTO();
+        surveyDTO.setSurveyorEmail(user.getEmail());
 
         assertTrue(surveyService != null);
-        when(surveyService.createSurvey(user.getEmail(), surveyCreateDTO)).thenReturn(surveyDTO);
+        when(surveyService.createSurvey(any(), any())).thenReturn(surveyDTO);
+        when(userService.getAuthName(any())).thenReturn(user.getEmail());
+        when(userService.existsByEmail(anyString())).thenReturn(true);
 
-        MvcResult result = mockMvc.perform(
+        assertTrue(mockMvc != null);
+
+        mockMvc.perform(
                 post("/survey/")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .accept(MediaType.APPLICATION_JSON_UTF8)
                         .content(RestResponseConverter.convertToString(surveyCreateDTO))
         )
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-//                .andExpect(jsonPath("$.token", Matchers.equalTo("TEST_TOKEN")))
-
-        String res = result.getResponse().getContentAsString();
-        System.out.println("res = " + res);
-
+                .andExpect(status().isCreated())
+//                .andReturn();
+                .andExpect(jsonPath("$.surveyorEmail", Matchers.equalTo(user.getEmail())))
+                ;
     }
-
-
-//    @Test
-//    public void test() throws Exception {
-//
-//    }
-
 
 }
