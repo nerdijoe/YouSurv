@@ -58,6 +58,10 @@ import * as questionType from '../../actions/surveyConstants';
 
 import * as surveyType from '../../actions/surveyConstants';
 
+import prettyFormat from 'pretty-format';
+import jsonfile from 'jsonfile';
+import fs from 'fs';
+
 var surveyTypeText = {}
 surveyTypeText[surveyType.SV_GENERAL] = 'General Survey';
 surveyTypeText[surveyType.SV_CLOSE] = 'Closed Survey';
@@ -184,6 +188,7 @@ class SurveyDetail extends Component {
       endDate: '',
       questionDate: moment(),
       newEmailList: '',
+      jsonFilename: `survey-${this.props.survey.id}.json`,
       // isPublishError: false,
       // isModalOpen: false,
     }
@@ -626,6 +631,55 @@ class SurveyDetail extends Component {
   //   </Modal>
   // )
 
+  // Component method
+
+  // handleFileUpload({ file }) {
+    
+  //   const jsonfile = file[0];
+  //   console.log('handleFileUpload jsonfile=', jsonfile);
+
+  // }
+
+  handleFileUpload(e) {
+    const payload = new FormData();
+
+    payload.append('file', e.target.files[0]);
+    console.log('e.target.files[0]=', e.target.files[0]);
+    console.log('e.target.files[0].result=', e.target.files[0].result);
+
+    console.log('handleFileUpload payload ---->', payload);
+    // console.log('handleFileUpload payload.values() ---->', payload);
+
+    // this.props.axiosUpload(payload);
+    const file = e.target.files[0];
+
+    // var file = '/tmp/data.json'
+    console.log('---- start readFile');
+
+    // jsonfile.read(file, function(err, obj) {
+    //   console.log(obj)
+    // })
+
+    var reader = new FileReader();
+    reader.onload = this.onReaderLoad;
+    reader.readAsText(e.target.files[0]);
+
+    console.log('---- end readFile');
+
+    // upload to path
+
+  }
+
+  onReaderLoad(event){
+    console.log('onReaderLoad');
+    // console.log(event.target.result);
+    var obj = JSON.parse(event.target.result);
+    console.log('obj=', obj);
+  }
+
+
+
+
 
   render() {
     const { activeItem } = this.state;
@@ -742,6 +796,12 @@ class SurveyDetail extends Component {
         return (
           <div>
             <h3>Edit</h3>
+            <Form>
+              <Form.Field>
+                <label>Import JSON file</label>
+                <input type="file" name="file" onChange={e => this.handleFileUpload(e)} />
+              </Form.Field>
+            </Form>
             <Button basic color={buttonColor} onClick={e => {this.handleAddShortAnswer()}}>Edit</Button>
           </div>
         ) 
@@ -753,11 +813,30 @@ class SurveyDetail extends Component {
       <a onClick={e => {this.handleRemoveQuestion(question)}}><Icon color='grey' size="large" name='remove'/></a>
     )
 
+    var obj = this.props.survey.questions;
+    var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+    // var data = "text/json;charset=utf-8," + encodeURIComponent(prettyFormat(obj));
     
 
     return (
       <Container>
         <h2>Detail</h2>
+        {/* <a href={`data: ${data}`} download="data.json">download JSON</a> */}
+
+        <Form>
+          <Form.Group inline>
+            {/* <Form.Field> */}
+            <Form.Field><label>Filename</label></Form.Field>
+            <Form.Field><input placeholder='' name='jsonFilename' value={this.state.jsonFilename} onChange={ (e) => { this.handleChangeSurveyDetail(e); }} /></Form.Field>
+            {/* </Form.Field> */}
+            {/* <Button color="youtube" onClick={e => this.handlePublish(e) }>Publish</Button> */}
+            {/* <Button as='a' color="youtube" href={`data: ${data}`} download={this.handleSubmitUpdateSurvey.jsonFilename}>Download</Button> */}
+
+            <Form.Field><a href={`data: ${data}`} download={this.state.jsonFilename}><Icon name='download' />Export JSON file</a></Form.Field>
+          </Form.Group>
+        </Form>
+
+
         <Message negative attached>
           <Message.Header>Information</Message.Header>
           {/* <Button onClick={(e) => this.openModelMessage(e)}>modal</Button>
@@ -928,6 +1007,7 @@ class SurveyDetail extends Component {
               <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
               <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
               <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
+              <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} />
             </Menu>
 
             <Segment attached='bottom'>
