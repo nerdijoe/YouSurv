@@ -11,6 +11,7 @@ import com.poll.persistence.model.*;
 //import com.poll.persistence.repository.mongo.AppUserRepository;
 //import com.poll.persistence.repository.mongo.SurveyRepository;
 import com.poll.persistence.repository.*;
+import com.poll.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -195,6 +196,14 @@ public class SurveyService {
         for (Survey survey: allSurveys){
             if (survey.getInvitedEmailList().contains(userEmail)){
                 invitedSurveys.add(survey);
+            } else{
+                List<Answer> answers = survey.getAnswers();
+                for (Answer answer : answers){
+                    if (answer.getSurveyeeEmail().equals(userEmail)){
+                        invitedSurveys.add(survey);
+                        break;
+                    }
+                }
             }
         }
 //        List<Survey> invitedSurveys = surveyRepository.findAllByInvitedEmailListContains(userEmail);
@@ -410,7 +419,10 @@ public class SurveyService {
         if (survey.isClosed()){
             return false;
         }
-        Date now = new Date();
+//        Date now = new Date();
+
+        Date now = TimeUtil.dateToUTC(new Date());
+
         Date start = survey.getStartDate();
         Date end = survey.getEndDate();
         if (start != null && now.before(start)){

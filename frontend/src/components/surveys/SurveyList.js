@@ -113,9 +113,14 @@ class SurveyList extends Component {
     var unpublishedSurveys = this.props.surveys.filter(survey => survey.publish == null);
     var publishedSurveys = this.props.surveys.filter(survey => survey.publish != null && !survey.closed);
     var closedSurveys = this.props.surveys.filter(survey => survey.publish != null && survey.closed)
+
+    // var obj = {a: 123, b: "4 5 6"};
+    // var obj = this.props.surveys;
+    // var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
     return (
       <Container>
         <h2>Survey List</h2>
+
         <SurveyForm />
         <Divider />
         <Header as='h2'>
