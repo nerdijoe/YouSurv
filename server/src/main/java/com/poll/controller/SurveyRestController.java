@@ -234,7 +234,7 @@ public class SurveyRestController {
     }
 
     @RequestMapping(value = "/savesubmitanswer/survey/{surveyId}", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity savesubmitSurveyAnswer(@RequestBody SaveSubmitAnswerDTO saveSubmitAnswerDTO ,@PathVariable("surveyId") long surveyId) {
+    public ResponseEntity ResponseEntitysavesubmitSurveyAnswer(@RequestBody SaveSubmitAnswerDTO saveSubmitAnswerDTO ,@PathVariable("surveyId") long surveyId) {
 //        String userEmail = auth.getName() ;
         if (!surveyService.existsById(surveyId)) {
             String message = "Survey with id: " + surveyId + " doesn't exist";
@@ -246,7 +246,7 @@ public class SurveyRestController {
 
         Survey survey = surveyService.findById(surveyId);
 
-        AnswerSaveDTO answerDTO = new AnswerSaveDTO(saveSubmitAnswerDTO.getChoices());
+        AnswerSaveDTO answerDTO = new AnswerSaveDTO(null, saveSubmitAnswerDTO.getChoices());
         String userEmail = saveSubmitAnswerDTO.getEmail();
         String token = saveSubmitAnswerDTO.getToken();
 

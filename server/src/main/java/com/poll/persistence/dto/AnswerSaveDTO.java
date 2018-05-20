@@ -12,5 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class AnswerSaveDTO {
+    private Long id;
     private List<AnswerChoice> choices;
 }

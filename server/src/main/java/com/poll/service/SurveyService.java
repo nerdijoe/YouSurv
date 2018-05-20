@@ -350,7 +350,12 @@ public class SurveyService {
     }
 
     public Answer saveAnswer(String surveyeeEmail, Survey survey, AnswerSaveDTO answerDTO) {
-        Answer answer = new Answer();
+        Answer answer;
+        if (answerDTO.getId() == null){
+            answer = new Answer();
+        } else{
+            answer = answerRepository.findById(answerDTO.getId());
+        }
         answer.setSurveyeeEmail(surveyeeEmail);
         answer.setSurvey(survey);
         answer.setChoices(answerDTO.getChoices());

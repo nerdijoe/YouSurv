@@ -13,9 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaveSubmitAnswerDTO {
-
     private String token;
     private String email;
     private List<AnswerChoice> choices;
-
 }
