@@ -24,6 +24,7 @@ public class AnswerChoice implements Serializable {
     private String questionId;
 
     @ElementCollection(targetClass=String.class)
+    @Column(columnDefinition = "LONGTEXT")
     private List<String> selection;
 
 }

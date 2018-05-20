@@ -26,7 +26,7 @@ public class Question extends AbstractTimestampModel implements Serializable  {
 
     private String text;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String image;
 
     @JsonIgnore
