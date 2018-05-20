@@ -3,11 +3,14 @@ package com.poll.controller;
 import com.poll.persistence.dto.AppUserDTO;
 import com.poll.persistence.dto.SurveyCreateDTO;
 import com.poll.persistence.dto.SurveyDTO;
+import com.poll.persistence.mapper.SurveyMapper;
 import com.poll.persistence.model.AppUser;
+import com.poll.persistence.model.Survey;
 import com.poll.service.SurveyService;
 import com.poll.service.UserService;
 import com.poll.util.RestResponseConverter;
 import org.hamcrest.Matchers;
+import org.hibernate.service.spi.InjectService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +36,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -53,6 +57,9 @@ public class SurveyRestControllerTest {
 
     @InjectMocks
     private SurveyRestController surveyRestController;
+
+    @MockBean
+    private SurveyMapper surveyMapper;
 
     private AppUserDTO user;
 
@@ -91,6 +98,38 @@ public class SurveyRestControllerTest {
 //                .andReturn();
                 .andExpect(jsonPath("$.surveyorEmail", Matchers.equalTo(user.getEmail())))
                 ;
+    }
+
+    @Test
+    public void saveSurvey() throws Exception {
+
+        SurveyDTO surveyDTO = new SurveyDTO();
+        surveyDTO.setSurveyorEmail(user.getEmail());
+
+
+        Survey survey = new Survey();
+        survey.setSurveyorEmail(user.getEmail());
+
+        assertTrue(surveyService != null);
+//        when(surveyService.createSurvey(any(), any())).thenReturn(surveyDTO);
+//        when(userService.getAuthName(any())).thenReturn(user.getEmail());
+        when(surveyService.existsById(anyLong())).thenReturn(true);
+        when(surveyService.save(any())).thenReturn(survey);
+        when(surveyMapper.toSurveyDTO(any())).thenReturn(surveyDTO);
+
+        assertTrue(mockMvc != null);
+
+        mockMvc.perform(
+                put("/survey/1")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8)
+                        .content(RestResponseConverter.convertToString(surveyDTO))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+//                .andReturn();
+                .andExpect(jsonPath("$.surveyorEmail", Matchers.equalTo(user.getEmail())))
+        ;
     }
 
 }
