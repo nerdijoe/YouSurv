@@ -63,7 +63,8 @@ class SurveyRegister extends Component {
       formValid: false,
       email: '',
       emailValid: true,
-      errorValid: true
+      errorValid: true,
+      isSubmitted: false
     }
   }
   
@@ -109,6 +110,9 @@ class SurveyRegister extends Component {
       email, surveyId: this.props.location.search.split('?surveyId=')[1]
     }).then( res => {
       console.log("responseeee");
+      this.setState({
+        isSubmitted: true
+      })
     })
     .catch( res => {
       console.log("here",res.message);
@@ -181,7 +185,8 @@ class SurveyRegister extends Component {
               <Grid.Column width={8}>
                 {( localStorage.getItem('user_email'))?(<div><h5>You are registered successfully.</h5> 
                     <Redirect to="/home/surveyee" /></div>
-                  ):(
+                  ):((this.state.isSubmitted)?(<div><h5>You are registered successfully.</h5> 
+                    <p>An email has been sent to your mentioned email address.<br/>Please participate in the survey from the sent link.</p></div>):(
                   <div>
                   <h2>Enter your Email ID or Sign In</h2>
                 <Form onSubmit={ (e) => { this.handleRegister(e) }} >
@@ -192,7 +197,7 @@ class SurveyRegister extends Component {
       
                   <Button color='youtube' type='submit' disabled={!this.state.formValid}>Submit</Button>
                 </Form>
-                </div>)}
+                </div>))}
 
                 <ErrorMessage formErrors={this.state.formErrors} />
                 {errorMSG}
@@ -224,5 +229,5 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-// const connectedSignIn = connect(mapStateToProps,mapDispatchToProps)(SignIn);
-export default SurveyRegister;
+const connectedSurveyRegister = connect(mapStateToProps,mapDispatchToProps)(SurveyRegister);
+export default connectedSurveyRegister;
