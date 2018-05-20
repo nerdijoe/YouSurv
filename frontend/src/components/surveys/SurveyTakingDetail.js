@@ -63,6 +63,7 @@ class SurveyTakingDetail extends Component {
     this.state = {
       survey: this.props.survey,
       answers: {},
+      answerId: null,
       hasChanges: this.props.hasChanges,
     }
 
@@ -124,10 +125,12 @@ class SurveyTakingDetail extends Component {
   }
 
   prepAnswers() {
-    var answers = {}
+    var answers = {};
+    var answerId = null;
     if(this.props.survey != undefined && this.props.survey.answers != undefined) {
       this.props.survey.answers.map(answer => {
         if(answer.surveyeeEmail === localStorage.getItem('user_email')) {
+          answerId = answer.id;
           answer.choices.map( c => {
             console.log(`answers[${c.questionId}] = ${c.selection}`)
             answers[c.questionId] = c.selection
@@ -137,10 +140,11 @@ class SurveyTakingDetail extends Component {
     }
 
     console.log('prepAnswers     answers=', answers);
+    console.log('prepAnswers     answerId=', answerId);
 
     this.setState({
       answers,
-
+      answerId,
     })
   }
 
@@ -333,7 +337,7 @@ class SurveyTakingDetail extends Component {
 
       console.log('choices=', choices);
 
-      this.props.surveyTakingSaveProgress(choices, this.props.survey.id);
+      this.props.surveyTakingSaveProgress(choices, this.props.survey.id, this.state.answerId);
     }
   }
 
@@ -713,7 +717,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     surveyTakingGetById: (data) => { dispatch(surveyTakingGetById(data)); },
-    surveyTakingSaveProgress: (data, surveyId) => { dispatch(surveyTakingSaveProgress(data, surveyId)); },
+    surveyTakingSaveProgress: (data, surveyId, answerId) => { dispatch(surveyTakingSaveProgress(data, surveyId, answerId)); },
     axiosSurveyTakingSubmit: (data) => { dispatch(axiosSurveyTakingSubmit(data)); },
     surveyTakingAnswerChangesTrue: () => { dispatch(surveyTakingAnswerChangesTrue()); }
   }

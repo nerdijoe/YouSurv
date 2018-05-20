@@ -405,9 +405,10 @@ export const surveyTakingGetByIdReduce = (data) => {
   }
 }
 
-export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
+export const surveyTakingSaveProgress = (data, surveyId, answerId) => dispatch => {
   console.log('surveyTakingSaveProgress data=', data);
   console.log('surveyId=', surveyId);
+  console.log('answerId=', answerId);
 
   // axios POST
   // {
@@ -417,8 +418,8 @@ export const surveyTakingSaveProgress = (data, surveyId) => dispatch => {
 
   const token = 'Bearer ' + localStorage.getItem('token');
   axios.post(`${domainURL}/survey/${surveyId}/answer`, {
-
     choices: data,
+    id: answerId,
   }, {
     headers: {
       Authorization: token,
