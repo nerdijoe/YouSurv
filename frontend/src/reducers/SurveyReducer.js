@@ -70,6 +70,17 @@ const SurveyReducer = (state = initialState, action) => {
         surveyCurrent: {...state.surveyCurrent, questions: updateQuestion},
       }
     }
+    case actionType.QUESTION_ADD_FROM_JSON_FILE: {
+      console.log('SurveyReducer QUESTION_ADD_FROM_JSON_FILE action=', action);
+
+      const updateQuestion = [...state.surveyCurrent.questions, ...action.data];
+
+      return {
+        ...state,
+        surveyCurrent: {...state.surveyCurrent, questions: updateQuestion},
+      }
+    }
+
     case actionType.QUESTION_UPDATE_TEXT: {
       console.log('SurveyReducer QUESTION_UPDATE_TEXT action.data=', action.data);
       const UpdatedSurveyCurrent = {...state.surveyCurrent}

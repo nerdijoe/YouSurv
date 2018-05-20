@@ -362,6 +362,19 @@ export const surveySaveQuestionReduce = () => {
   }
 }
 
+export const questionAddFromJson = data => dispatch => {
+  console.log('questionAddFromJson data=', data);
+  dispatch(questionAddFromJsonReduce(data))
+}
+
+export const questionAddFromJsonReduce = (data) => {
+  return {
+    type: actionType.QUESTION_ADD_FROM_JSON_FILE,
+    data,
+  }
+}
+
+
 export const questionRemove = (data) => dispatch => {
   console.log('questionRemove');
 
