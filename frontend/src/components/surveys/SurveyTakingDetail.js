@@ -391,7 +391,7 @@ class SurveyTakingDetail extends Component {
               </Comment.Content>
             </Comment>
           </Comment.Group>
-            <IdleTimer ref="saveTimer" timeout={3000} startOnLoad={false} idleAction={e => this.handleSubmitSaveProgress(e)}>
+            <IdleTimer ref="saveTimer" timeout={1000} startOnLoad={false} idleAction={e => this.handleSubmitSaveProgress(e)}>
             {this.state.alertVisible && <div>{this.getAlertMsg()}</div>}
             <h3>Please fill this survey questions</h3>
 

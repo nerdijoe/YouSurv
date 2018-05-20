@@ -136,9 +136,11 @@ class CommonSurvey extends Component {
     // for general survey page, call axios to fetch the survey
 
     var answers = {}
+    var answerId = null;
     if(this.state.survey != undefined && this.state.survey.answers != undefined) {
       this.state.survey.answers.map(answer => {
         if(answer.surveyeeEmail === localStorage.getItem('user_email')) {
+          answerId = answer.id;
           answer.choices.map( c => { answers[c.questionId] = c.selection})
         }
       })
@@ -147,7 +149,8 @@ class CommonSurvey extends Component {
     console.log('     answers=', answers);
 
     this.setState({
-      answers
+      answers,
+      answerId
     })
 
   }
@@ -308,6 +311,7 @@ class CommonSurvey extends Component {
       // this.props.surveyTakingSaveProgress(choices, this.state.survey.id);
       axios.post(`${domainURL}/survey/${this.state.survey.id}/answer`, {
           choices: choices,
+          id: this.state.answerId,
         }, {
           headers: {
             Authorization: token,
