@@ -681,18 +681,6 @@ class SurveyDetail extends Component {
 
       this.props.questionAddFromJson(obj);
     }
-
-    // reader.onload = (function(theFile){
-    //     var fileName = theFile.name;
-        
-    //     console.log('_this=', _this);
-    //     return function(e){
-    //         console.log(fileName);
-    //         console.log(e.target.result);
-    //     };
-    // })(file);   
-
-    // reader.readAsText(e.target.files[0]);
     reader.readAsText(file);
 
 

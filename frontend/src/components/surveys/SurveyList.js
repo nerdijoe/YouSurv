@@ -86,7 +86,7 @@ class SurveyList extends Component {
           </List.Item>
           <List.Item>
             <List.Icon name='calendar' />
-            <List.Content>Created on {Moment(survey.created).format('L LT')}</List.Content>
+            <List.Content>Created on {Moment(survey.created).utcOffset(0).format('L LT')}</List.Content>
           </List.Item>
         </List>
       </Card.Description>
