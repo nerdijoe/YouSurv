@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import {
   Container,
   Grid,
@@ -117,9 +119,11 @@ class LandingBanner extends Component {
                 16 million questions answered daily.
               </BannerTextSub>
               
+              <Link to='/signup'>
               <Button color="youtube" size='huge' style={styles.buttonBanner}>
                 Try SurveyApe Now
               </Button>
+              </Link>
 
               {/* <Button primary basic size='huge' style={styles.buttonBanner}>
                 Get Dropbox Basic
