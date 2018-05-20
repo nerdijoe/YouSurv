@@ -11,6 +11,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScans;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,6 +25,10 @@ public class Application  extends SpringBootServletInitializer {
     @Autowired
     UserService userService;
 
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
