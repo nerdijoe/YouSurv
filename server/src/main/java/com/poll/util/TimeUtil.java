@@ -10,8 +10,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class TimeUtil {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -52,5 +54,11 @@ public class TimeUtil {
         return dateString;
     }
 
+    public static Date dateFromUTC(Date date){
+        return new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
+    }
 
+    public static Date dateToUTC(Date date){
+        return new Date(date.getTime() - Calendar.getInstance().getTimeZone().getOffset(date.getTime()));
+    }
 }
