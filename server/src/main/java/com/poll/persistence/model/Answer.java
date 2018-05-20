@@ -32,6 +32,7 @@ public class Answer extends AbstractTimestampModel {
 //    )
 //    @Embedded
     @ElementCollection(targetClass = AnswerChoice.class)
+    @Column(columnDefinition = "LONGBLOB")
     private List<AnswerChoice> choices;
 
     private boolean submitted;
