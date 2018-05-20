@@ -130,7 +130,7 @@ class SurveyTaking extends Component {
           ) : ('')}
 
         <Card.Group>
-        { this.props.surveys.filter(survey => survey.publish != null).map(survey => {
+        { this.props.surveys.filter(survey => survey.publish != null && !survey.closed).map(survey => {
           var link = `/home/takesurvey/${survey.id}`;
 
           var isSubmitted = false;
