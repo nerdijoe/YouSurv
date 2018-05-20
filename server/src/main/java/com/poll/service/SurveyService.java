@@ -195,6 +195,14 @@ public class SurveyService {
         for (Survey survey: allSurveys){
             if (survey.getInvitedEmailList().contains(userEmail)){
                 invitedSurveys.add(survey);
+            } else{
+                List<Answer> answers = survey.getAnswers();
+                for (Answer answer : answers){
+                    if (answer.getSurveyeeEmail().equals(userEmail)){
+                        invitedSurveys.add(survey);
+                        break;
+                    }
+                }
             }
         }
 //        List<Survey> invitedSurveys = surveyRepository.findAllByInvitedEmailListContains(userEmail);
