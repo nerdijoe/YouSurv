@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import {
   questionAdd,
+  questionAddFromJson,
   questionUpdateText,
   questionRemove,
   surveySaveQuestion,
@@ -662,8 +663,41 @@ class SurveyDetail extends Component {
 
     var reader = new FileReader();
     reader.onload = this.onReaderLoad;
-    reader.readAsText(e.target.files[0]);
 
+    var _this = this;
+    reader.onload = (e) => {
+      var obj = JSON.parse(e.target.result);
+      console.log('my obj=', obj);
+
+      // need to rewrite the question id in the obj
+      obj.map(item => {
+        if(item.id == undefined) {
+          item['id'] = cuid();
+        } else {
+          item.id = cuid();
+        }
+      })
+      console.log('rewritten obj=', obj);
+
+      this.props.questionAddFromJson(obj);
+    }
+
+    // reader.onload = (function(theFile){
+    //     var fileName = theFile.name;
+        
+    //     console.log('_this=', _this);
+    //     return function(e){
+    //         console.log(fileName);
+    //         console.log(e.target.result);
+    //     };
+    // })(file);   
+
+    // reader.readAsText(e.target.files[0]);
+    reader.readAsText(file);
+
+
+    console.log('reader.result=', reader.result);
+    console.log('file=', file);
     console.log('---- end readFile');
 
     // upload to path
@@ -675,6 +709,10 @@ class SurveyDetail extends Component {
     // console.log(event.target.result);
     var obj = JSON.parse(event.target.result);
     console.log('obj=', obj);
+
+    console.log('this=', this);
+    // axios call to update the survey question
+    // this.props.surveyAddQuestionFromJson(obj);
   }
 
 
@@ -792,10 +830,10 @@ class SurveyDetail extends Component {
           </div>
         ) 
       } 
-      else if ( activeItem === 'Edit' ) {
+      else if ( activeItem === 'Import' ) {
         return (
           <div>
-            <h3>Edit</h3>
+            <h3>Import from JSON file</h3>
             <Form>
               <Form.Field>
                 <label>Import JSON file</label>
@@ -1007,7 +1045,7 @@ class SurveyDetail extends Component {
               <Menu.Item name='Short Answer' active={activeItem === 'Short Answer'} onClick={this.handleItemClick} />
               <Menu.Item name='Date' active={activeItem === 'Date'} onClick={this.handleItemClick} />
               <Menu.Item name='Rating' active={activeItem === 'Rating'} onClick={this.handleItemClick} />
-              <Menu.Item name='Edit' active={activeItem === 'Edit'} onClick={this.handleItemClick} />
+              <Menu.Item name='Import' active={activeItem === 'Import'} onClick={this.handleItemClick} />
             </Menu>
 
             <Segment attached='bottom'>
@@ -1350,6 +1388,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     questionAdd: (data) => { dispatch(questionAdd(data)); },
+    questionAddFromJson: (data) => { dispatch(questionAddFromJson(data)); },
     questionUpdateText: (data) => { dispatch(questionUpdateText(data)); },
     questionRemove: (data) => { dispatch(questionRemove(data)); },
     axiosSurveyUpdate: (data) => { dispatch(axiosSurveyUpdate(data)); },
