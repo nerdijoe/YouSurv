@@ -96,7 +96,7 @@ class SurveyTaking extends Component {
                       (<Label color="yellow" horizontal>New</Label>)
                     }
                   </List.Item>
-                  {answer.updated != undefined ? Moment(answer.updated).format('L LT') : ''}
+                  {answer.updated != undefined ? Moment(answer.updated).utcOffset(0).format('L LT') : ''}
                   <List.Item>
                     
                   </List.Item>
