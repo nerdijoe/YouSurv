@@ -317,7 +317,7 @@ class CommonSurvey extends Component {
           console.log('>  after handleSaveProgress ', res.data);
           if (this.state.hasChanges)
           {
-            this.setState({ hasChanges: false, alertVisible: true, alertStyle: 'success' });
+            this.setState({ hasChanges: false, alertVisible: true, alertStyle: 'success', answerId: res.data.id });
           }
           // router.push('/signin');
         })
@@ -358,6 +358,8 @@ class CommonSurvey extends Component {
     if(pos != -1) {
       answerId = this.state.survey.answers[pos].id;
     }
+    else
+      answerId = this.state.answerId;
 
     const token = 'Bearer ' + localStorage.getItem('token');
 
@@ -491,7 +493,7 @@ class CommonSurvey extends Component {
                 </div>
             )}
           </Form>
-          <IdleTimer ref="saveTimer" timeout={3000} startOnLoad={false} idleAction={this.handleSubmitSaveProgress}>
+          <IdleTimer ref="saveTimer" timeout={1000} startOnLoad={false} idleAction={this.handleSubmitSaveProgress}>
             {this.state.alertVisible && <div>{this.getAlertMsg()}</div>}
             <h3>Please fill this survey questions</h3>
             <Form >
