@@ -1,4 +1,4 @@
-# MyPoll
+# YouSurv
 An online poll website
 
 Requirements
